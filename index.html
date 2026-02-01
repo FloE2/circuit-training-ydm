@@ -938,6 +938,9 @@
                 <button class="edit-wod" id="settingsButton" onclick="openSettings()" style="display: none;">
                     Paramètres
                 </button>
+                <button class="edit-wod" id="quitButton" onclick="quitWOD()" style="display: none; background: #e53e3e;">
+                    Quitter
+                </button>
             </div>
             <div class="header-content">
                 <h1><span id="headerWodName">Circuit Training</span></h1>
@@ -1338,9 +1341,16 @@
             document.getElementById('mainContainer').classList.add('visible');
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('settingsButton').style.display = 'block';
+            document.getElementById('quitButton').style.display = 'block';
             
             renderWOD();
             resetTimer();
+        }
+
+        function quitWOD() {
+            if (confirm('Quitter le WOD ?\n\nLes résultats non sauvegardés seront perdus.')) {
+                location.reload();
+            }
         }
 
         function renderWOD() {
