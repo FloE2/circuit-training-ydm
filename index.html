@@ -1003,12 +1003,12 @@
 
             <!-- Add/Edit Exercise Form -->
             <div class="add-exercise-form">
-                <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Documenter un exercice</h3>
+                <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Ajouter un nouvel exercice</h3>
                 
                 <div class="form-group">
                     <label>Nom de l'exercice</label>
-                    <input type="text" id="exerciseName" placeholder="Choisissez un exercice dans la liste ci-dessous">
-                    <small style="color: #718096;">Cliquez sur un exercice ci-dessous pour le documenter</small>
+                    <input type="text" id="exerciseName" placeholder="Ex: Tractions, Pompes diamant...">
+                    <small style="color: #718096;">Créez un nouvel exercice ou sélectionnez-en un dans la liste ci-dessous</small>
                 </div>
 
                 <div class="form-group">
@@ -1026,7 +1026,7 @@
 
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="saveExercise()" style="flex: 1;">
-                        <span id="saveButtonText">Enregistrer</span>
+                        <span id="saveButtonText">Créer l'exercice</span>
                     </button>
                     <button class="btn" onclick="cancelEditExercise()" id="cancelEditBtn" style="display: none; background: #718096; color: white;">
                         Annuler
@@ -1072,6 +1072,7 @@
 
     <script>
         const EXERCISES = [
+            'Air Squat',
             'Box Jump Over',
             'Burpees',
             'Burpees Pogo',
@@ -1842,7 +1843,7 @@
                             <div class="exercise-desc-preview">${preview}</div>
                         </div>
                         <div class="exercise-actions">
-                            <button class="btn-edit" onclick="editExercise('${name}')">${hasData ? 'Modifier' : 'Ajouter description'}</button>
+                            <button class="btn-edit" onclick="editExercise('${name}')">${hasData ? 'Modifier' : 'Documenter'}</button>
                             ${hasData ? `<button class="btn-delete" onclick="deleteExerciseData('${name}')">Supprimer données</button>` : ''}
                         </div>
                     </div>
@@ -1892,11 +1893,8 @@
                 return;
             }
             
-            // Check if exercise exists in EXERCISES list
-            if (!EXERCISES.includes(name)) {
-                alert('Cet exercice n\'existe pas dans la liste. Veuillez choisir un exercice existant ou contacter l\'administrateur pour ajouter un nouvel exercice.');
-                return;
-            }
+            // Check if it's a new exercise
+            const isNewExercise = !EXERCISES.includes(name);
             
             // Prepare exercise data
             const exerciseInfo = {
@@ -1912,8 +1910,15 @@
             // Update local data
             exerciseData[name] = exerciseInfo;
             
+            // Add to EXERCISES list if new
+            if (isNewExercise) {
+                EXERCISES.push(name);
+                EXERCISES.sort();
+            }
+            
             // Clear form
             document.getElementById('exerciseName').value = '';
+            document.getElementById('exerciseName').disabled = false;
             document.getElementById('exerciseDescription').value = '';
             document.getElementById('imageInput1').value = '';
             document.getElementById('imageInput2').value = '';
@@ -1923,11 +1928,15 @@
             // Refresh list
             renderExerciseList();
             currentEditingExercise = null;
-            document.getElementById('formTitle').textContent = 'Ajouter un exercice';
-            document.getElementById('saveButtonText').textContent = 'Ajouter l\'exercice';
+            document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
+            document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
             document.getElementById('cancelEditBtn').style.display = 'none';
             
-            alert(`Documentation de "${name}" sauvegardée sur Firebase !`);
+            if (isNewExercise) {
+                alert(`Nouvel exercice "${name}" créé et sauvegardé sur Firebase !`);
+            } else {
+                alert(`Documentation de "${name}" mise à jour sur Firebase !`);
+            }
         }
 
         function editExercise(name) {
@@ -1941,7 +1950,8 @@
             while (imagePreviews.length < 2) imagePreviews.push(null);
             updateImagePreview();
             
-            document.getElementById('formTitle').textContent = data.description || data.images.length > 0 ? 'Modifier l\'exercice' : 'Ajouter une description';
+            const hasData = data.description || data.images.length > 0;
+            document.getElementById('formTitle').textContent = hasData ? 'Modifier l\'exercice' : 'Documenter l\'exercice';
             document.getElementById('saveButtonText').textContent = 'Enregistrer';
             document.getElementById('cancelEditBtn').style.display = 'block';
             
@@ -1959,8 +1969,8 @@
             imagePreviews = [null, null];
             updateImagePreview();
             
-            document.getElementById('formTitle').textContent = 'Ajouter un exercice';
-            document.getElementById('saveButtonText').textContent = 'Ajouter l\'exercice';
+            document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
+            document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
@@ -1989,4 +1999,3 @@
     </script>
 </body>
 </html>
-
