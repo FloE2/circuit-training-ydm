@@ -877,8 +877,12 @@
                 ➕ Nouveau WOD
             </button>
             
-            <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em;">
+            <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em; margin-bottom: 15px;">
                 📚 Mes WODs sauvegardés
+            </button>
+
+            <button class="btn btn-primary" onclick="openSettingsFromWelcome()" style="background: #ed8936; padding: 20px; font-size: 1.2em;">
+                ⚙️ Gérer les exercices
             </button>
         </div>
     </div>
@@ -1755,9 +1759,24 @@
             renderExerciseList();
         }
 
+        function openSettingsFromWelcome() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('settingsOverlay').style.display = 'flex';
+            renderExerciseList();
+        }
+
         function closeSettings() {
             document.getElementById('settingsOverlay').style.display = 'none';
             cancelEditExercise();
+            
+            // Return to appropriate screen
+            if (document.getElementById('mainContainer').classList.contains('visible')) {
+                // Already in a WOD, just close settings
+                return;
+            } else {
+                // Return to welcome screen
+                document.getElementById('welcomeScreen').style.display = 'flex';
+            }
         }
 
         // Load exercises from Firebase
