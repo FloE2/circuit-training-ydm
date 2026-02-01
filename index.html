@@ -851,11 +851,12 @@
 
             <!-- Add/Edit Exercise Form -->
             <div class="add-exercise-form">
-                <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Ajouter un exercice</h3>
+                <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Documenter un exercice</h3>
                 
                 <div class="form-group">
                     <label>Nom de l'exercice</label>
-                    <input type="text" id="exerciseName" placeholder="Ex: Air Squat">
+                    <input type="text" id="exerciseName" placeholder="Choisissez un exercice dans la liste ci-dessous">
+                    <small style="color: #718096;">Cliquez sur un exercice ci-dessous pour le documenter</small>
                 </div>
 
                 <div class="form-group">
@@ -873,7 +874,7 @@
 
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="saveExercise()" style="flex: 1;">
-                        <span id="saveButtonText">Ajouter l'exercice</span>
+                        <span id="saveButtonText">Enregistrer</span>
                     </button>
                     <button class="btn" onclick="cancelEditExercise()" id="cancelEditBtn" style="display: none; background: #718096; color: white;">
                         Annuler
@@ -935,12 +936,7 @@
         const database = firebase.database();
 
         // Exercise database with descriptions and images
-        let exerciseData = {
-            'Air Squat': {
-                description: 'Squat avec saut à l\'extension',
-                images: []
-            }
-        };
+        let exerciseData = {};
 
         let currentEditingExercise = null;
         let imagePreviews = [null, null];
@@ -1426,25 +1422,24 @@
 
         function renderExerciseList() {
             const container = document.getElementById('exerciseListContainer');
-            const sortedExercises = Object.keys(exerciseData).sort();
             
-            if (sortedExercises.length === 0) {
-                container.innerHTML = '<div class="no-records">Aucun exercice personnalisé</div>';
-                return;
-            }
+            // Show ALL exercises, not just those with custom data
+            const sortedExercises = EXERCISES.sort();
             
             container.innerHTML = sortedExercises.map(name => {
-                const data = exerciseData[name];
-                const preview = data.description ? data.description.substring(0, 50) + '...' : 'Aucune description';
+                const data = exerciseData[name] || { description: '', images: [] };
+                const hasData = data.description || data.images.length > 0;
+                const preview = data.description ? data.description.substring(0, 50) + (data.description.length > 50 ? '...' : '') : 'Aucune description';
+                
                 return `
-                    <div class="exercise-list-item">
+                    <div class="exercise-list-item" style="${!hasData ? 'opacity: 0.7;' : ''}">
                         <div class="exercise-info">
-                            <div class="exercise-title">${name}</div>
+                            <div class="exercise-title">${name}${!hasData ? ' <span style="font-size: 0.8em; opacity: 0.6;">(non documenté)</span>' : ''}</div>
                             <div class="exercise-desc-preview">${preview}</div>
                         </div>
                         <div class="exercise-actions">
-                            <button class="btn-edit" onclick="editExercise('${name}')">Modifier</button>
-                            <button class="btn-delete" onclick="deleteExercise('${name}')">Supprimer</button>
+                            <button class="btn-edit" onclick="editExercise('${name}')">${hasData ? 'Modifier' : 'Ajouter description'}</button>
+                            ${hasData ? `<button class="btn-delete" onclick="deleteExerciseData('${name}')">Supprimer données</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -1493,6 +1488,12 @@
                 return;
             }
             
+            // Check if exercise exists in EXERCISES list
+            if (!EXERCISES.includes(name)) {
+                alert('Cet exercice n\'existe pas dans la liste. Veuillez choisir un exercice existant ou contacter l\'administrateur pour ajouter un nouvel exercice.');
+                return;
+            }
+            
             // Prepare exercise data
             const exerciseInfo = {
                 description: description,
@@ -1506,12 +1507,6 @@
             
             // Update local data
             exerciseData[name] = exerciseInfo;
-            
-            // Add to EXERCISES list if not already there
-            if (!EXERCISES.includes(name)) {
-                EXERCISES.push(name);
-                EXERCISES.sort();
-            }
             
             // Clear form
             document.getElementById('exerciseName').value = '';
@@ -1528,21 +1523,22 @@
             document.getElementById('saveButtonText').textContent = 'Ajouter l\'exercice';
             document.getElementById('cancelEditBtn').style.display = 'none';
             
-            alert(`Exercice "${name}" sauvegardé sur Firebase !`);
+            alert(`Documentation de "${name}" sauvegardée sur Firebase !`);
         }
 
         function editExercise(name) {
             currentEditingExercise = name;
-            const data = exerciseData[name];
+            const data = exerciseData[name] || { description: '', images: [] };
             
             document.getElementById('exerciseName').value = name;
-            document.getElementById('exerciseDescription').value = data.description;
-            imagePreviews = [...data.images];
+            document.getElementById('exerciseName').disabled = true; // Prevent changing exercise name
+            document.getElementById('exerciseDescription').value = data.description || '';
+            imagePreviews = data.images ? [...data.images] : [];
             while (imagePreviews.length < 2) imagePreviews.push(null);
             updateImagePreview();
             
-            document.getElementById('formTitle').textContent = 'Modifier l\'exercice';
-            document.getElementById('saveButtonText').textContent = 'Enregistrer les modifications';
+            document.getElementById('formTitle').textContent = data.description || data.images.length > 0 ? 'Modifier l\'exercice' : 'Ajouter une description';
+            document.getElementById('saveButtonText').textContent = 'Enregistrer';
             document.getElementById('cancelEditBtn').style.display = 'block';
             
             // Scroll to form
@@ -1552,6 +1548,7 @@
         function cancelEditExercise() {
             currentEditingExercise = null;
             document.getElementById('exerciseName').value = '';
+            document.getElementById('exerciseName').disabled = false; // Re-enable name input
             document.getElementById('exerciseDescription').value = '';
             document.getElementById('imageInput1').value = '';
             document.getElementById('imageInput2').value = '';
@@ -1563,8 +1560,8 @@
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        async function deleteExercise(name) {
-            if (confirm(`Supprimer l'exercice "${name}" ?\n\nAttention : cela ne le supprimera pas des WODs déjà créés.`)) {
+        async function deleteExerciseData(name) {
+            if (confirm(`Supprimer la description et les images de "${name}" ?\n\nL'exercice restera disponible dans la liste, mais sans documentation.`)) {
                 // Delete from Firebase
                 const deleted = await deleteExerciseFromFirebase(name);
                 
@@ -1573,14 +1570,9 @@
                 // Delete from local data
                 delete exerciseData[name];
                 
-                // Remove from EXERCISES list
-                const index = EXERCISES.indexOf(name);
-                if (index > -1) {
-                    EXERCISES.splice(index, 1);
-                }
-                
+                // Refresh list (exercise stays in EXERCISES array)
                 renderExerciseList();
-                alert(`Exercice "${name}" supprimé de Firebase !`);
+                alert(`Documentation de "${name}" supprimée !`);
             }
         }
 
