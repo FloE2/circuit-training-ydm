@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit Training - WOD</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #e0e0e0;
+        }
+
+        .setup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .setup-box {
+            background: #2d3748;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            color: #e0e0e0;
+        }
+
+        .setup-box h2 {
+            color: #4299e1;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            text-align: center;
+        }
+
+        .setup-box p {
+            color: #a0aec0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e0e0e0;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.95em;
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+            background: #1a202c;
+            color: #e0e0e0;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.4);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .container.visible {
+            display: block;
+        }
+
+        header {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #4299e1;
+            font-size: 1.8em;
+            margin-bottom: 6px;
+        }
+
+        .wod-info {
+            color: #a0aec0;
+            font-size: 0.95em;
+        }
+
+        .controls {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 2.4em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .timer-display.warning {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%); }
+            50% { background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); }
+        }
+
+        .btn-control {
+            padding: 12px 24px;
+            font-size: 0.95em;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-start {
+            background: #00C851;
+            color: white;
+        }
+
+        .btn-pause {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-control:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .main-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Adaptive grid layouts - max 3 columns to prevent overflow */
+        .main-grid.cols-1 { grid-template-columns: 1fr; }
+        .main-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .main-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .main-grid.cols-4 { grid-template-columns: repeat(3, 1fr); }
+        .main-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+        .main-grid.cols-6 { grid-template-columns: repeat(3, 1fr); }
+        .main-grid.cols-7 { grid-template-columns: repeat(3, 1fr); }
+        .main-grid.cols-8 { grid-template-columns: repeat(3, 1fr); }
+
+        .atelier-card {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .atelier-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .atelier-header {
+            background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .atelier-header h3 {
+            font-size: 1.2em;
+            margin-bottom: 3px;
+        }
+
+        .atelier-duration {
+            font-size: 0.85em;
+            opacity: 0.95;
+        }
+
+        .exercises {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #1a202c;
+            border-radius: 8px;
+            min-height: 70px;
+        }
+
+        .exercise {
+            text-align: center;
+            padding: 8px 10px;
+            background: #2d3748;
+            border-radius: 8px;
+            border: 2px solid #4299e1;
+        }
+
+        .exercise-reps {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4299e1;
+            margin-bottom: 3px;
+        }
+
+        .exercise-name {
+            font-size: 0.75em;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+
+        .plus-sign {
+            font-size: 1.8em;
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .records-section {
+            border-top: 2px dashed #4a5568;
+            padding-top: 12px;
+        }
+
+        .records-title {
+            color: #4299e1;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .record-input-form {
+            background: #1a202c;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .record-input {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .record-input input {
+            padding: 8px;
+            border: 2px solid #4a5568;
+            border-radius: 6px;
+            font-size: 0.85em;
+            background: #2d3748;
+            color: #e0e0e0;
+        }
+
+        .record-input input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .category-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .category-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #4a5568;
+            background: #2d3748;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8em;
+            transition: all 0.3s;
+            color: #e0e0e0;
+        }
+
+        .category-btn.active {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .category-btn:hover {
+            border-color: #4299e1;
+        }
+
+        .btn-add {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 0.9em;
+        }
+
+        .btn-add:hover {
+            background: #38a169;
+        }
+
+        .records-list {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .record-item {
+            background: #1a202c;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .record-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .record-name {
+            font-weight: bold;
+            color: #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        .record-category {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .category-boys { background: #3182ce; color: white; }
+        .category-girls { background: #d53f8c; color: white; }
+        .category-mixed { background: #805ad5; color: white; }
+
+        .record-score {
+            color: #4299e1;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .rankings-section {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .rankings-title {
+            color: #4299e1;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .rankings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .ranking-card {
+            background: #1a202c;
+            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid #4299e1;
+        }
+
+        .ranking-card h4 {
+            color: #4299e1;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .ranking-item {
+            background: #2d3748;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ranking-item.first { border-left: 4px solid #ffd700; }
+        .ranking-item.second { border-left: 4px solid #c0c0c0; }
+        .ranking-item.third { border-left: 4px solid #cd7f32; }
+
+        .edit-wod {
+            background: #4299e1;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            border: none;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .edit-wod:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-6 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-7 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-8 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr !important; }
+            header h1 { font-size: 1.4em; }
+            .timer-display { font-size: 1.8em; padding: 12px 20px; }
+            .controls { padding: 10px; }
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .edit-wod {
+                width: 100%;
+            }
+        }
+
+        .no-records {
+            text-align: center;
+            color: #718096;
+            padding: 15px;
+            font-style: italic;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #718096;
+            padding: 20px;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        /* Tooltip styles */
+        .exercise-tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a202c;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 250px;
+            max-width: 350px;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
+        }
+
+        .exercise-tooltip:hover .tooltip-content {
+            display: block;
+        }
+
+        .tooltip-description {
+            color: #e0e0e0;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .tooltip-images {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .tooltip-images img {
+            max-width: 120px;
+            max-height: 100px;
+            border-radius: 6px;
+            border: 1px solid #4a5568;
+        }
+
+        /* Settings modal styles */
+        .settings-section {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .exercise-list-item {
+            background: #1a202c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercise-list-item:hover {
+            background: #2d3748;
+        }
+
+        .exercise-info {
+            flex: 1;
+        }
+
+        .exercise-title {
+            color: #4299e1;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .exercise-desc-preview {
+            color: #a0aec0;
+            font-size: 0.85em;
+            font-style: italic;
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .add-exercise-form {
+            background: #1a202c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .image-upload-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border: 2px dashed #4a5568;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2d3748;
+        }
+
+        .image-preview-item img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 6px;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            background: #2d3748;
+            color: #e0e0e0;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .progress-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #718096;
+            border: 2px solid #4a5568;
+            transition: all 0.3s;
+        }
+
+        .progress-dot.completed {
+            background: #48bb78;
+            border-color: #48bb78;
+            color: white;
+        }
+
+        .progress-dot.active {
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(66, 153, 225, 0.6);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Setup Overlay -->
+    <div class="setup-overlay" id="setupOverlay">
+        <div class="setup-box">
+            <h2>Configuration du WOD</h2>
+            <p>Paramétrez votre séance de circuit training</p>
+            
+            <div class="form-group">
+                <label>Nom du WOD</label>
+                <input type="text" id="wodName" placeholder="Ex: WOD du 01/02/2026">
+            </div>
+
+            <div class="form-group">
+                <label>Nombre d'ateliers (1-8)</label>
+                <input type="number" id="numAteliers" min="1" max="8" value="3">
+            </div>
+
+            <div class="form-group">
+                <label>Durée AMRAP (minutes)</label>
+                <input type="number" id="duration" min="2" max="15" value="5">
+            </div>
+
+            <button class="btn btn-primary" onclick="setupAteliers()">
+                Configurer les ateliers
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <header>
+            <div style="display: flex; gap: 10px;">
+                <button class="edit-wod" id="editButton" onclick="resetApp()" style="display: none;">
+                    Modifier
+                </button>
+                <button class="edit-wod" id="settingsButton" onclick="openSettings()" style="display: none;">
+                    Paramètres
+                </button>
+            </div>
+            <div class="header-content">
+                <h1><span id="headerWodName">Circuit Training</span></h1>
+                <div class="wod-info" id="wodInfo"></div>
+            </div>
+            <div style="width: 100px;"></div>
+        </header>
+
+        <div class="controls">
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            <button class="btn-control btn-start" onclick="startTimer()">Démarrer</button>
+            <button class="btn-control btn-pause" onclick="pauseTimer()">Pause</button>
+            <button class="btn-control btn-reset" onclick="resetTimer()">Réinitialiser</button>
+        </div>
+
+        <!-- Global Rankings -->
+        <div class="rankings-section" id="globalRankings" style="display: none;">
+            <h3 class="rankings-title">Classement Général du WOD</h3>
+            <div class="rankings-grid">
+                <div class="ranking-card">
+                    <h4>Top 3 Global</h4>
+                    <div id="globalTop3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ateliers Grid -->
+        <div class="main-grid" id="ateliersGrid"></div>
+
+        <!-- Copyright Footer -->
+        <div class="copyright">
+            © EUDE Florian - YDM
+        </div>
+    </div>
+
+    <!-- Atelier Configuration Modal -->
+    <div class="setup-overlay" id="atelierSetupOverlay" style="display: none;">
+        <div class="setup-box">
+            <div style="margin-bottom: 15px;">
+                <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;" id="atelierProgress"></div>
+            </div>
+            
+            <h2>Configuration Atelier <span id="currentAtelierNum"></span></h2>
+            
+            <div class="form-group">
+                <label>Nombre d'exercices (1-5)</label>
+                <input type="number" id="numExercises" min="1" max="5" value="2">
+            </div>
+
+            <div id="exercisesConfig"></div>
+
+            <button class="btn btn-primary" onclick="saveAtelierConfig()">
+                Valider cet atelier
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="setup-overlay" id="settingsOverlay" style="display: none;">
+        <div class="setup-box" style="max-width: 800px;">
+            <h2>Gestion des Exercices</h2>
+            <p>Ajoutez, modifiez ou supprimez des exercices</p>
+
+            <!-- Add/Edit Exercise Form -->
+            <div class="add-exercise-form">
+                <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Ajouter un exercice</h3>
+                
+                <div class="form-group">
+                    <label>Nom de l'exercice</label>
+                    <input type="text" id="exerciseName" placeholder="Ex: Air Squat">
+                </div>
+
+                <div class="form-group">
+                    <label>Description courte</label>
+                    <textarea id="exerciseDescription" placeholder="Ex: Squat avec saut à l'extension" maxlength="150"></textarea>
+                    <small style="color: #718096;">Maximum 150 caractères</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Images (max 2)</label>
+                    <input type="file" id="imageInput1" accept="image/*" onchange="previewImage(0)" style="margin-bottom: 8px;">
+                    <input type="file" id="imageInput2" accept="image/*" onchange="previewImage(1)">
+                    <div class="image-upload-preview" id="imagePreviewContainer"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="saveExercise()" style="flex: 1;">
+                        <span id="saveButtonText">Ajouter l'exercice</span>
+                    </button>
+                    <button class="btn" onclick="cancelEditExercise()" id="cancelEditBtn" style="display: none; background: #718096; color: white;">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exercise List -->
+            <div class="settings-section">
+                <h3 style="color: #4299e1; margin-bottom: 15px;">Liste des exercices</h3>
+                <div id="exerciseListContainer"></div>
+            </div>
+
+            <button class="btn btn-primary" onclick="closeSettings()" style="margin-top: 20px;">
+                Fermer
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        const EXERCISES = [
+            'Air Squat',
+            'Box Jump Over',
+            'Burpees',
+            'Burpees Pogo',
+            'Butterfly Sit Ups',
+            'Farmer Carry',
+            'Inchworm',
+            'Jumping Jack',
+            'KB High Pull',
+            'KB Swing US',
+            'Knee to Jump',
+            'Lunge Jumps',
+            'MB Russian Twist',
+            'Push Up',
+            'Side Shuffle',
+            'Single Under',
+            'Squat Jumps',
+            'Up & Down Planks',
+            'Wall Ball'
+        ].sort();
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBc0dO60IWnrpgUJ80DPR2foE7_4VXwQx8",
+            authDomain: "circuit-training-college-ydm.firebaseapp.com",
+            databaseURL: "https://circuit-training-college-ydm-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "circuit-training-college-ydm",
+            storageBucket: "circuit-training-college-ydm.firebasestorage.app",
+            messagingSenderId: "795066582832",
+            appId: "1:795066582832:web:90897fb3c24b9b2dae2af5"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Exercise database with descriptions and images
+        let exerciseData = {
+            'Air Squat': {
+                description: 'Squat avec saut à l\'extension',
+                images: []
+            }
+        };
+
+        let currentEditingExercise = null;
+        let imagePreviews = [null, null];
+
+        let wodConfig = {
+            name: '',
+            numAteliers: 3,
+            duration: 5,
+            ateliers: []
+        };
+
+        let currentAtelierIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 0;
+        let isRunning = false;
+        let selectedCategories = {};
+
+        // Audio context for beep
+        let audioContext = null;
+
+        function playBeep() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Play 3 beeps
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                }, i * 400);
+            }
+        }
+
+        function setupAteliers() {
+            const name = document.getElementById('wodName').value.trim();
+            const num = parseInt(document.getElementById('numAteliers').value);
+            const duration = parseInt(document.getElementById('duration').value);
+
+            if (num < 1 || num > 8) {
+                alert('Le nombre d\'ateliers doit être entre 1 et 8');
+                return;
+            }
+
+            if (duration < 2 || duration > 15) {
+                alert('La durée doit être entre 2 et 15 minutes');
+                return;
+            }
+
+            wodConfig.name = name || 'Circuit Training';
+            wodConfig.numAteliers = num;
+            wodConfig.duration = duration;
+            wodConfig.ateliers = [];
+
+            document.getElementById('setupOverlay').style.display = 'none';
+            currentAtelierIndex = 0;
+            showAtelierConfig();
+        }
+
+        function showAtelierConfig() {
+            if (currentAtelierIndex >= wodConfig.numAteliers) {
+                finishSetup();
+                return;
+            }
+
+            document.getElementById('atelierSetupOverlay').style.display = 'flex';
+            document.getElementById('currentAtelierNum').textContent = currentAtelierIndex + 1;
+            
+            // Update progress dots
+            updateProgressDots();
+            
+            // Add slide-in animation
+            const setupBox = document.querySelector('#atelierSetupOverlay .setup-box');
+            setupBox.classList.remove('slide-in');
+            void setupBox.offsetWidth; // Force reflow
+            setupBox.classList.add('slide-in');
+            
+            const numExercises = parseInt(document.getElementById('numExercises').value) || 2;
+            generateExerciseInputs(numExercises);
+            
+            document.getElementById('numExercises').onchange = function() {
+                const num = parseInt(this.value);
+                if (num >= 1 && num <= 5) {
+                    generateExerciseInputs(num);
+                }
+            };
+        }
+
+        function updateProgressDots() {
+            const progressContainer = document.getElementById('atelierProgress');
+            progressContainer.innerHTML = '';
+            
+            for (let i = 0; i < wodConfig.numAteliers; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                dot.textContent = i + 1;
+                
+                if (i < currentAtelierIndex) {
+                    dot.classList.add('completed');
+                } else if (i === currentAtelierIndex) {
+                    dot.classList.add('active');
+                }
+                
+                progressContainer.appendChild(dot);
+            }
+        }
+
+        function generateExerciseInputs(num) {
+            const container = document.getElementById('exercisesConfig');
+            container.innerHTML = '';
+
+            for (let i = 0; i < num; i++) {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                group.innerHTML = `
+                    <label>Exercice ${i + 1}</label>
+                    <select id="exercise_${i}" style="margin-bottom: 6px;">
+                        ${EXERCISES.map(ex => `<option value="${ex}">${ex}</option>`).join('')}
+                    </select>
+                    <input type="number" id="reps_${i}" min="1" max="100" value="10" placeholder="Répétitions">
+                `;
+                container.appendChild(group);
+            }
+        }
+
+        function saveAtelierConfig() {
+            const numEx = parseInt(document.getElementById('numExercises').value);
+            const exercises = [];
+
+            for (let i = 0; i < numEx; i++) {
+                const name = document.getElementById(`exercise_${i}`).value;
+                const reps = parseInt(document.getElementById(`reps_${i}`).value);
+                
+                if (reps < 1 || reps > 100) {
+                    alert('Les répétitions doivent être entre 1 et 100');
+                    return;
+                }
+                
+                exercises.push({ name, reps });
+            }
+
+            wodConfig.ateliers.push({
+                exercises: exercises,
+                records: []
+            });
+
+            currentAtelierIndex++;
+            showAtelierConfig();
+        }
+
+        function finishSetup() {
+            document.getElementById('atelierSetupOverlay').style.display = 'none';
+            document.getElementById('mainContainer').classList.add('visible');
+            document.getElementById('editButton').style.display = 'block';
+            document.getElementById('settingsButton').style.display = 'block';
+            
+            renderWOD();
+            resetTimer();
+        }
+
+        function renderWOD() {
+            document.getElementById('headerWodName').textContent = wodConfig.name;
+            document.getElementById('wodInfo').textContent = 
+                `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${wodConfig.duration} min - Format AMRAP (travail en alterné)`;
+
+            const grid = document.getElementById('ateliersGrid');
+            grid.className = `main-grid cols-${wodConfig.numAteliers}`;
+            grid.innerHTML = '';
+
+            wodConfig.ateliers.forEach((atelier, index) => {
+                selectedCategories[index] = 'mixed';
+                
+                const card = document.createElement('div');
+                card.className = 'atelier-card';
+                
+                const exercisesHTML = atelier.exercises.map((ex, i) => {
+                    const exData = exerciseData[ex.name] || { description: '', images: [] };
+                    const tooltipHTML = (exData.description || exData.images.length > 0) ? `
+                        <div class="tooltip-content">
+                            ${exData.description ? `<div class="tooltip-description">${exData.description}</div>` : ''}
+                            ${exData.images.length > 0 ? `
+                                <div class="tooltip-images">
+                                    ${exData.images.map(img => `<img src="${img}" alt="${ex.name}">`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : '';
+                    
+                    return `
+                    <div class="exercise exercise-tooltip">
+                        <div class="exercise-reps">${ex.reps}</div>
+                        <div class="exercise-name">${ex.name}</div>
+                        ${tooltipHTML}
+                    </div>
+                    ${i < atelier.exercises.length - 1 ? '<div class="plus-sign">+</div>' : ''}
+                `}).join('');
+
+                card.innerHTML = `
+                    <div class="atelier-header">
+                        <h3>Atelier ${index + 1}</h3>
+                        <div class="atelier-duration">${wodConfig.duration}' - AMRAP</div>
+                    </div>
+                    
+                    <div class="exercises">
+                        ${exercisesHTML}
+                    </div>
+                    
+                    <div class="records-section">
+                        <div class="records-title">Ajouter un résultat</div>
+                        <div class="record-input-form">
+                            <div class="category-selector">
+                                <button class="category-btn active" onclick="selectCategory(${index}, 'mixed')">Mixte</button>
+                                <button class="category-btn" onclick="selectCategory(${index}, 'boys')">Garçons</button>
+                                <button class="category-btn" onclick="selectCategory(${index}, 'girls')">Filles</button>
+                            </div>
+                            <div class="record-input">
+                                <input type="text" placeholder="Prénom(s) - ex: Tom & Léa" id="name_${index}">
+                                <input type="number" placeholder="Répétitions" id="score_${index}" min="0">
+                            </div>
+                            <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
+                        </div>
+                        <div class="records-title" style="margin-top: 15px;">Top 3</div>
+                        <div class="records-list" id="records_${index}">
+                            <div class="no-records">Aucun résultat pour le moment</div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function selectCategory(atelierIndex, category) {
+            selectedCategories[atelierIndex] = category;
+            
+            const card = document.querySelector(`#records_${atelierIndex}`).closest('.atelier-card');
+            const buttons = card.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const categoryMap = { 'mixed': 0, 'boys': 1, 'girls': 2 };
+            buttons[categoryMap[category]].classList.add('active');
+        }
+
+        function addRecord(atelierIndex) {
+            const name = document.getElementById(`name_${atelierIndex}`).value.trim();
+            const score = parseInt(document.getElementById(`score_${atelierIndex}`).value);
+            const category = selectedCategories[atelierIndex] || 'mixed';
+
+            if (!name || !score || score < 0) {
+                alert('Entrez un nom d\'équipe et un score valide');
+                return;
+            }
+
+            wodConfig.ateliers[atelierIndex].records.push({ name, score, category });
+            wodConfig.ateliers[atelierIndex].records.sort((a, b) => b.score - a.score);
+
+            document.getElementById(`name_${atelierIndex}`).value = '';
+            document.getElementById(`score_${atelierIndex}`).value = '';
+
+            updateRecordsList(atelierIndex);
+            updateGlobalRankings();
+        }
+
+        function updateRecordsList(atelierIndex) {
+            const list = document.getElementById(`records_${atelierIndex}`);
+            const records = wodConfig.ateliers[atelierIndex].records.slice(0, 3);
+
+            if (records.length === 0) {
+                list.innerHTML = '<div class="no-records">Aucun résultat pour le moment</div>';
+                return;
+            }
+
+            const rankClass = ['first', 'second', 'third'];
+            const ranks = ['1er', '2ème', '3ème'];
+            const categoryLabels = {
+                'boys': 'Garçons',
+                'girls': 'Filles',
+                'mixed': 'Mixte'
+            };
+
+            list.innerHTML = records.map((r, i) => `
+                <div class="record-item ${rankClass[i]}">
+                    <div class="record-info">
+                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <div>
+                            <div class="record-name">${r.name}</div>
+                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                        </div>
+                    </div>
+                    <span class="record-score">${r.score} reps</span>
+                </div>
+            `).join('');
+        }
+
+        function updateGlobalRankings() {
+            const allGroups = {};
+            
+            // Aggregate scores for all groups
+            wodConfig.ateliers.forEach(atelier => {
+                atelier.records.forEach(record => {
+                    if (!allGroups[record.name]) {
+                        allGroups[record.name] = {
+                            name: record.name,
+                            category: record.category,
+                            totalScore: 0,
+                            atelierCount: 0
+                        };
+                    }
+                    allGroups[record.name].totalScore += record.score;
+                    allGroups[record.name].atelierCount++;
+                });
+            });
+
+            // Convert to array and sort
+            const rankings = Object.values(allGroups)
+                .filter(g => g.atelierCount === wodConfig.numAteliers)
+                .sort((a, b) => b.totalScore - a.totalScore)
+                .slice(0, 3);
+
+            if (rankings.length > 0) {
+                document.getElementById('globalRankings').style.display = 'block';
+                displayGlobalTop3(rankings);
+            }
+        }
+
+        function displayGlobalTop3(rankings) {
+            const container = document.getElementById('globalTop3');
+            
+            if (rankings.length === 0) {
+                container.innerHTML = '<div class="no-records">Aucune équipe n\'a terminé tous les ateliers</div>';
+                return;
+            }
+
+            const rankClass = ['first', 'second', 'third'];
+            const ranks = ['1er', '2ème', '3ème'];
+            const categoryLabels = {
+                'boys': 'Garçons',
+                'girls': 'Filles',
+                'mixed': 'Mixte'
+            };
+
+            container.innerHTML = rankings.map((r, i) => `
+                <div class="ranking-item ${rankClass[i]}">
+                    <div class="record-info">
+                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <div>
+                            <div class="record-name">${r.name}</div>
+                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                        </div>
+                    </div>
+                    <span class="record-score">${r.totalScore} reps</span>
+                </div>
+            `).join('');
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                if (timeLeft === 0) {
+                    timeLeft = wodConfig.duration * 60;
+                }
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            timeLeft = wodConfig.duration * 60;
+            updateDisplay();
+            document.getElementById('timerDisplay').classList.remove('warning');
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+                
+                // Warning in last 10 seconds
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    document.getElementById('timerDisplay').classList.add('warning');
+                }
+                
+                if (timeLeft === 0) {
+                    pauseTimer();
+                    document.getElementById('timerDisplay').classList.remove('warning');
+                    playBeep();
+                    // Wait for beeps to finish before showing alert
+                    setTimeout(() => {
+                        alert('TEMPS ÉCOULÉ ! STOP !');
+                    }, 1200); // 3 beeps × 400ms = 1200ms
+                }
+            }
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function resetApp() {
+            if (confirm('Recommencer la configuration ? Tous les résultats seront perdus.')) {
+                location.reload();
+            }
+        }
+
+        // Settings functions
+        function openSettings() {
+            document.getElementById('settingsOverlay').style.display = 'flex';
+            renderExerciseList();
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsOverlay').style.display = 'none';
+            cancelEditExercise();
+        }
+
+        // Load exercises from Firebase
+        async function loadExercisesFromFirebase() {
+            try {
+                const snapshot = await database.ref('exercises').once('value');
+                if (snapshot.exists()) {
+                    const firebaseExercises = snapshot.val();
+                    
+                    // Merge Firebase data with exerciseData
+                    exerciseData = { ...exerciseData, ...firebaseExercises };
+                    
+                    // Update EXERCISES list
+                    Object.keys(firebaseExercises).forEach(name => {
+                        if (!EXERCISES.includes(name)) {
+                            EXERCISES.push(name);
+                        }
+                    });
+                    EXERCISES.sort();
+                }
+            } catch (error) {
+                console.error('Erreur chargement Firebase:', error);
+            }
+        }
+
+        // Save exercise to Firebase
+        async function saveExerciseToFirebase(name, data) {
+            try {
+                await database.ref('exercises/' + name).set(data);
+                return true;
+            } catch (error) {
+                console.error('Erreur sauvegarde Firebase:', error);
+                alert('Erreur lors de la sauvegarde sur Firebase');
+                return false;
+            }
+        }
+
+        // Delete exercise from Firebase
+        async function deleteExerciseFromFirebase(name) {
+            try {
+                await database.ref('exercises/' + name).remove();
+                return true;
+            } catch (error) {
+                console.error('Erreur suppression Firebase:', error);
+                return false;
+            }
+        }
+
+        function renderExerciseList() {
+            const container = document.getElementById('exerciseListContainer');
+            const sortedExercises = Object.keys(exerciseData).sort();
+            
+            if (sortedExercises.length === 0) {
+                container.innerHTML = '<div class="no-records">Aucun exercice personnalisé</div>';
+                return;
+            }
+            
+            container.innerHTML = sortedExercises.map(name => {
+                const data = exerciseData[name];
+                const preview = data.description ? data.description.substring(0, 50) + '...' : 'Aucune description';
+                return `
+                    <div class="exercise-list-item">
+                        <div class="exercise-info">
+                            <div class="exercise-title">${name}</div>
+                            <div class="exercise-desc-preview">${preview}</div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button class="btn-edit" onclick="editExercise('${name}')">Modifier</button>
+                            <button class="btn-delete" onclick="deleteExercise('${name}')">Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function previewImage(index) {
+            const input = document.getElementById(`imageInput${index + 1}`);
+            const file = input.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreviews[index] = e.target.result;
+                    updateImagePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateImagePreview() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = imagePreviews.map((img, i) => {
+                if (!img) return '';
+                return `
+                    <div class="image-preview-item">
+                        <img src="${img}" alt="Preview ${i + 1}">
+                        <button class="remove-image" onclick="removeImage(${i})">×</button>
+                    </div>
+                `;
+            }).filter(Boolean).join('');
+        }
+
+        function removeImage(index) {
+            imagePreviews[index] = null;
+            document.getElementById(`imageInput${index + 1}`).value = '';
+            updateImagePreview();
+        }
+
+        async function saveExercise() {
+            const name = document.getElementById('exerciseName').value.trim();
+            const description = document.getElementById('exerciseDescription').value.trim();
+            
+            if (!name) {
+                alert('Entrez un nom d\'exercice');
+                return;
+            }
+            
+            // Prepare exercise data
+            const exerciseInfo = {
+                description: description,
+                images: imagePreviews.filter(Boolean)
+            };
+            
+            // Save to Firebase
+            const saved = await saveExerciseToFirebase(name, exerciseInfo);
+            
+            if (!saved) return;
+            
+            // Update local data
+            exerciseData[name] = exerciseInfo;
+            
+            // Add to EXERCISES list if not already there
+            if (!EXERCISES.includes(name)) {
+                EXERCISES.push(name);
+                EXERCISES.sort();
+            }
+            
+            // Clear form
+            document.getElementById('exerciseName').value = '';
+            document.getElementById('exerciseDescription').value = '';
+            document.getElementById('imageInput1').value = '';
+            document.getElementById('imageInput2').value = '';
+            imagePreviews = [null, null];
+            updateImagePreview();
+            
+            // Refresh list
+            renderExerciseList();
+            currentEditingExercise = null;
+            document.getElementById('formTitle').textContent = 'Ajouter un exercice';
+            document.getElementById('saveButtonText').textContent = 'Ajouter l\'exercice';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            
+            alert(`Exercice "${name}" sauvegardé sur Firebase !`);
+        }
+
+        function editExercise(name) {
+            currentEditingExercise = name;
+            const data = exerciseData[name];
+            
+            document.getElementById('exerciseName').value = name;
+            document.getElementById('exerciseDescription').value = data.description;
+            imagePreviews = [...data.images];
+            while (imagePreviews.length < 2) imagePreviews.push(null);
+            updateImagePreview();
+            
+            document.getElementById('formTitle').textContent = 'Modifier l\'exercice';
+            document.getElementById('saveButtonText').textContent = 'Enregistrer les modifications';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            
+            // Scroll to form
+            document.querySelector('.add-exercise-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelEditExercise() {
+            currentEditingExercise = null;
+            document.getElementById('exerciseName').value = '';
+            document.getElementById('exerciseDescription').value = '';
+            document.getElementById('imageInput1').value = '';
+            document.getElementById('imageInput2').value = '';
+            imagePreviews = [null, null];
+            updateImagePreview();
+            
+            document.getElementById('formTitle').textContent = 'Ajouter un exercice';
+            document.getElementById('saveButtonText').textContent = 'Ajouter l\'exercice';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        async function deleteExercise(name) {
+            if (confirm(`Supprimer l'exercice "${name}" ?\n\nAttention : cela ne le supprimera pas des WODs déjà créés.`)) {
+                // Delete from Firebase
+                const deleted = await deleteExerciseFromFirebase(name);
+                
+                if (!deleted) return;
+                
+                // Delete from local data
+                delete exerciseData[name];
+                
+                // Remove from EXERCISES list
+                const index = EXERCISES.indexOf(name);
+                if (index > -1) {
+                    EXERCISES.splice(index, 1);
+                }
+                
+                renderExerciseList();
+                alert(`Exercice "${name}" supprimé de Firebase !`);
+            }
+        }
+
+        // Initialize
+        window.onload = async function() {
+            generateExerciseInputs(2);
+            // Load exercises from Firebase
+            await loadExercisesFromFirebase();
+        };
+    </script>
+</body>
+</html>
