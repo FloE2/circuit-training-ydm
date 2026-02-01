@@ -1713,9 +1713,18 @@
 
         async function saveWODToFirebase() {
             try {
+                // Ensure wodConfig has required fields
+                if (!wodConfig.name) {
+                    alert('Le WOD doit avoir un nom');
+                    return false;
+                }
+                
                 const wodData = {
-                    ...wodConfig,
-                    createdAt: currentWODId ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
+                    name: wodConfig.name,
+                    numAteliers: wodConfig.numAteliers,
+                    duration: wodConfig.duration,
+                    ateliers: wodConfig.ateliers,
+                    createdAt: currentWODId && savedWODs[currentWODId] ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 };
                 
@@ -1731,18 +1740,23 @@
                 return true;
             } catch (error) {
                 console.error('Erreur sauvegarde WOD:', error);
-                alert('Erreur lors de la sauvegarde du WOD');
+                console.error('WOD data:', wodConfig);
+                alert('Erreur lors de la sauvegarde du WOD: ' + error.message);
                 return false;
             }
         }
 
         function backToConfig() {
             document.getElementById('saveLaunchScreen').style.display = 'none';
+            // Go back to the last atelier configuration
+            currentAtelierIndex = Math.max(0, wodConfig.ateliers.length - 1);
+            document.getElementById('atelierSetupOverlay').style.display = 'flex';
+            showAtelierConfig();
         }
 
         async function launchNow() {
             document.getElementById('saveLaunchScreen').style.display = 'none';
-            finishSetup();
+            showMainContainer();
         }
 
         async function saveForLater() {
