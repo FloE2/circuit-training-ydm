@@ -1310,6 +1310,14 @@
         function finishSetup() {
             document.getElementById('atelierSetupOverlay').style.display = 'none';
             
+            // Ensure all ateliers are configured
+            if (wodConfig.ateliers.length < wodConfig.numAteliers) {
+                alert('Erreur : Tous les ateliers ne sont pas configurés. Veuillez recommencer.');
+                currentAtelierIndex = 0;
+                showAtelierConfig();
+                return;
+            }
+            
             // If coming from a loaded WOD, go directly to main container
             if (currentWODId && savedWODs[currentWODId]) {
                 showMainContainer();
@@ -1320,6 +1328,13 @@
         }
 
         function showMainContainer() {
+            // Ensure wodConfig is valid
+            if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
+                alert('Erreur : WOD invalide. Veuillez reconfigurer.');
+                location.reload();
+                return;
+            }
+            
             document.getElementById('mainContainer').classList.add('visible');
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('settingsButton').style.display = 'block';
@@ -1329,6 +1344,14 @@
         }
 
         function renderWOD() {
+            console.log('Rendering WOD:', wodConfig);
+            
+            if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
+                console.error('No ateliers found in wodConfig');
+                alert('Erreur : Aucun atelier trouvé. Veuillez reconfigurer le WOD.');
+                return;
+            }
+            
             document.getElementById('headerWodName').textContent = wodConfig.name;
             document.getElementById('wodInfo').textContent = 
                 `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${wodConfig.duration} min - Format AMRAP (travail en alterné)`;
@@ -1338,6 +1361,8 @@
             grid.innerHTML = '';
 
             wodConfig.ateliers.forEach((atelier, index) => {
+                console.log(`Rendering atelier ${index + 1}:`, atelier);
+                
                 selectedCategories[index] = 'mixed';
                 
                 const card = document.createElement('div');
@@ -1345,10 +1370,12 @@
                 
                 const exercisesHTML = atelier.exercises.map((ex, i) => {
                     const exData = exerciseData[ex.name] || { description: '', images: [] };
-                    const tooltipHTML = (exData.description || exData.images.length > 0) ? `
+                    const hasTooltip = exData.description || (exData.images && exData.images.length > 0);
+                    
+                    const tooltipHTML = hasTooltip ? `
                         <div class="tooltip-content">
                             ${exData.description ? `<div class="tooltip-description">${exData.description}</div>` : ''}
-                            ${exData.images.length > 0 ? `
+                            ${exData.images && exData.images.length > 0 ? `
                                 <div class="tooltip-images">
                                     ${exData.images.map(img => `<img src="${img}" alt="${ex.name}">`).join('')}
                                 </div>
@@ -1357,7 +1384,7 @@
                     ` : '';
                     
                     return `
-                    <div class="exercise exercise-tooltip">
+                    <div class="exercise ${hasTooltip ? 'exercise-tooltip' : ''}">
                         <div class="exercise-reps">${ex.reps}</div>
                         <div class="exercise-name">${ex.name}</div>
                         ${tooltipHTML}
@@ -1398,6 +1425,8 @@
                 
                 grid.appendChild(card);
             });
+            
+            console.log(`Successfully rendered ${wodConfig.ateliers.length} ateliers`);
         }
 
         function selectCategory(atelierIndex, category) {
