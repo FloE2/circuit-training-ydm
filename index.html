@@ -874,15 +874,15 @@
             <p>Gestion de vos séances de WOD</p>
             
             <button class="btn btn-primary" onclick="createNewWOD()" style="margin-bottom: 15px; padding: 20px; font-size: 1.2em;">
-                ➕ Nouveau WOD
+                Nouveau WOD
             </button>
             
             <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em; margin-bottom: 15px;">
-                📚 Mes WODs sauvegardés
+                Mes WODs sauvegardés
             </button>
 
             <button class="btn btn-primary" onclick="openSettingsFromWelcome()" style="background: #ed8936; padding: 20px; font-size: 1.2em;">
-                ⚙️ Gérer les exercices
+                Gérer les exercices
             </button>
         </div>
     </div>
@@ -890,13 +890,13 @@
     <!-- My WODs List -->
     <div class="setup-overlay" id="myWODsScreen" style="display: none;">
         <div class="setup-box" style="max-width: 900px;">
-            <h2>📚 Mes WODs sauvegardés</h2>
+            <h2>Mes WODs sauvegardés</h2>
             <p>Chargez, modifiez ou supprimez vos WODs</p>
             
             <div id="wodsList" style="margin: 20px 0; max-height: 60vh; overflow-y: auto;"></div>
             
             <button class="btn" onclick="backToWelcome()" style="background: #718096; color: white;">
-                ← Retour
+                Retour
             </button>
         </div>
     </div>
@@ -1049,19 +1049,19 @@
     <!-- Save or Launch Screen -->
     <div class="save-launch-screen" id="saveLaunchScreen">
         <div class="save-launch-box">
-            <h3>WOD configuré ! ✅</h3>
+            <h3>WOD configuré</h3>
             <p style="color: #a0aec0; margin-bottom: 25px;">Que souhaitez-vous faire ?</p>
             
             <button class="btn btn-primary" onclick="launchNow()" style="background: #48bb78;">
-                ▶️ Lancer maintenant
+                Lancer maintenant
             </button>
             
             <button class="btn btn-primary" onclick="saveForLater()">
-                💾 Sauvegarder pour plus tard
+                Sauvegarder pour plus tard
             </button>
             
             <button class="btn" onclick="backToConfig()" style="background: #718096; color: white;">
-                ← Retour à la config
+                Retour à la config
             </button>
         </div>
     </div>
@@ -1630,10 +1630,10 @@
                             </div>
                             <div class="wod-card-preview">${preview.substring(0, 150)}${preview.length > 150 ? '...' : ''}</div>
                             <div class="wod-card-actions">
-                                <button class="btn-wod btn-load" onclick="loadWOD('${wod.id}')">▶️ Charger</button>
-                                <button class="btn-wod btn-modify" onclick="modifyWOD('${wod.id}')">✏️ Modifier</button>
-                                <button class="btn-wod btn-duplicate" onclick="duplicateWOD('${wod.id}')">📋 Dupliquer</button>
-                                <button class="btn-wod btn-delete-wod" onclick="deleteWOD('${wod.id}')">🗑️ Supprimer</button>
+                                <button class="btn-wod btn-load" onclick="loadWOD('${wod.id}')">Charger</button>
+                                <button class="btn-wod btn-modify" onclick="modifyWOD('${wod.id}')">Modifier</button>
+                                <button class="btn-wod btn-duplicate" onclick="duplicateWOD('${wod.id}')">Dupliquer</button>
+                                <button class="btn-wod btn-delete-wod" onclick="deleteWOD('${wod.id}')">Supprimer</button>
                             </div>
                         </div>
                     `;
