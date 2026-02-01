@@ -746,18 +746,166 @@
         .slide-in {
             animation: slideIn 0.4s ease-out;
         }
+
+        /* WOD List Styles */
+        .wod-card {
+            background: #1a202c;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #4a5568;
+            transition: all 0.3s;
+        }
+
+        .wod-card:hover {
+            border-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        .wod-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .wod-card-title {
+            color: #4299e1;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .wod-card-info {
+            color: #a0aec0;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .wod-card-preview {
+            background: #2d3748;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            color: #e0e0e0;
+        }
+
+        .wod-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-wod {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-load {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-modify {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-duplicate {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-delete-wod {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-wod:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .save-launch-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .save-launch-box {
+            background: #2d3748;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .save-launch-box h3 {
+            color: #4299e1;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .save-launch-box button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 15px;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
-    <!-- Setup Overlay -->
-    <div class="setup-overlay" id="setupOverlay">
+    <!-- Welcome Screen -->
+    <div class="setup-overlay" id="welcomeScreen">
+        <div class="setup-box" style="max-width: 500px;">
+            <h2>Circuit Training</h2>
+            <p>Gestion de vos séances de WOD</p>
+            
+            <button class="btn btn-primary" onclick="createNewWOD()" style="margin-bottom: 15px; padding: 20px; font-size: 1.2em;">
+                ➕ Nouveau WOD
+            </button>
+            
+            <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em;">
+                📚 Mes WODs sauvegardés
+            </button>
+        </div>
+    </div>
+
+    <!-- My WODs List -->
+    <div class="setup-overlay" id="myWODsScreen" style="display: none;">
+        <div class="setup-box" style="max-width: 900px;">
+            <h2>📚 Mes WODs sauvegardés</h2>
+            <p>Chargez, modifiez ou supprimez vos WODs</p>
+            
+            <div id="wodsList" style="margin: 20px 0; max-height: 60vh; overflow-y: auto;"></div>
+            
+            <button class="btn" onclick="backToWelcome()" style="background: #718096; color: white;">
+                ← Retour
+            </button>
+        </div>
+    </div>
+
+    <!-- Setup WOD Configuration -->
+    <div class="setup-overlay" id="setupOverlay" style="display: none;">
         <div class="setup-box">
             <h2>Configuration du WOD</h2>
             <p>Paramétrez votre séance de circuit training</p>
             
             <div class="form-group">
                 <label>Nom du WOD</label>
-                <input type="text" id="wodName" placeholder="Ex: WOD du 01/02/2026">
+                <input type="text" id="wodName" placeholder="Ex: WOD Cardio 5ème">
             </div>
 
             <div class="form-group">
@@ -894,6 +1042,26 @@
         </div>
     </div>
 
+    <!-- Save or Launch Screen -->
+    <div class="save-launch-screen" id="saveLaunchScreen">
+        <div class="save-launch-box">
+            <h3>WOD configuré ! ✅</h3>
+            <p style="color: #a0aec0; margin-bottom: 25px;">Que souhaitez-vous faire ?</p>
+            
+            <button class="btn btn-primary" onclick="launchNow()" style="background: #48bb78;">
+                ▶️ Lancer maintenant
+            </button>
+            
+            <button class="btn btn-primary" onclick="saveForLater()">
+                💾 Sauvegarder pour plus tard
+            </button>
+            
+            <button class="btn" onclick="backToConfig()" style="background: #718096; color: white;">
+                ← Retour à la config
+            </button>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -948,6 +1116,9 @@
             ateliers: []
         };
 
+        let currentWODId = null; // Track if we're editing an existing WOD
+        let savedWODs = {}; // Cache of saved WODs
+
         let currentAtelierIndex = 0;
         let timerInterval = null;
         let timeLeft = 0;
@@ -998,13 +1169,24 @@
                 return;
             }
 
-            wodConfig.name = name || 'Circuit Training';
+            if (!name) {
+                alert('Donnez un nom à votre WOD');
+                return;
+            }
+
+            wodConfig.name = name;
             wodConfig.numAteliers = num;
             wodConfig.duration = duration;
-            wodConfig.ateliers = [];
-
-            document.getElementById('setupOverlay').style.display = 'none';
+            
+            // If modifying existing WOD, keep existing ateliers that are still valid
+            if (wodConfig.ateliers.length > num) {
+                wodConfig.ateliers = wodConfig.ateliers.slice(0, num);
+            }
+            
+            // Start from first atelier
             currentAtelierIndex = 0;
+            
+            document.getElementById('setupOverlay').style.display = 'none';
             showAtelierConfig();
         }
 
@@ -1026,8 +1208,20 @@
             void setupBox.offsetWidth; // Force reflow
             setupBox.classList.add('slide-in');
             
-            const numExercises = parseInt(document.getElementById('numExercises').value) || 2;
+            // If atelier exists, pre-fill it
+            const existingAtelier = wodConfig.ateliers[currentAtelierIndex];
+            const numExercises = existingAtelier ? existingAtelier.exercises.length : 2;
+            
+            document.getElementById('numExercises').value = numExercises;
             generateExerciseInputs(numExercises);
+            
+            // Fill existing exercise data if modifying
+            if (existingAtelier) {
+                existingAtelier.exercises.forEach((ex, i) => {
+                    document.getElementById(`exercise_${i}`).value = ex.name;
+                    document.getElementById(`reps_${i}`).value = ex.reps;
+                });
+            }
             
             document.getElementById('numExercises').onchange = function() {
                 const num = parseInt(this.value);
@@ -1090,10 +1284,20 @@
                 exercises.push({ name, reps });
             }
 
-            wodConfig.ateliers.push({
-                exercises: exercises,
-                records: []
-            });
+            // Update or add atelier
+            if (wodConfig.ateliers[currentAtelierIndex]) {
+                // Update existing
+                wodConfig.ateliers[currentAtelierIndex] = {
+                    exercises: exercises,
+                    records: wodConfig.ateliers[currentAtelierIndex].records || []
+                };
+            } else {
+                // Add new
+                wodConfig.ateliers.push({
+                    exercises: exercises,
+                    records: []
+                });
+            }
 
             currentAtelierIndex++;
             showAtelierConfig();
@@ -1101,6 +1305,17 @@
 
         function finishSetup() {
             document.getElementById('atelierSetupOverlay').style.display = 'none';
+            
+            // If coming from a loaded WOD, go directly to main container
+            if (currentWODId && savedWODs[currentWODId]) {
+                showMainContainer();
+            } else {
+                // Show save or launch choice
+                document.getElementById('saveLaunchScreen').style.display = 'flex';
+            }
+        }
+
+        function showMainContainer() {
             document.getElementById('mainContainer').classList.add('visible');
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('settingsButton').style.display = 'block';
@@ -1360,6 +1575,177 @@
         function resetApp() {
             if (confirm('Recommencer la configuration ? Tous les résultats seront perdus.')) {
                 location.reload();
+            }
+        }
+
+        // WOD Management Functions
+        function createNewWOD() {
+            currentWODId = null;
+            wodConfig = { name: '', numAteliers: 3, duration: 5, ateliers: [] };
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('setupOverlay').style.display = 'flex';
+        }
+
+        function backToWelcome() {
+            document.getElementById('myWODsScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'flex';
+        }
+
+        async function showMyWODs() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('myWODsScreen').style.display = 'flex';
+            await loadSavedWODs();
+        }
+
+        async function loadSavedWODs() {
+            try {
+                const snapshot = await database.ref('wods').once('value');
+                const container = document.getElementById('wodsList');
+                
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<div class="no-records">Aucun WOD sauvegardé pour le moment</div>';
+                    return;
+                }
+                
+                savedWODs = snapshot.val();
+                const wodArray = Object.entries(savedWODs).map(([id, data]) => ({ id, ...data }));
+                wodArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                container.innerHTML = wodArray.map(wod => {
+                    const preview = wod.ateliers.map((a, i) => 
+                        `Atelier ${i+1}: ${a.exercises.map(e => `${e.reps} ${e.name}`).join(' + ')}`
+                    ).join(' | ');
+                    
+                    return `
+                        <div class="wod-card">
+                            <div class="wod-card-header">
+                                <div class="wod-card-title">${wod.name}</div>
+                            </div>
+                            <div class="wod-card-info">
+                                ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''} × ${wod.duration} min
+                            </div>
+                            <div class="wod-card-preview">${preview.substring(0, 150)}${preview.length > 150 ? '...' : ''}</div>
+                            <div class="wod-card-actions">
+                                <button class="btn-wod btn-load" onclick="loadWOD('${wod.id}')">▶️ Charger</button>
+                                <button class="btn-wod btn-modify" onclick="modifyWOD('${wod.id}')">✏️ Modifier</button>
+                                <button class="btn-wod btn-duplicate" onclick="duplicateWOD('${wod.id}')">📋 Dupliquer</button>
+                                <button class="btn-wod btn-delete-wod" onclick="deleteWOD('${wod.id}')">🗑️ Supprimer</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Erreur chargement WODs:', error);
+                alert('Erreur lors du chargement des WODs');
+            }
+        }
+
+        async function loadWOD(id) {
+            const wod = savedWODs[id];
+            if (!wod) return;
+            
+            currentWODId = id;
+            wodConfig = { ...wod };
+            
+            document.getElementById('myWODsScreen').style.display = 'none';
+            finishSetup();
+        }
+
+        async function modifyWOD(id) {
+            const wod = savedWODs[id];
+            if (!wod) return;
+            
+            currentWODId = id;
+            wodConfig = { ...wod };
+            
+            // Go back to config
+            document.getElementById('myWODsScreen').style.display = 'none';
+            document.getElementById('setupOverlay').style.display = 'flex';
+            
+            // Fill form
+            document.getElementById('wodName').value = wod.name;
+            document.getElementById('numAteliers').value = wod.numAteliers;
+            document.getElementById('duration').value = wod.duration;
+        }
+
+        async function duplicateWOD(id) {
+            const wod = savedWODs[id];
+            if (!wod) return;
+            
+            const newName = prompt('Nom du WOD dupliqué:', wod.name + ' (copie)');
+            if (!newName) return;
+            
+            const newWOD = {
+                ...wod,
+                name: newName,
+                createdAt: new Date().toISOString()
+            };
+            
+            try {
+                await database.ref('wods').push(newWOD);
+                alert('WOD dupliqué avec succès !');
+                await loadSavedWODs();
+            } catch (error) {
+                console.error('Erreur duplication:', error);
+                alert('Erreur lors de la duplication');
+            }
+        }
+
+        async function deleteWOD(id) {
+            const wod = savedWODs[id];
+            if (!wod) return;
+            
+            if (!confirm(`Supprimer le WOD "${wod.name}" ?\n\nCette action est irréversible.`)) return;
+            
+            try {
+                await database.ref('wods/' + id).remove();
+                alert('WOD supprimé !');
+                await loadSavedWODs();
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                alert('Erreur lors de la suppression');
+            }
+        }
+
+        async function saveWODToFirebase() {
+            try {
+                const wodData = {
+                    ...wodConfig,
+                    createdAt: currentWODId ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                if (currentWODId) {
+                    // Update existing
+                    await database.ref('wods/' + currentWODId).set(wodData);
+                } else {
+                    // Create new
+                    const newRef = await database.ref('wods').push(wodData);
+                    currentWODId = newRef.key;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Erreur sauvegarde WOD:', error);
+                alert('Erreur lors de la sauvegarde du WOD');
+                return false;
+            }
+        }
+
+        function backToConfig() {
+            document.getElementById('saveLaunchScreen').style.display = 'none';
+        }
+
+        async function launchNow() {
+            document.getElementById('saveLaunchScreen').style.display = 'none';
+            finishSetup();
+        }
+
+        async function saveForLater() {
+            const saved = await saveWODToFirebase();
+            if (saved) {
+                alert(`WOD "${wodConfig.name}" sauvegardé !`);
+                location.reload(); // Return to welcome screen
             }
         }
 
