@@ -427,6 +427,40 @@
             font-size: 1.05em;
         }
 
+        .record-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .btn-edit-record, .btn-delete-record {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75em;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-edit-record {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-edit-record:hover {
+            background: #3182ce;
+        }
+
+        .btn-delete-record {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-delete-record:hover {
+            background: #c53030;
+        }
+
         .rankings-section {
             background: #2d3748;
             border-radius: 12px;
@@ -1585,9 +1619,56 @@
                             <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
                         </div>
                     </div>
-                    <span class="record-score">${r.score} reps</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="record-score">${r.score} reps</span>
+                        <div class="record-actions">
+                            <button class="btn-edit-record" onclick="editRecord(${atelierIndex}, ${i})" title="Modifier">✏️</button>
+                            <button class="btn-delete-record" onclick="deleteRecord(${atelierIndex}, ${i})" title="Supprimer">🗑️</button>
+                        </div>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function editRecord(atelierIndex, recordIndex) {
+            const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
+            
+            // Pre-fill the form with existing data
+            document.getElementById(`name_${atelierIndex}`).value = record.name;
+            document.getElementById(`score_${atelierIndex}`).value = record.score;
+            
+            // Set the category
+            selectCategory(atelierIndex, record.category);
+            
+            // Delete the old record
+            wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
+            
+            // Save to localStorage
+            saveSessionData();
+            
+            // Update display
+            updateRecordsList(atelierIndex);
+            updateGlobalRankings();
+            
+            // Scroll to form
+            const card = document.getElementById(`records_${atelierIndex}`).closest('.atelier-card');
+            card.querySelector('.record-input-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function deleteRecord(atelierIndex, recordIndex) {
+            const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
+            
+            if (confirm(`Supprimer le résultat de "${record.name}" (${record.score} reps) ?`)) {
+                // Remove the record
+                wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
+                
+                // Save to localStorage
+                saveSessionData();
+                
+                // Update display
+                updateRecordsList(atelierIndex);
+                updateGlobalRankings();
+            }
         }
 
         function updateGlobalRankings() {
