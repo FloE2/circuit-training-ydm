@@ -296,12 +296,12 @@
             font-weight: bold;
         }
 
-        .record-section {
+        .records-section {
             border-top: 2px dashed #4a5568;
             padding-top: 12px;
         }
 
-        .record-title {
+        .records-title {
             color: #4299e1;
             font-weight: bold;
             margin-bottom: 10px;
@@ -309,35 +309,11 @@
             text-align: center;
         }
 
-        .record-display {
-            background: #1a202c;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .current-record {
-            color: #a0aec0;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .record-value {
-            color: #4299e1;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .no-record {
-            color: #718096;
-            font-style: italic;
-        }
-
-        .record-form {
+        .record-input-form {
             background: #1a202c;
             padding: 10px;
             border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .record-input {
@@ -361,7 +337,36 @@
             border-color: #4299e1;
         }
 
-        .btn-update {
+        .category-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .category-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #4a5568;
+            background: #2d3748;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8em;
+            transition: all 0.3s;
+            color: #e0e0e0;
+        }
+
+        .category-btn.active {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .category-btn:hover {
+            border-color: #4299e1;
+        }
+
+        .btn-add {
             background: #48bb78;
             color: white;
             border: none;
@@ -371,28 +376,106 @@
             font-weight: bold;
             width: 100%;
             font-size: 0.9em;
-            transition: all 0.3s;
         }
 
-        .btn-update:hover {
+        .btn-add:hover {
             background: #38a169;
         }
 
-        .new-record-alert {
-            background: #48bb78;
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 8px;
-            animation: fadeIn 0.5s;
+        .records-list {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .record-item {
+            background: #1a202c;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .record-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .record-name {
+            font-weight: bold;
+            color: #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        .record-category {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .category-boys { background: #3182ce; color: white; }
+        .category-girls { background: #d53f8c; color: white; }
+        .category-mixed { background: #805ad5; color: white; }
+
+        .record-score {
+            color: #4299e1;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .rankings-section {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .rankings-title {
+            color: #4299e1;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .rankings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .ranking-card {
+            background: #1a202c;
+            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid #4299e1;
+        }
+
+        .ranking-card h4 {
+            color: #4299e1;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .ranking-item {
+            background: #2d3748;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ranking-item.first { border-left: 4px solid #ffd700; }
+        .ranking-item.second { border-left: 4px solid #c0c0c0; }
+        .ranking-item.third { border-left: 4px solid #cd7f32; }
 
         .edit-wod {
             background: #4299e1;
@@ -434,6 +517,13 @@
             .edit-wod {
                 width: 100%;
             }
+        }
+
+        .no-records {
+            text-align: center;
+            color: #718096;
+            padding: 15px;
+            font-style: italic;
         }
 
         .copyright {
@@ -888,6 +978,17 @@
             <button class="btn-control btn-reset" onclick="resetTimer()">Réinitialiser</button>
         </div>
 
+        <!-- Global Rankings -->
+        <div class="rankings-section" id="globalRankings" style="display: none;">
+            <h3 class="rankings-title">Classement Général du WOD</h3>
+            <div class="rankings-grid">
+                <div class="ranking-card">
+                    <h4>Top 3 Global</h4>
+                    <div id="globalTop3"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Ateliers Grid -->
         <div class="main-grid" id="ateliersGrid"></div>
 
@@ -1046,18 +1147,19 @@
 
         let currentWODId = null;
         let savedWODs = {};
+
         let currentAtelierIndex = 0;
         let timerInterval = null;
         let timeLeft = 0;
         let isRunning = false;
+        let selectedCategories = {};
 
         // Audio context for beep
         let audioContext = null;
 
-        // LocalStorage key for records (expires after 2 hours)
-        const RECORDS_KEY = 'wod_session_records';
-        const RECORDS_TIMESTAMP_KEY = 'wod_session_timestamp';
-        const SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+        // LocalStorage keys for session data
+        const SESSION_KEY = 'wod_session_data';
+        const SESSION_TIMESTAMP_KEY = 'wod_session_timestamp';
 
         function playBeep() {
             if (!audioContext) {
@@ -1084,98 +1186,61 @@
             }
         }
 
-        // Records management
-        function loadRecords() {
-            const timestamp = localStorage.getItem(RECORDS_TIMESTAMP_KEY);
-            const now = Date.now();
-            
-            // Check if records have expired (> 2 hours)
-            if (timestamp && (now - parseInt(timestamp)) > SESSION_DURATION) {
-                localStorage.removeItem(RECORDS_KEY);
-                localStorage.removeItem(RECORDS_TIMESTAMP_KEY);
-                return {};
-            }
-            
-            const records = localStorage.getItem(RECORDS_KEY);
-            return records ? JSON.parse(records) : {};
-        }
-
-        function saveRecords(records) {
-            localStorage.setItem(RECORDS_KEY, JSON.stringify(records));
-            localStorage.setItem(RECORDS_TIMESTAMP_KEY, Date.now().toString());
-        }
-
-        function getRecordKey(wodName, atelierIndex) {
-            return `${wodName}_atelier_${atelierIndex}`;
-        }
-
-        function updateRecord(atelierIndex) {
-            const name = document.getElementById(`record_name_${atelierIndex}`).value.trim();
-            const score = parseInt(document.getElementById(`record_score_${atelierIndex}`).value);
-            
-            if (!name || !score || score < 0) {
-                alert('Entrez un nom d\'équipe et un score valide');
-                return;
-            }
-
-            const recordKey = getRecordKey(wodConfig.name, atelierIndex);
-            const records = loadRecords();
-            const currentRecord = records[recordKey];
-            
-            // Check if it's a new record
-            const isNewRecord = !currentRecord || score > currentRecord.score;
-            
-            records[recordKey] = { name, score };
-            saveRecords(records);
-            
-            // Clear inputs
-            document.getElementById(`record_name_${atelierIndex}`).value = '';
-            document.getElementById(`record_score_${atelierIndex}`).value = '';
-            
-            // Update display
-            displayRecord(atelierIndex);
-            
-            // Show new record alert if applicable
-            if (isNewRecord && currentRecord) {
-                showNewRecordAlert(atelierIndex);
+        // LocalStorage management functions
+        function saveSessionData() {
+            try {
+                const sessionData = {
+                    wodName: wodConfig.name,
+                    records: wodConfig.ateliers.map(atelier => atelier.records || [])
+                };
+                localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+                localStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
+                console.log('Session data saved to localStorage:', sessionData);
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
             }
         }
 
-        function displayRecord(atelierIndex) {
-            const recordKey = getRecordKey(wodConfig.name, atelierIndex);
-            const records = loadRecords();
-            const record = records[recordKey];
-            const displayDiv = document.getElementById(`record_display_${atelierIndex}`);
-            
-            if (record) {
-                displayDiv.innerHTML = `
-                    <div class="current-record">Record actuel :</div>
-                    <div class="record-value">${record.name} - ${record.score} reps</div>
-                `;
-            } else {
-                displayDiv.innerHTML = `<div class="no-record">Aucun record enregistré</div>`;
-            }
-        }
+        function loadSessionData() {
+            try {
+                const savedData = localStorage.getItem(SESSION_KEY);
+                const timestamp = localStorage.getItem(SESSION_TIMESTAMP_KEY);
+                
+                if (!savedData || !timestamp) {
+                    return null;
+                }
 
-        function showNewRecordAlert(atelierIndex) {
-            const alertDiv = document.getElementById(`record_alert_${atelierIndex}`);
-            alertDiv.style.display = 'block';
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                alertDiv.style.display = 'none';
-            }, 3000);
+                const sessionData = JSON.parse(savedData);
+                
+                // Check if it's the same WOD
+                if (sessionData.wodName === wodConfig.name) {
+                    console.log('Loading session data from localStorage:', sessionData);
+                    return sessionData.records;
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+                return null;
+            }
         }
 
         function clearAllRecords() {
             if (confirm('Effacer tous les records de la séance en cours ?\n\nCette action est irréversible.')) {
-                localStorage.removeItem(RECORDS_KEY);
-                localStorage.removeItem(RECORDS_TIMESTAMP_KEY);
+                // Clear localStorage
+                localStorage.removeItem(SESSION_KEY);
+                localStorage.removeItem(SESSION_TIMESTAMP_KEY);
                 
-                // Update all displays
+                // Clear in-memory data
+                wodConfig.ateliers.forEach(atelier => {
+                    atelier.records = [];
+                });
+                
+                // Update displays
                 for (let i = 0; i < wodConfig.numAteliers; i++) {
-                    displayRecord(i);
+                    updateRecordsList(i);
                 }
+                updateGlobalRankings();
                 
                 alert('Tous les records ont été effacés');
             }
@@ -1306,9 +1371,15 @@
             }
 
             if (wodConfig.ateliers[currentAtelierIndex]) {
-                wodConfig.ateliers[currentAtelierIndex] = { exercises: exercises };
+                wodConfig.ateliers[currentAtelierIndex] = {
+                    exercises: exercises,
+                    records: wodConfig.ateliers[currentAtelierIndex].records || []
+                };
             } else {
-                wodConfig.ateliers.push({ exercises: exercises });
+                wodConfig.ateliers.push({
+                    exercises: exercises,
+                    records: []
+                });
             }
 
             currentAtelierIndex++;
@@ -1339,6 +1410,15 @@
                 return;
             }
             
+            // Try to load saved session data
+            const savedRecords = loadSessionData();
+            if (savedRecords && savedRecords.length === wodConfig.ateliers.length) {
+                wodConfig.ateliers.forEach((atelier, index) => {
+                    atelier.records = savedRecords[index] || [];
+                });
+                console.log('Restored records from localStorage');
+            }
+            
             document.getElementById('mainContainer').classList.add('visible');
             document.getElementById('editButton').style.display = 'block';
             document.getElementById('settingsButton').style.display = 'block';
@@ -1347,6 +1427,7 @@
             
             renderWOD();
             resetTimer();
+            updateGlobalRankings();
         }
 
         function quitWOD() {
@@ -1356,6 +1437,8 @@
         }
 
         function renderWOD() {
+            console.log('Rendering WOD:', wodConfig);
+            
             if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
                 console.error('No ateliers found in wodConfig');
                 alert('Erreur : Aucun atelier trouvé. Veuillez reconfigurer le WOD.');
@@ -1371,6 +1454,10 @@
             grid.innerHTML = '';
 
             wodConfig.ateliers.forEach((atelier, index) => {
+                console.log(`Rendering atelier ${index + 1}:`, atelier);
+                
+                selectedCategories[index] = 'mixed';
+                
                 const card = document.createElement('div');
                 card.className = 'atelier-card';
                 
@@ -1408,31 +1495,160 @@
                         ${exercisesHTML}
                     </div>
                     
-                    <div class="record-section">
-                        <div class="record-title">Record de l'atelier</div>
-                        <div class="record-display" id="record_display_${index}">
-                            <div class="no-record">Aucun record enregistré</div>
-                        </div>
-                        
-                        <div class="record-form">
-                            <div class="record-input">
-                                <input type="text" placeholder="Nom de l'équipe" id="record_name_${index}">
-                                <input type="number" placeholder="Reps" id="record_score_${index}" min="0">
+                    <div class="records-section">
+                        <div class="records-title">Ajouter un résultat</div>
+                        <div class="record-input-form">
+                            <div class="category-selector">
+                                <button class="category-btn active" onclick="selectCategory(${index}, 'mixed')">Mixte</button>
+                                <button class="category-btn" onclick="selectCategory(${index}, 'boys')">Garçons</button>
+                                <button class="category-btn" onclick="selectCategory(${index}, 'girls')">Filles</button>
                             </div>
-                            <button class="btn-update" onclick="updateRecord(${index})">Mettre à jour le record</button>
+                            <div class="record-input">
+                                <input type="text" placeholder="Prénom(s) - ex: Tom & Léa" id="name_${index}">
+                                <input type="number" placeholder="Répétitions" id="score_${index}" min="0">
+                            </div>
+                            <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
                         </div>
-                        
-                        <div class="new-record-alert" id="record_alert_${index}" style="display: none;">
-                            NOUVEAU RECORD !
+                        <div class="records-title" style="margin-top: 15px;">Top 3</div>
+                        <div class="records-list" id="records_${index}">
+                            <div class="no-records">Aucun résultat pour le moment</div>
                         </div>
                     </div>
                 `;
                 
                 grid.appendChild(card);
                 
-                // Load and display existing record
-                displayRecord(index);
+                // Update display with existing records
+                updateRecordsList(index);
             });
+            
+            console.log(`Successfully rendered ${wodConfig.ateliers.length} ateliers`);
+        }
+
+        function selectCategory(atelierIndex, category) {
+            selectedCategories[atelierIndex] = category;
+            
+            const card = document.querySelector(`#records_${atelierIndex}`).closest('.atelier-card');
+            const buttons = card.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const categoryMap = { 'mixed': 0, 'boys': 1, 'girls': 2 };
+            buttons[categoryMap[category]].classList.add('active');
+        }
+
+        function addRecord(atelierIndex) {
+            const name = document.getElementById(`name_${atelierIndex}`).value.trim();
+            const score = parseInt(document.getElementById(`score_${atelierIndex}`).value);
+            const category = selectedCategories[atelierIndex] || 'mixed';
+
+            if (!name || !score || score < 0) {
+                alert('Entrez un nom d\'équipe et un score valide');
+                return;
+            }
+
+            wodConfig.ateliers[atelierIndex].records.push({ name, score, category });
+            wodConfig.ateliers[atelierIndex].records.sort((a, b) => b.score - a.score);
+
+            // Save to localStorage
+            saveSessionData();
+
+            document.getElementById(`name_${atelierIndex}`).value = '';
+            document.getElementById(`score_${atelierIndex}`).value = '';
+
+            updateRecordsList(atelierIndex);
+            updateGlobalRankings();
+        }
+
+        function updateRecordsList(atelierIndex) {
+            const list = document.getElementById(`records_${atelierIndex}`);
+            const records = wodConfig.ateliers[atelierIndex].records.slice(0, 3);
+
+            if (records.length === 0) {
+                list.innerHTML = '<div class="no-records">Aucun résultat pour le moment</div>';
+                return;
+            }
+
+            const rankClass = ['first', 'second', 'third'];
+            const ranks = ['1er', '2ème', '3ème'];
+            const categoryLabels = {
+                'boys': 'Garçons',
+                'girls': 'Filles',
+                'mixed': 'Mixte'
+            };
+
+            list.innerHTML = records.map((r, i) => `
+                <div class="record-item ${rankClass[i]}">
+                    <div class="record-info">
+                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <div>
+                            <div class="record-name">${r.name}</div>
+                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                        </div>
+                    </div>
+                    <span class="record-score">${r.score} reps</span>
+                </div>
+            `).join('');
+        }
+
+        function updateGlobalRankings() {
+            const allGroups = {};
+            
+            wodConfig.ateliers.forEach(atelier => {
+                atelier.records.forEach(record => {
+                    if (!allGroups[record.name]) {
+                        allGroups[record.name] = {
+                            name: record.name,
+                            category: record.category,
+                            totalScore: 0,
+                            atelierCount: 0
+                        };
+                    }
+                    allGroups[record.name].totalScore += record.score;
+                    allGroups[record.name].atelierCount++;
+                });
+            });
+
+            const rankings = Object.values(allGroups)
+                .filter(g => g.atelierCount === wodConfig.numAteliers)
+                .sort((a, b) => b.totalScore - a.totalScore)
+                .slice(0, 3);
+
+            if (rankings.length > 0) {
+                document.getElementById('globalRankings').style.display = 'block';
+                displayGlobalTop3(rankings);
+            } else {
+                document.getElementById('globalRankings').style.display = 'none';
+            }
+        }
+
+        function displayGlobalTop3(rankings) {
+            const container = document.getElementById('globalTop3');
+            
+            if (rankings.length === 0) {
+                container.innerHTML = '<div class="no-records">Aucune équipe n\'a terminé tous les ateliers</div>';
+                return;
+            }
+
+            const rankClass = ['first', 'second', 'third'];
+            const ranks = ['1er', '2ème', '3ème'];
+            const categoryLabels = {
+                'boys': 'Garçons',
+                'girls': 'Filles',
+                'mixed': 'Mixte'
+            };
+
+            container.innerHTML = rankings.map((r, i) => `
+                <div class="ranking-item ${rankClass[i]}">
+                    <div class="record-info">
+                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <div>
+                            <div class="record-name">${r.name}</div>
+                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                        </div>
+                    </div>
+                    <span class="record-score">${r.totalScore} reps</span>
+                </div>
+            `).join('');
         }
 
         // Timer functions
@@ -1487,7 +1703,7 @@
         }
 
         function resetApp() {
-            if (confirm('Recommencer la configuration ? Les records seront conservés.')) {
+            if (confirm('Recommencer la configuration ?\n\nLes records seront conservés en localStorage.')) {
                 location.reload();
             }
         }
@@ -1517,7 +1733,7 @@
                 const container = document.getElementById('wodsList');
                 
                 if (!snapshot.exists()) {
-                    container.innerHTML = '<div class="no-record" style="padding: 20px;">Aucun WOD sauvegardé pour le moment</div>';
+                    container.innerHTML = '<div class="no-records" style="padding: 20px;">Aucun WOD sauvegardé pour le moment</div>';
                     return;
                 }
                 
@@ -1595,7 +1811,7 @@
             
             try {
                 await database.ref('wods').push(newWOD);
-                alert('WOD dupliqué avec succès');
+                alert('WOD dupliqué avec succès !');
                 await loadSavedWODs();
             } catch (error) {
                 console.error('Erreur duplication:', error);
@@ -1611,7 +1827,7 @@
             
             try {
                 await database.ref('wods/' + id).remove();
-                alert('WOD supprimé');
+                alert('WOD supprimé !');
                 await loadSavedWODs();
             } catch (error) {
                 console.error('Erreur suppression:', error);
@@ -1630,7 +1846,7 @@
                     name: wodConfig.name,
                     numAteliers: wodConfig.numAteliers,
                     duration: wodConfig.duration,
-                    ateliers: wodConfig.ateliers,
+                    ateliers: wodConfig.ateliers.map(a => ({ exercises: a.exercises })), // Don't save records to Firebase
                     createdAt: currentWODId && savedWODs[currentWODId] ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 };
@@ -1645,6 +1861,7 @@
                 return true;
             } catch (error) {
                 console.error('Erreur sauvegarde WOD:', error);
+                console.error('WOD data:', wodConfig);
                 alert('Erreur lors de la sauvegarde du WOD: ' + error.message);
                 return false;
             }
@@ -1665,7 +1882,7 @@
         async function saveForLater() {
             const saved = await saveWODToFirebase();
             if (saved) {
-                alert(`WOD "${wodConfig.name}" sauvegardé`);
+                alert(`WOD "${wodConfig.name}" sauvegardé !`);
                 location.reload();
             }
         }
@@ -1698,6 +1915,7 @@
                 const snapshot = await database.ref('exercises').once('value');
                 if (snapshot.exists()) {
                     const firebaseExercises = snapshot.val();
+                    
                     exerciseData = { ...exerciseData, ...firebaseExercises };
                     
                     Object.keys(firebaseExercises).forEach(name => {
@@ -1735,6 +1953,7 @@
 
         function renderExerciseList() {
             const container = document.getElementById('exerciseListContainer');
+            
             const sortedExercises = EXERCISES.sort();
             
             container.innerHTML = sortedExercises.map(name => {
@@ -1807,6 +2026,7 @@
             };
             
             const saved = await saveExerciseToFirebase(name, exerciseInfo);
+            
             if (!saved) return;
             
             exerciseData[name] = exerciseInfo;
@@ -1831,9 +2051,9 @@
             document.getElementById('cancelEditBtn').style.display = 'none';
             
             if (isNewExercise) {
-                alert(`Nouvel exercice "${name}" créé et sauvegardé sur Firebase`);
+                alert(`Nouvel exercice "${name}" créé et sauvegardé sur Firebase !`);
             } else {
-                alert(`Documentation de "${name}" mise à jour sur Firebase`);
+                alert(`Documentation de "${name}" mise à jour sur Firebase !`);
             }
         }
 
@@ -1874,11 +2094,13 @@
         async function deleteExerciseData(name) {
             if (confirm(`Supprimer la description et les images de "${name}" ?\n\nL'exercice restera disponible dans la liste, mais sans documentation.`)) {
                 const deleted = await deleteExerciseFromFirebase(name);
+                
                 if (!deleted) return;
                 
                 delete exerciseData[name];
+                
                 renderExerciseList();
-                alert(`Documentation de "${name}" supprimée`);
+                alert(`Documentation de "${name}" supprimée !`);
             }
         }
 
