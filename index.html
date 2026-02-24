@@ -1656,6 +1656,10 @@
                     if (userBar) userBar.style.display = 'flex';
                     var userEmail = document.getElementById('userEmail');
                     if (userEmail) userEmail.textContent = user.email;
+                    // Load exercises now that we're authenticated
+                    if (typeof loadExercisesFromFirebase === 'function') {
+                        loadExercisesFromFirebase();
+                    }
                 } else {
                     document.getElementById('authOverlay').style.display = 'flex';
                     document.getElementById('welcomeScreen').style.display = 'none';
@@ -3044,11 +3048,11 @@
     // ═══════════════════════════════════════════════════════
     //  INIT
     // ═══════════════════════════════════════════════════════
-    window.onload = async function() {
+    window.onload = function() {
         // Hide welcome screen until auth check completes
         document.getElementById('welcomeScreen').style.display = 'none';
         generateExerciseInputs(2);
-        await loadExercisesFromFirebase();
+        // loadExercisesFromFirebase() is called after login in onAuthStateChanged
     };
     </script>
 </body>
