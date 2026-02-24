@@ -1333,9 +1333,18 @@
             <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em; margin-bottom: 15px;">
                 Mes WODs sauvegardés
             </button>
-            <button class="btn btn-primary" onclick="openSettingsFromWelcome()" style="background: #ed8936; padding: 20px; font-size: 1.2em;">
+            <button class="btn btn-primary" onclick="openSettingsFromWelcome()" style="background: #ed8936; padding: 20px; font-size: 1.2em; margin-bottom: 20px;">
                 Gérer les exercices
             </button>
+
+            <!-- Séparateur + Déconnexion -->
+            <div style="border-top: 1px solid #4a5568; padding-top: 15px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span style="color: #718096; font-size: 0.82em;">🔐 <span id="welcomeUserEmail" style="color:#a0aec0;"></span></span>
+                <button onclick="logoutUser()" style="background: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85em;"
+                    onmouseover="this.style.background='#c53030'" onmouseout="this.style.background='#e53e3e'">
+                    🚪 Se déconnecter
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1694,6 +1703,8 @@
                     if (userBar) userBar.style.display = 'flex';
                     var userEmail = document.getElementById('userEmail');
                     if (userEmail) userEmail.textContent = user.email;
+                    var welcomeEmail = document.getElementById('welcomeUserEmail');
+                    if (welcomeEmail) welcomeEmail.textContent = user.email;
                     // Load exercises now that we're authenticated
                     if (typeof loadExercisesFromFirebase === 'function') {
                         loadExercisesFromFirebase();
