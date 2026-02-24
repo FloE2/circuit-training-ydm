@@ -185,18 +185,7 @@
             position: relative;
         }
 
-        .mode-btn.disabled::after {
-            content: 'Bientôt';
-            position: absolute;
-            top: -10px;
-            right: -4px;
-            background: #ed8936;
-            color: white;
-            font-size: 0.6em;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
+        /* .mode-btn.disabled::after removed */
 
         .mode-description {
             font-size: 0.82em;
@@ -978,6 +967,291 @@
         }
 
         .btn-logout:hover { border-color: #e53e3e; color: #e53e3e; }
+
+        /* ══════════ EMOM STYLES ══════════ */
+
+        /* Mode badge */
+        .mode-badge.emom {
+            background: rgba(237,137,54,0.2);
+            color: #ed8936;
+            border: 1px solid #ed8936;
+        }
+
+        .mode-btn.active-emom {
+            background: linear-gradient(135deg, #c05621, #9c4221);
+            border-color: #ed8936;
+            color: white;
+            box-shadow: 0 4px 15px rgba(237,137,54,0.4);
+        }
+
+        .mode-description.emom { border-left-color: #ed8936; }
+
+        .wod-mode-pill.emom { background: rgba(237,137,54,0.25); color: #ed8936; border: 1px solid #ed8936; }
+
+        /* EMOM big panel */
+        .emom-panel {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 2px solid #ed8936;
+        }
+
+        .emom-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .emom-stat {
+            background: #1a202c;
+            border-radius: 10px;
+            padding: 10px 18px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .emom-stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #ed8936;
+            line-height: 1;
+        }
+
+        .emom-stat-label {
+            font-size: 0.72em;
+            color: #718096;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .emom-minute-countdown {
+            font-size: 3.5em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, #c05621, #9c4221);
+            padding: 12px 30px;
+            border-radius: 14px;
+            min-width: 160px;
+            box-shadow: 0 4px 20px rgba(237,137,54,0.4);
+            transition: background 0.3s;
+        }
+
+        .emom-minute-countdown.warning-emom {
+            animation: pulseEmom 1s infinite;
+        }
+
+        @keyframes pulseEmom {
+            0%, 100% { background: linear-gradient(135deg, #c53030, #9b2c2c); }
+            50% { background: linear-gradient(135deg, #e53e3e, #c53030); }
+        }
+
+        /* Current exercise card */
+        .emom-current-card {
+            background: linear-gradient(135deg, #c05621 0%, #9c4221 100%);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 25px rgba(237,137,54,0.35);
+            animation: fadeInSlide 0.4s ease-out;
+        }
+
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(-12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .emom-current-label {
+            font-size: 0.78em;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+
+        .emom-current-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 8px;
+            line-height: 1.15;
+        }
+
+        .emom-current-reps {
+            font-size: 3em;
+            font-weight: bold;
+            color: #fef08a;
+            line-height: 1;
+        }
+
+        .emom-current-reps-label {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.75);
+            margin-top: 4px;
+        }
+
+        /* Next exercise preview */
+        .emom-next-card {
+            background: #1a202c;
+            border: 2px dashed #4a5568;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .emom-next-label {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .emom-next-content {
+            flex: 1;
+        }
+
+        .emom-next-name {
+            color: #e0e0e0;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .emom-next-reps {
+            color: #ed8936;
+            font-size: 0.85em;
+        }
+
+        /* Progress dots for EMOM rounds */
+        .emom-rounds-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .emom-round-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: #1a202c;
+            border: 2px solid #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #718096;
+            transition: all 0.3s;
+        }
+
+        .emom-round-dot.done { background: #48bb78; border-color: #48bb78; color: white; }
+        .emom-round-dot.active { background: #ed8936; border-color: #ed8936; color: white; transform: scale(1.2); box-shadow: 0 0 12px rgba(237,137,54,0.6); }
+
+        /* Séquence list */
+        .emom-sequence {
+            background: #1a202c;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 12px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .emom-seq-title {
+            color: #ed8936;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .emom-seq-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: background 0.3s;
+            font-size: 0.88em;
+        }
+
+        .emom-seq-item.seq-done { background: rgba(72,187,120,0.12); color: #68d391; }
+        .emom-seq-item.seq-active { background: rgba(237,137,54,0.2); color: #fbd38d; font-weight: bold; }
+        .emom-seq-item.seq-future { color: #718096; }
+
+        .emom-seq-min {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            min-width: 52px;
+            font-size: 0.85em;
+        }
+
+        .emom-seq-icon { font-size: 1em; }
+
+        /* Finished overlay */
+        .emom-finished {
+            background: linear-gradient(135deg, #276749, #22543d);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .emom-finished h2 { color: #9ae6b4; font-size: 2em; margin-bottom: 8px; }
+        .emom-finished p { color: #68d391; font-size: 1.1em; }
+
+        /* EMOM timer bar */
+        .emom-progress-bar-wrap {
+            background: #1a202c;
+            border-radius: 8px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .emom-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ed8936, #fbd38d);
+            border-radius: 8px;
+            transition: width 1s linear;
+        }
+
+        /* Logout prominent button */
+        .btn-logout-prominent {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-logout-prominent:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229,62,62,0.4);
+        }
     </style>
 </head>
 <body>
@@ -1058,10 +1332,10 @@
                         <span class="mode-label">For Time</span>
                         <span class="mode-sub">Le plus vite</span>
                     </button>
-                    <button type="button" class="mode-btn disabled" id="modeBtn_emom" onclick="return false;">
+                    <button type="button" class="mode-btn" id="modeBtn_emom" onclick="selectWodMode('emom')">
                         <span class="mode-icon">🔄</span>
                         <span class="mode-label">EMOM</span>
-                        <span class="mode-sub">Toutes les min</span>
+                        <span class="mode-sub">Chaque minute</span>
                     </button>
                 </div>
                 <div class="mode-description" id="modeDesc">
@@ -1079,10 +1353,19 @@
                 <input type="number" id="numAteliers" min="1" max="8" value="3">
             </div>
 
-            <!-- AMRAP : durée compte à rebours -->
+            <!-- Duration / TimeCap (hidden for EMOM) -->
             <div class="form-group" id="durationGroup">
                 <label id="durationLabel">Durée AMRAP (minutes)</label>
                 <input type="number" id="duration" min="2" max="30" value="5">
+            </div>
+
+            <!-- EMOM : nombre de tours (hidden for AMRAP/ForTime) -->
+            <div class="form-group" id="toursGroup" style="display:none;">
+                <label>Nombre de tours (cycles)</label>
+                <input type="number" id="numTours" min="1" max="20" value="3">
+                <small style="color:#718096; margin-top:4px; display:block;">
+                    Ex : 3 tours × 4 exercices = 12 minutes au total
+                </small>
             </div>
 
             <!-- TEAM SIZE -->
@@ -1129,8 +1412,9 @@
             </div>
             <div class="header-content">
                 <div class="auth-user-bar" id="userBar" style="display:none;justify-content:center;margin-bottom:8px;">
+                    <span>🔐</span>
                     <span id="userEmail"></span>
-                    <button class="btn-logout" onclick="logoutUser()">Déconnexion</button>
+                    <button class="btn-logout-prominent" onclick="logoutUser()">🚪 Se déconnecter</button>
                 </div>
                 <h1>
                     <span id="headerWodName">Circuit Training</span>
@@ -1147,6 +1431,59 @@
             <button class="btn-control btn-start" onclick="startTimer()">Démarrer</button>
             <button class="btn-control btn-pause" onclick="pauseTimer()">Pause</button>
             <button class="btn-control btn-reset" onclick="resetTimer()">Réinitialiser</button>
+        </div>
+
+        <!-- EMOM Panel -->
+        <div class="emom-panel" id="emomPanel" style="display:none;">
+            <!-- Stats row -->
+            <div class="emom-header-row">
+                <div class="emom-stat">
+                    <div class="emom-stat-value" id="emomMinuteNum">1</div>
+                    <div class="emom-stat-label">Minute</div>
+                </div>
+                <div class="emom-minute-countdown" id="emomCountdown">60</div>
+                <div class="emom-stat">
+                    <div class="emom-stat-value" id="emomTourNum">1</div>
+                    <div class="emom-stat-label">Tour</div>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="emom-progress-bar-wrap">
+                <div class="emom-progress-bar" id="emomProgressBar" style="width:100%;"></div>
+            </div>
+
+            <!-- Current exercise -->
+            <div class="emom-current-card" id="emomCurrentCard" style="margin-top:14px;">
+                <div class="emom-current-label">Exercice en cours</div>
+                <div class="emom-current-name" id="emomCurrentName">—</div>
+                <div class="emom-current-reps" id="emomCurrentReps">—</div>
+                <div class="emom-current-reps-label" id="emomCurrentRepsLabel">répétitions</div>
+            </div>
+
+            <!-- Next exercise -->
+            <div class="emom-next-card" id="emomNextCard">
+                <div class="emom-next-label">⏭ Suivant</div>
+                <div class="emom-next-content">
+                    <div class="emom-next-name" id="emomNextName">—</div>
+                    <div class="emom-next-reps" id="emomNextReps"></div>
+                </div>
+            </div>
+
+            <!-- Rounds dots -->
+            <div class="emom-rounds-row" id="emomRoundsRow"></div>
+
+            <!-- Sequence list -->
+            <div class="emom-sequence">
+                <div class="emom-seq-title">📋 Programme complet</div>
+                <div id="emomSequenceList"></div>
+            </div>
+        </div>
+
+        <!-- EMOM Finished -->
+        <div class="emom-finished" id="emomFinished">
+            <h2>🎉 WOD terminé !</h2>
+            <p id="emomFinishedMsg"></p>
         </div>
 
         <!-- Global Rankings -->
@@ -1363,10 +1700,11 @@
     // ═══════════════════════════════════════════════════════
     let wodConfig = {
         name: '',
-        mode: 'amrap',   // 'amrap' | 'fortime'
+        mode: 'amrap',   // 'amrap' | 'fortime' | 'emom'
         teamSize: 1,     // 1 = indiv, 2-5 = groupe
         numAteliers: 3,
         duration: 5,     // AMRAP: countdown minutes | ForTime: time cap minutes
+        numTours: 3,     // EMOM: number of rounds
         ateliers: []
     };
 
@@ -1391,30 +1729,35 @@
     function selectWodMode(mode) {
         selectedWodMode = mode;
 
-        // Reset all buttons
-        ['amrap','fortime'].forEach(m => {
+        ['amrap','fortime','emom'].forEach(m => {
             const btn = document.getElementById(`modeBtn_${m}`);
-            if (btn) {
-                btn.className = 'mode-btn';
-            }
+            if (btn) btn.className = 'mode-btn';
         });
-
-        // Activate selected
         const activeBtn = document.getElementById(`modeBtn_${mode}`);
         if (activeBtn) activeBtn.className = `mode-btn active-${mode}`;
 
-        // Update description
         const desc = document.getElementById('modeDesc');
         const durationLabel = document.getElementById('durationLabel');
+        const durationGroup = document.getElementById('durationGroup');
+        const toursGroup = document.getElementById('toursGroup');
 
         if (mode === 'amrap') {
             desc.className = 'mode-description';
             desc.innerHTML = '<strong>AMRAP</strong> — En un temps limité, réaliser un <em>maximum de répétitions</em>. Le score est le nombre de reps total.';
             durationLabel.textContent = 'Durée AMRAP (minutes)';
+            durationGroup.style.display = 'block';
+            toursGroup.style.display = 'none';
         } else if (mode === 'fortime') {
             desc.className = 'mode-description fortime';
             desc.innerHTML = '<strong>For Time</strong> — Réaliser un nombre fixe de répétitions <em>le plus rapidement possible</em>. Le score est le temps réalisé (+ bas = meilleur).';
             durationLabel.textContent = 'Time cap (limite de temps en minutes)';
+            durationGroup.style.display = 'block';
+            toursGroup.style.display = 'none';
+        } else if (mode === 'emom') {
+            desc.className = 'mode-description emom';
+            desc.innerHTML = '<strong>EMOM</strong> — <em>Every Minute On the Minute</em> : au début de chaque minute, réaliser les reps de l'exercice. Le reste de la minute = récupération. On change d'exercice à chaque minute.';
+            durationGroup.style.display = 'none';
+            toursGroup.style.display = 'block';
         }
     }
 
@@ -1485,17 +1828,26 @@
     function setupAteliers() {
         const name = document.getElementById('wodName').value.trim();
         const num = parseInt(document.getElementById('numAteliers').value);
-        const duration = parseInt(document.getElementById('duration').value);
 
         if (!name) { alert('Donnez un nom à votre WOD'); return; }
-        if (num < 1 || num > 8) { alert('Le nombre d\'ateliers doit être entre 1 et 8'); return; }
-        if (duration < 2 || duration > 30) { alert('La durée doit être entre 2 et 30 minutes'); return; }
+        if (num < 1 || num > 8) { alert('Le nombre d'ateliers doit être entre 1 et 8'); return; }
+
+        let duration = 5, numTours = 3;
+
+        if (selectedWodMode === 'emom') {
+            numTours = parseInt(document.getElementById('numTours').value);
+            if (isNaN(numTours) || numTours < 1 || numTours > 20) { alert('Le nombre de tours doit être entre 1 et 20'); return; }
+        } else {
+            duration = parseInt(document.getElementById('duration').value);
+            if (isNaN(duration) || duration < 2 || duration > 30) { alert('La durée doit être entre 2 et 30 minutes'); return; }
+        }
 
         wodConfig.name = name;
         wodConfig.mode = selectedWodMode;
         wodConfig.teamSize = selectedTeamSize;
         wodConfig.numAteliers = num;
         wodConfig.duration = duration;
+        wodConfig.numTours = numTours;
 
         if (wodConfig.ateliers.length > num) wodConfig.ateliers = wodConfig.ateliers.slice(0, num);
         currentAtelierIndex = 0;
@@ -1548,7 +1900,7 @@
     function generateExerciseInputs(num) {
         const container = document.getElementById('exercisesConfig');
         container.innerHTML = '';
-        const modeLabel = wodConfig.mode === 'fortime' ? 'Répétitions à réaliser' : 'Répétitions';
+        const modeLabel = wodConfig.mode === 'fortime' ? 'Répétitions à réaliser' : (wodConfig.mode === 'emom' ? 'Répétitions à faire dans la minute' : 'Répétitions');
         for (let i = 0; i < num; i++) {
             const group = document.createElement('div');
             group.className = 'form-group';
@@ -1612,16 +1964,24 @@
         document.getElementById('mainContainer').classList.add('visible');
         document.getElementById('editButton').style.display = 'block';
         document.getElementById('settingsButton').style.display = 'block';
-        document.getElementById('clearRecordsButton').style.display = 'block';
+        document.getElementById('clearRecordsButton').style.display = wodConfig.mode === 'emom' ? 'none' : 'block';
         document.getElementById('quitButton').style.display = 'block';
 
+        // Hide the generic timer bar for EMOM (it has its own countdown)
+        document.querySelector('.controls').style.display = wodConfig.mode === 'emom' ? 'none' : 'flex';
+
         renderWOD();
-        resetTimer();
-        updateGlobalRankings();
+        if (wodConfig.mode !== 'emom') {
+            resetTimer();
+            updateGlobalRankings();
+        }
     }
 
     function quitWOD() {
-        if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) location.reload();
+        if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) {
+            pauseEmom();
+            location.reload();
+        }
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1629,37 +1989,57 @@
     // ═══════════════════════════════════════════════════════
     function renderWOD() {
         const isForTime = wodConfig.mode === 'fortime';
-
-        document.getElementById('headerWodName').textContent = wodConfig.name;
+        const isEmom = wodConfig.mode === 'emom';
 
         // Mode Badge
         const badge = document.getElementById('modeBadge');
+        const teamBadge = document.getElementById('teamBadge');
         if (isForTime) {
-            badge.className = 'mode-badge fortime';
-            badge.textContent = '⚡ For Time';
+            badge.className = 'mode-badge fortime'; badge.textContent = '⚡ For Time';
+        } else if (isEmom) {
+            badge.className = 'mode-badge emom'; badge.textContent = '🔄 EMOM';
         } else {
-            badge.className = 'mode-badge amrap';
-            badge.textContent = '⏳ AMRAP';
+            badge.className = 'mode-badge amrap'; badge.textContent = '⏳ AMRAP';
         }
 
         // Team badge
         const teamSize = wodConfig.teamSize || 1;
-        const teamBadge = document.getElementById('teamBadge');
-        const teamLabels = { 1: '🧍 Indiv', 2: '👥 Duo', 3: '👥 Trio', 4: '👨‍👩‍👧‍👦 4 élèves', 5: '🏅 5 élèves' };
+        const teamLabels = { 1:'🧍 Indiv', 2:'👥 Duo', 3:'👥 Trio', 4:'👨‍👩‍👧‍👦 4 élèves', 5:'🏅 5 élèves' };
         teamBadge.textContent = teamLabels[teamSize] || '🧍 Indiv';
 
         // Info text
-        const infoSuffix = isForTime
-            ? `Time cap : ${wodConfig.duration} min — Finir le plus vite possible`
-            : `${wodConfig.duration} min — AMRAP (max de répétitions)`;
+        let infoSuffix;
+        if (isEmom) {
+            const totalEx = wodConfig.ateliers.reduce((s, a) => s + a.exercises.length, 0);
+            const totalMin = totalEx * (wodConfig.numTours || 3);
+            infoSuffix = `${wodConfig.numTours} tours × ${totalEx} exercices = ${totalMin} minutes — EMOM`;
+        } else if (isForTime) {
+            infoSuffix = `Time cap : ${wodConfig.duration} min — Finir le plus vite possible`;
+        } else {
+            infoSuffix = `${wodConfig.duration} min — AMRAP (max de répétitions)`;
+        }
+
         const teamSizeLabel = teamSize === 1 ? 'Individuel' : `Équipes de ${teamSize}`;
         document.getElementById('wodInfo').textContent =
             `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${infoSuffix} — ${teamSizeLabel}`;
+
+        // Show/hide EMOM panel vs ateliers grid
+        document.getElementById('emomPanel').style.display = isEmom ? 'block' : 'none';
+        document.getElementById('emomFinished').style.display = 'none';
+        document.getElementById('globalRankings').style.display = (isEmom) ? 'none' : 'none'; // rankings handled elsewhere
+        document.getElementById('clearRecordsButton').style.display = isEmom ? 'none' : 'block';
 
         const grid = document.getElementById('ateliersGrid');
         grid.className = `main-grid cols-${wodConfig.numAteliers}`;
         grid.innerHTML = '';
 
+        if (isEmom) {
+            renderEmomAtelierCards();
+            initEmomDisplay();
+            return;
+        }
+
+        // AMRAP / ForTime ateliers
         wodConfig.ateliers.forEach((atelier, index) => {
             selectedCategories[index] = 'mixed';
             const card = document.createElement('div');
@@ -1676,26 +2056,20 @@
                                 ${exData.images.map(img => `<img src="${img}" alt="${ex.name}">`).join('')}
                             </div>` : ''}
                     </div>` : '';
-
                 return `
                     <div class="exercise ${hasTooltip ? 'exercise-tooltip' : ''} ${isForTime ? 'fortime-ex' : ''}">
                         <div class="exercise-reps ${isForTime ? 'fortime-reps' : ''}">${ex.reps}</div>
                         <div class="exercise-name">${ex.name}</div>
                         ${tooltipHTML}
                     </div>
-                    ${i < atelier.exercises.length - 1
-                        ? `<div class="plus-sign ${isForTime ? 'fortime-plus' : ''}">+</div>` : ''}
+                    ${i < atelier.exercises.length - 1 ? `<div class="plus-sign ${isForTime ? 'fortime-plus' : ''}">+</div>` : ''}
                 `;
             }).join('');
 
-            // Score input label depends on mode
-            const scoreLabel = isForTime ? 'MM:SS' : 'Répétitions';
-            const scorePlaceholder = isForTime ? 'ex: 3:42' : 'Répétitions';
             const scoreInputClass = isForTime ? 'class="time-input"' : '';
             const scoreInputType = isForTime ? 'text' : 'number';
-            const timeHint = isForTime
-                ? `<div class="time-hint">Format MM:SS (ex: 3:42) ou laisser vide si DNF</div>` : '';
-
+            const scorePlaceholder = isForTime ? 'MM:SS' : 'Répétitions';
+            const timeHint = isForTime ? `<div class="time-hint">Format MM:SS (ex: 3:42) ou laisser vide si DNF</div>` : '';
             const titleColor = isForTime ? 'fortime-title' : '';
             const headerClass = isForTime ? 'atelier-header fortime-header' : 'atelier-header';
             const headerSub = isForTime
@@ -1707,9 +2081,7 @@
                     <h3>Atelier ${index + 1}</h3>
                     <div class="atelier-duration">${headerSub}</div>
                 </div>
-
                 <div class="exercises">${exercisesHTML}</div>
-
                 <div class="records-section">
                     <div class="records-title ${titleColor}">Ajouter un résultat</div>
                     <div class="record-input-form">
@@ -1724,24 +2096,24 @@
                         </div>
                         ${timeHint}
                         ${isForTime ? `
-                        <div style="margin-bottom: 8px;">
-                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85em; color:#a0aec0;">
+                        <div style="margin-bottom:8px;">
+                            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.85em;color:#a0aec0;">
                                 <input type="checkbox" id="dnf_${index}"> DNF (Did Not Finish)
                             </label>
                         </div>` : ''}
                         <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
                     </div>
-                    <div class="records-title ${titleColor}" style="margin-top: 15px;">Top 3</div>
+                    <div class="records-title ${titleColor}" style="margin-top:15px;">Top 3</div>
                     <div class="records-list" id="records_${index}">
                         <div class="no-records">Aucun résultat pour le moment</div>
                     </div>
                 </div>
             `;
-
             grid.appendChild(card);
             updateRecordsList(index);
         });
     }
+
 
     // ═══════════════════════════════════════════════════════
     //  CATEGORY
@@ -2001,15 +2373,239 @@
     }
 
     // ═══════════════════════════════════════════════════════
+    //  EMOM ENGINE
+    // ═══════════════════════════════════════════════════════
+
+    let emomSequence = [];     // flat list: [{atelierIdx, exIdx, name, reps}, ...]
+    let emomCurrentStep = 0;   // index in full sequence (0-based)
+    let emomSecondsLeft = 60;  // seconds remaining in current minute
+    let emomInterval = null;
+    let emomIsRunning = false;
+    let emomTotalMinutes = 0;
+
+    function buildEmomSequence() {
+        emomSequence = [];
+        const tours = wodConfig.numTours || 3;
+        for (let t = 0; t < tours; t++) {
+            wodConfig.ateliers.forEach((atelier, ai) => {
+                atelier.exercises.forEach((ex, ei) => {
+                    emomSequence.push({
+                        atelierIdx: ai,
+                        exIdx: ei,
+                        name: ex.name,
+                        reps: ex.reps,
+                        tour: t + 1,
+                        minuteNum: emomSequence.length + 1
+                    });
+                });
+            });
+        }
+        emomTotalMinutes = emomSequence.length;
+    }
+
+    function renderEmomAtelierCards() {
+        // Show ateliers as read-only reference cards with orange theme
+        const grid = document.getElementById('ateliersGrid');
+        grid.innerHTML = '';
+        grid.className = `main-grid cols-${wodConfig.numAteliers}`;
+
+        wodConfig.ateliers.forEach((atelier, index) => {
+            const card = document.createElement('div');
+            card.className = 'atelier-card';
+            card.id = `emomAtelierCard_${index}`;
+
+            const exercisesHTML = atelier.exercises.map((ex, i) => `
+                <div class="exercise" style="border-color:#ed8936;">
+                    <div class="exercise-reps" style="color:#ed8936;">${ex.reps}</div>
+                    <div class="exercise-name">${ex.name}</div>
+                </div>
+                ${i < atelier.exercises.length - 1 ? '<div class="plus-sign" style="color:#ed8936;">+</div>' : ''}
+            `).join('');
+
+            card.innerHTML = `
+                <div class="atelier-header" style="background:linear-gradient(135deg,#c05621,#9c4221);">
+                    <h3>Atelier ${index + 1}</h3>
+                    <div class="atelier-duration">${atelier.exercises.length} exercice${atelier.exercises.length>1?'s':''}</div>
+                </div>
+                <div class="exercises">${exercisesHTML}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function initEmomDisplay() {
+        buildEmomSequence();
+        emomCurrentStep = 0;
+        emomSecondsLeft = 60;
+        emomIsRunning = false;
+
+        // Build rounds dots
+        const tours = wodConfig.numTours || 3;
+        const roundsRow = document.getElementById('emomRoundsRow');
+        roundsRow.innerHTML = '';
+        for (let t = 1; t <= tours; t++) {
+            const dot = document.createElement('div');
+            dot.className = 'emom-round-dot';
+            dot.id = `emomRoundDot_${t}`;
+            dot.textContent = t;
+            roundsRow.appendChild(dot);
+        }
+        if (roundsRow.children[0]) roundsRow.children[0].className = 'emom-round-dot active';
+
+        updateEmomDisplay();
+        renderEmomSequenceList();
+    }
+
+    function updateEmomDisplay() {
+        if (emomCurrentStep >= emomTotalMinutes) {
+            // Finished
+            stopEmom(true);
+            return;
+        }
+
+        const step = emomSequence[emomCurrentStep];
+        const nextStep = emomSequence[emomCurrentStep + 1] || null;
+
+        // Minute number
+        document.getElementById('emomMinuteNum').textContent = step.minuteNum;
+
+        // Tour number
+        document.getElementById('emomTourNum').textContent = step.tour;
+
+        // Countdown
+        const cd = document.getElementById('emomCountdown');
+        cd.textContent = emomSecondsLeft;
+        cd.className = 'emom-minute-countdown' + (emomSecondsLeft <= 10 ? ' warning-emom' : '');
+
+        // Progress bar
+        const pct = (emomSecondsLeft / 60) * 100;
+        document.getElementById('emomProgressBar').style.width = pct + '%';
+
+        // Current exercise card
+        document.getElementById('emomCurrentName').textContent = step.name;
+        document.getElementById('emomCurrentReps').textContent = step.reps;
+
+        // Next exercise
+        if (nextStep) {
+            document.getElementById('emomNextName').textContent = nextStep.name;
+            document.getElementById('emomNextReps').textContent = `${nextStep.reps} reps — Tour ${nextStep.tour}`;
+            document.getElementById('emomNextCard').style.display = 'flex';
+        } else {
+            document.getElementById('emomNextName').textContent = '🏁 Dernier exercice !';
+            document.getElementById('emomNextReps').textContent = '';
+            document.getElementById('emomNextCard').style.display = 'flex';
+        }
+
+        // Rounds dots
+        for (let t = 1; t <= (wodConfig.numTours || 3); t++) {
+            const dot = document.getElementById(`emomRoundDot_${t}`);
+            if (!dot) continue;
+            if (t < step.tour) dot.className = 'emom-round-dot done';
+            else if (t === step.tour) dot.className = 'emom-round-dot active';
+            else dot.className = 'emom-round-dot';
+        }
+
+        // Highlight atelier card
+        wodConfig.ateliers.forEach((_, ai) => {
+            const c = document.getElementById(`emomAtelierCard_${ai}`);
+            if (c) c.style.outline = ai === step.atelierIdx ? '3px solid #ed8936' : 'none';
+        });
+
+        renderEmomSequenceList();
+    }
+
+    function renderEmomSequenceList() {
+        const container = document.getElementById('emomSequenceList');
+        container.innerHTML = emomSequence.map((s, i) => {
+            let cls = 'seq-future', icon = '○';
+            if (i < emomCurrentStep) { cls = 'seq-done'; icon = '✓'; }
+            else if (i === emomCurrentStep) { cls = 'seq-active'; icon = '▶'; }
+            return `
+                <div class="emom-seq-item ${cls}" id="emomSeqItem_${i}">
+                    <span class="emom-seq-min">Min ${s.minuteNum}</span>
+                    <span class="emom-seq-icon">${icon}</span>
+                    <span style="flex:1">${s.name}</span>
+                    <span style="font-weight:bold;">${s.reps} reps</span>
+                    <span style="color:#718096;font-size:0.8em;margin-left:6px;">Tour ${s.tour}</span>
+                </div>
+            `;
+        }).join('');
+
+        // Scroll active item into view
+        const activeItem = document.getElementById(`emomSeqItem_${emomCurrentStep}`);
+        if (activeItem) activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function startEmom() {
+        if (emomIsRunning) return;
+        if (emomCurrentStep >= emomTotalMinutes) return;
+        emomIsRunning = true;
+        emomInterval = setInterval(tickEmom, 1000);
+    }
+
+    function pauseEmom() {
+        emomIsRunning = false;
+        clearInterval(emomInterval);
+    }
+
+    function resetEmom() {
+        pauseEmom();
+        emomCurrentStep = 0;
+        emomSecondsLeft = 60;
+        document.getElementById('emomFinished').style.display = 'none';
+        document.getElementById('emomPanel').style.display = 'block';
+        initEmomDisplay();
+    }
+
+    function tickEmom() {
+        emomSecondsLeft--;
+
+        if (emomSecondsLeft <= 0) {
+            // Beep at end of minute
+            playBeep();
+            emomCurrentStep++;
+            emomSecondsLeft = 60;
+
+            if (emomCurrentStep >= emomTotalMinutes) {
+                stopEmom(true);
+                return;
+            }
+            // Animate new card
+            const card = document.getElementById('emomCurrentCard');
+            card.classList.remove('fadeInSlide');
+            void card.offsetWidth;
+            card.classList.add('fadeInSlide');
+        }
+
+        updateEmomDisplay();
+    }
+
+    function stopEmom(finished) {
+        pauseEmom();
+        if (finished) {
+            const tours = wodConfig.numTours || 3;
+            const totalEx = emomTotalMinutes;
+            document.getElementById('emomPanel').style.display = 'none';
+            document.getElementById('emomFinished').style.display = 'block';
+            document.getElementById('emomFinishedMsg').textContent =
+                `${tours} tour${tours>1?'s':''} × ${totalEx / tours} exercice${totalEx/tours>1?'s':''} = ${totalEx} minutes réalisées ! Bravo à tous ! 💪`;
+            // All round dots done
+            for (let t = 1; t <= tours; t++) {
+                const dot = document.getElementById(`emomRoundDot_${t}`);
+                if (dot) dot.className = 'emom-round-dot done';
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════
     //  TIMER
     // ═══════════════════════════════════════════════════════
     function startTimer() {
+        if (wodConfig.mode === 'emom') { startEmom(); return; }
         if (isRunning) return;
         isRunning = true;
         const isForTime = wodConfig.mode === 'fortime';
-
         if (isForTime) {
-            // Stopwatch: count UP
             document.getElementById('timerDisplay').classList.add('fortime-running');
             timerInterval = setInterval(() => {
                 timeElapsed++;
@@ -2017,8 +2613,6 @@
                 const s = timeElapsed % 60;
                 document.getElementById('timerDisplay').textContent =
                     `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-
-                // Warn near time cap
                 const cap = wodConfig.duration * 60;
                 const remaining = cap - timeElapsed;
                 if (remaining <= 10 && remaining > 0) {
@@ -2033,7 +2627,6 @@
                 }
             }, 1000);
         } else {
-            // AMRAP: count DOWN
             if (timeLeft === 0) timeLeft = wodConfig.duration * 60;
             timerInterval = setInterval(updateTimerAMRAP, 1000);
         }
@@ -2046,10 +2639,7 @@
             const s = timeLeft % 60;
             document.getElementById('timerDisplay').textContent =
                 `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-
-            if (timeLeft <= 10 && timeLeft > 0) {
-                document.getElementById('timerDisplay').classList.add('warning');
-            }
+            if (timeLeft <= 10 && timeLeft > 0) document.getElementById('timerDisplay').classList.add('warning');
             if (timeLeft === 0) {
                 pauseTimer();
                 document.getElementById('timerDisplay').classList.remove('warning');
@@ -2060,16 +2650,17 @@
     }
 
     function pauseTimer() {
+        if (wodConfig.mode === 'emom') { pauseEmom(); return; }
         isRunning = false;
         clearInterval(timerInterval);
     }
 
     function resetTimer() {
+        if (wodConfig.mode === 'emom') { resetEmom(); return; }
         isRunning = false;
         clearInterval(timerInterval);
         const isForTime = wodConfig.mode === 'fortime';
         const display = document.getElementById('timerDisplay');
-
         if (isForTime) {
             timeElapsed = 0;
             display.textContent = '00:00';
@@ -2083,6 +2674,7 @@
         }
     }
 
+
     // ═══════════════════════════════════════════════════════
     //  APP NAVIGATION
     // ═══════════════════════════════════════════════════════
@@ -2092,7 +2684,7 @@
 
     function createNewWOD() {
         currentWODId = null;
-        wodConfig = { name:'', mode:'amrap', teamSize:1, numAteliers:3, duration:5, ateliers:[] };
+        wodConfig = { name:'', mode:'amrap', teamSize:1, numAteliers:3, duration:5, numTours:3, ateliers:[] };
         selectedWodMode = 'amrap';
         selectedTeamSize = 1;
         document.getElementById('welcomeScreen').style.display = 'none';
@@ -2126,7 +2718,8 @@
             container.innerHTML = wodArray.map(wod => {
                 const mode = wod.mode || 'amrap';
                 const teamLabelsMap = { 1:'🧍 Indiv', 2:'👥 Duo', 3:'👥 Trio', 4:'👨‍👩‍👧‍👦 4 élèves', 5:'🏅 5 élèves' };
-                const modeLabel = mode === 'fortime' ? 'For Time' : 'AMRAP';
+                const modeLabelMap = { amrap:'AMRAP', fortime:'For Time', emom:'EMOM' };
+                const modeLabel = modeLabelMap[mode] || 'AMRAP';
                 const preview = wod.ateliers.map((a, i) =>
                     `Atelier ${i+1}: ${a.exercises.map(e => `${e.reps} ${e.name}`).join(' + ')}`
                 ).join(' | ');
@@ -2139,7 +2732,8 @@
                             <span class="team-badge" style="font-size:0.7em;">${teamLabelsMap[wod.teamSize||1]||'🧍 Indiv'}</span>
                         </div>
                         <div class="wod-card-info">
-                            ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''} × ${wod.duration} min
+                            ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''}
+                            ${mode === 'emom' ? `× ${wod.numTours || 3} tours` : `× ${wod.duration} min`}
                         </div>
                         <div class="wod-card-preview">${preview.substring(0, 150)}${preview.length > 150 ? '...' : ''}</div>
                         <div class="wod-card-actions">
@@ -2161,7 +2755,7 @@
         const wod = savedWODs[id];
         if (!wod) return;
         currentWODId = id;
-        wodConfig = { ...wod, mode: wod.mode || 'amrap', teamSize: wod.teamSize || 1 };
+        wodConfig = { ...wod, mode: wod.mode || 'amrap', teamSize: wod.teamSize || 1, numTours: wod.numTours || 3 };
         document.getElementById('myWODsScreen').style.display = 'none';
         finishSetup();
     }
@@ -2173,6 +2767,12 @@
         wodConfig = { ...wod, mode: wod.mode || 'amrap' };
         selectedWodMode = wodConfig.mode;
         selectedTeamSize = wodConfig.teamSize || 1;
+
+        // Restore EMOM tours in form if applicable
+        if (wodConfig.mode === 'emom') {
+            const nt = document.getElementById('numTours');
+            if (nt) nt.value = wodConfig.numTours || 3;
+        }
 
         document.getElementById('myWODsScreen').style.display = 'none';
         document.getElementById('setupOverlay').style.display = 'flex';
@@ -2213,6 +2813,7 @@
                 name: wodConfig.name,
                 mode: wodConfig.mode || 'amrap',
                 teamSize: wodConfig.teamSize || 1,
+                numTours: wodConfig.numTours || 3,
                 numAteliers: wodConfig.numAteliers,
                 duration: wodConfig.duration,
                 ateliers: wodConfig.ateliers.map(a => ({ exercises: a.exercises })),
