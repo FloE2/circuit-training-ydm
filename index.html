@@ -1252,12 +1252,49 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(229,62,62,0.4);
         }
+
+        /* ── Loading screen ── */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99998;
+        }
+
+        .loading-spinner {
+            width: 48px; height: 48px;
+            border: 4px solid #2d3748;
+            border-top: 4px solid #4299e1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #718096;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
 
+    <!-- ═══ LOADING SCREEN ═══ -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Chargement…</div>
+    </div>
+
     <!-- ═══ LOGIN SCREEN ═══ -->
-    <div class="auth-overlay" id="authOverlay">
+    <div class="auth-overlay" id="authOverlay" style="display:none;">
         <div class="auth-box">
             <div class="auth-logo">🏋️</div>
             <h2>Circuit Training</h2>
@@ -1650,6 +1687,7 @@
 
             auth.onAuthStateChanged(function(user) {
                 if (user) {
+                    document.getElementById('loadingOverlay').style.display = 'none';
                     document.getElementById('authOverlay').style.display = 'none';
                     document.getElementById('welcomeScreen').style.display = 'flex';
                     var userBar = document.getElementById('userBar');
@@ -1661,6 +1699,7 @@
                         loadExercisesFromFirebase();
                     }
                 } else {
+                    document.getElementById('loadingOverlay').style.display = 'none';
                     document.getElementById('authOverlay').style.display = 'flex';
                     document.getElementById('welcomeScreen').style.display = 'none';
                     var myWODs = document.getElementById('myWODsScreen');
