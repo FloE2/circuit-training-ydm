@@ -1579,6 +1579,108 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
+    <!-- ═══ AUTH SCRIPT (isolated block — always available) ═══ -->
+    <script>
+    (function() {
+        // Wait for Firebase to be ready
+        function initAuth() {
+            if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) {
+                setTimeout(initAuth, 50);
+                return;
+            }
+
+            var auth = firebase.auth();
+            var ALLOWED = ['florianeude@gmail.com', 'cosperecemeric@gmail.com'];
+
+            window.showAuthError = function(msg) {
+                var el = document.getElementById('authError');
+                if (el) { el.textContent = msg; el.style.display = 'block'; }
+            };
+
+            window.hideAuthError = function() {
+                var el = document.getElementById('authError');
+                if (el) el.style.display = 'none';
+            };
+
+            window.togglePasswordVisibility = function() {
+                var input = document.getElementById('authPassword');
+                var icon = document.getElementById('eyeIcon');
+                if (!input || !icon) return;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = '🙈';
+                } else {
+                    input.type = 'password';
+                    icon.textContent = '👁️';
+                }
+            };
+
+            window.loginUser = async function() {
+                var email = document.getElementById('authEmail').value.trim().toLowerCase();
+                var password = document.getElementById('authPassword').value;
+                window.hideAuthError();
+
+                if (!email || !password) { window.showAuthError('Veuillez remplir tous les champs.'); return; }
+                if (!ALLOWED.includes(email)) { window.showAuthError('Accès non autorisé pour cet email.'); return; }
+
+                var btn = document.getElementById('loginBtn');
+                var loading = document.getElementById('authLoading');
+                if (btn) btn.disabled = true;
+                if (loading) loading.style.display = 'block';
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } catch (error) {
+                    if (loading) loading.style.display = 'none';
+                    if (btn) btn.disabled = false;
+                    var msgs = {
+                        'auth/user-not-found': 'Aucun compte trouvé pour cet email.',
+                        'auth/wrong-password': 'Mot de passe incorrect.',
+                        'auth/invalid-email': 'Adresse email invalide.',
+                        'auth/too-many-requests': 'Trop de tentatives. Réessayez plus tard.',
+                        'auth/invalid-credential': 'Email ou mot de passe incorrect.'
+                    };
+                    window.showAuthError(msgs[error.code] || 'Erreur : ' + error.message);
+                }
+            };
+
+            window.logoutUser = async function() {
+                if (confirm('Se déconnecter ?')) await auth.signOut();
+            };
+
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    document.getElementById('authOverlay').style.display = 'none';
+                    document.getElementById('welcomeScreen').style.display = 'flex';
+                    var userBar = document.getElementById('userBar');
+                    if (userBar) userBar.style.display = 'flex';
+                    var userEmail = document.getElementById('userEmail');
+                    if (userEmail) userEmail.textContent = user.email;
+                } else {
+                    document.getElementById('authOverlay').style.display = 'flex';
+                    document.getElementById('welcomeScreen').style.display = 'none';
+                    var myWODs = document.getElementById('myWODsScreen');
+                    if (myWODs) myWODs.style.display = 'none';
+                    var setup = document.getElementById('setupOverlay');
+                    if (setup) setup.style.display = 'none';
+                    var main = document.getElementById('mainContainer');
+                    if (main) main.classList.remove('visible');
+                    var userBar = document.getElementById('userBar');
+                    if (userBar) userBar.style.display = 'none';
+                    var btn = document.getElementById('loginBtn');
+                    if (btn) btn.disabled = false;
+                    var loading = document.getElementById('authLoading');
+                    if (loading) loading.style.display = 'none';
+                    window.hideAuthError();
+                }
+            });
+        }
+
+        initAuth();
+    })();
+    </script>
+
+
     <script>
     // ═══════════════════════════════════════════════════════
     //  EXERCISES LIST
@@ -1604,92 +1706,6 @@
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    const auth = firebase.auth();
-
-    // ═══════════════════════════════════════════════════════
-    //  AUTH
-    // ═══════════════════════════════════════════════════════
-    const ALLOWED_EMAILS = ['florianeude@gmail.com', 'cosperecemeric@gmail.com'];
-
-    function showAuthError(msg) {
-        const el = document.getElementById('authError');
-        el.textContent = msg;
-        el.style.display = 'block';
-    }
-
-    function hideAuthError() {
-        const el = document.getElementById('authError');
-        if (el) el.style.display = 'none';
-    }
-
-    function togglePasswordVisibility() {
-        const input = document.getElementById('authPassword');
-        const icon = document.getElementById('eyeIcon');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.textContent = '🙈';
-        } else {
-            input.type = 'password';
-            icon.textContent = '👁️';
-        }
-    }
-
-    async function loginUser() {
-        const email = document.getElementById('authEmail').value.trim().toLowerCase();
-        const password = document.getElementById('authPassword').value;
-        hideAuthError();
-
-        if (!email || !password) { showAuthError('Veuillez remplir tous les champs.'); return; }
-        if (!ALLOWED_EMAILS.includes(email)) { showAuthError('Accès non autorisé pour cet email.'); return; }
-
-        const btn = document.getElementById('loginBtn');
-        const loading = document.getElementById('authLoading');
-        btn.disabled = true;
-        loading.style.display = 'block';
-
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
-        } catch (error) {
-            loading.style.display = 'none';
-            btn.disabled = false;
-            const msgs = {
-                'auth/user-not-found': 'Aucun compte trouvé pour cet email.',
-                'auth/wrong-password': 'Mot de passe incorrect.',
-                'auth/invalid-email': 'Adresse email invalide.',
-                'auth/too-many-requests': 'Trop de tentatives. Réessayez plus tard.',
-                'auth/invalid-credential': 'Email ou mot de passe incorrect.'
-            };
-            showAuthError(msgs[error.code] || 'Erreur : ' + error.message);
-        }
-    }
-
-    async function logoutUser() {
-        if (confirm('Se déconnecter ?')) await auth.signOut();
-    }
-
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            document.getElementById('authOverlay').style.display = 'none';
-            document.getElementById('welcomeScreen').style.display = 'flex';
-            const userBar = document.getElementById('userBar');
-            if (userBar) { userBar.style.display = 'flex'; }
-            const userEmail = document.getElementById('userEmail');
-            if (userEmail) userEmail.textContent = user.email;
-        } else {
-            document.getElementById('authOverlay').style.display = 'flex';
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('myWODsScreen').style.display = 'none';
-            document.getElementById('setupOverlay').style.display = 'none';
-            document.getElementById('mainContainer').classList.remove('visible');
-            const userBar = document.getElementById('userBar');
-            if (userBar) userBar.style.display = 'none';
-            const btn = document.getElementById('loginBtn');
-            if (btn) btn.disabled = false;
-            const loading = document.getElementById('authLoading');
-            if (loading) loading.style.display = 'none';
-            hideAuthError();
-        }
-    });
 
     let exerciseData = {};
     let currentEditingExercise = null;
