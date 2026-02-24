@@ -992,8 +992,19 @@
             <div class="auth-error" id="authError"></div>
 
             <input type="email" class="auth-input" id="authEmail" placeholder="Adresse e-mail" autocomplete="email">
-            <input type="password" class="auth-input" id="authPassword" placeholder="Mot de passe" autocomplete="current-password"
-                onkeydown="if(event.key==='Enter') loginUser()">
+            <div style="position:relative; margin-bottom:12px;">
+                <input type="password" class="auth-input" id="authPassword"
+                    placeholder="Mot de passe" autocomplete="current-password"
+                    onkeydown="if(event.key==='Enter') loginUser()"
+                    style="margin-bottom:0; padding-right:46px;">
+                <button type="button" onclick="togglePasswordVisibility()"
+                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                           background:none; border:none; cursor:pointer; font-size:1.2em;
+                           line-height:1; padding:0; color:#718096;"
+                    title="Afficher/masquer le mot de passe">
+                    <span id="eyeIcon">👁️</span>
+                </button>
+            </div>
 
             <button class="btn-login" id="loginBtn" onclick="loginUser()">Se connecter</button>
             <div class="auth-loading" id="authLoading">Connexion en cours…</div>
@@ -1256,6 +1267,92 @@
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    const auth = firebase.auth();
+
+    // ═══════════════════════════════════════════════════════
+    //  AUTH
+    // ═══════════════════════════════════════════════════════
+    const ALLOWED_EMAILS = ['florianeude@gmail.com', 'cosperecemeric@gmail.com'];
+
+    function showAuthError(msg) {
+        const el = document.getElementById('authError');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    function hideAuthError() {
+        const el = document.getElementById('authError');
+        if (el) el.style.display = 'none';
+    }
+
+    function togglePasswordVisibility() {
+        const input = document.getElementById('authPassword');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+
+    async function loginUser() {
+        const email = document.getElementById('authEmail').value.trim().toLowerCase();
+        const password = document.getElementById('authPassword').value;
+        hideAuthError();
+
+        if (!email || !password) { showAuthError('Veuillez remplir tous les champs.'); return; }
+        if (!ALLOWED_EMAILS.includes(email)) { showAuthError('Accès non autorisé pour cet email.'); return; }
+
+        const btn = document.getElementById('loginBtn');
+        const loading = document.getElementById('authLoading');
+        btn.disabled = true;
+        loading.style.display = 'block';
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+            loading.style.display = 'none';
+            btn.disabled = false;
+            const msgs = {
+                'auth/user-not-found': 'Aucun compte trouvé pour cet email.',
+                'auth/wrong-password': 'Mot de passe incorrect.',
+                'auth/invalid-email': 'Adresse email invalide.',
+                'auth/too-many-requests': 'Trop de tentatives. Réessayez plus tard.',
+                'auth/invalid-credential': 'Email ou mot de passe incorrect.'
+            };
+            showAuthError(msgs[error.code] || 'Erreur : ' + error.message);
+        }
+    }
+
+    async function logoutUser() {
+        if (confirm('Se déconnecter ?')) await auth.signOut();
+    }
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'flex';
+            const userBar = document.getElementById('userBar');
+            if (userBar) { userBar.style.display = 'flex'; }
+            const userEmail = document.getElementById('userEmail');
+            if (userEmail) userEmail.textContent = user.email;
+        } else {
+            document.getElementById('authOverlay').style.display = 'flex';
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('myWODsScreen').style.display = 'none';
+            document.getElementById('setupOverlay').style.display = 'none';
+            document.getElementById('mainContainer').classList.remove('visible');
+            const userBar = document.getElementById('userBar');
+            if (userBar) userBar.style.display = 'none';
+            const btn = document.getElementById('loginBtn');
+            if (btn) btn.disabled = false;
+            const loading = document.getElementById('authLoading');
+            if (loading) loading.style.display = 'none';
+            hideAuthError();
+        }
+    });
 
     let exerciseData = {};
     let currentEditingExercise = null;
