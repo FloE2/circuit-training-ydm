@@ -17,10 +17,8 @@
 
         .setup-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
@@ -83,6 +81,84 @@
             border-color: #4299e1;
         }
 
+        /* ── Mode selector ── */
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: 2px solid #4a5568;
+            background: #1a202c;
+            color: #a0aec0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .mode-btn .mode-icon { font-size: 1.4em; display: block; margin-bottom: 4px; }
+        .mode-btn .mode-label { display: block; font-size: 0.95em; }
+        .mode-btn .mode-sub { display: block; font-size: 0.7em; opacity: 0.6; margin-top: 2px; }
+
+        .mode-btn:hover:not(.disabled) {
+            border-color: #4299e1;
+            color: #e0e0e0;
+        }
+
+        .mode-btn.active-amrap {
+            background: linear-gradient(135deg, #2b6cb0, #2c5282);
+            border-color: #4299e1;
+            color: white;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+        }
+
+        .mode-btn.active-fortime {
+            background: linear-gradient(135deg, #276749, #22543d);
+            border-color: #48bb78;
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .mode-btn.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .mode-btn.disabled::after {
+            content: 'Bientôt';
+            position: absolute;
+            top: -10px;
+            right: -4px;
+            background: #ed8936;
+            color: white;
+            font-size: 0.6em;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .mode-description {
+            font-size: 0.82em;
+            color: #a0aec0;
+            padding: 8px 12px;
+            background: #1a202c;
+            border-radius: 8px;
+            margin-top: 4px;
+            border-left: 3px solid #4299e1;
+            transition: border-color 0.3s;
+        }
+
+        .mode-description.fortime { border-left-color: #48bb78; }
+
+        /* ── Buttons ── */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -105,15 +181,14 @@
             box-shadow: 0 5px 15px rgba(66, 153, 225, 0.4);
         }
 
+        /* ── Main container ── */
         .container {
             max-width: 1800px;
             margin: 0 auto;
             display: none;
         }
 
-        .container.visible {
-            display: block;
-        }
+        .container.visible { display: block; }
 
         header {
             background: #2d3748;
@@ -127,22 +202,37 @@
             gap: 15px;
         }
 
-        .header-content {
-            flex: 1;
-            text-align: center;
+        .header-content { flex: 1; text-align: center; }
+
+        header h1 { color: #4299e1; font-size: 1.8em; margin-bottom: 6px; }
+
+        .wod-info { color: #a0aec0; font-size: 0.95em; }
+
+        /* ── Mode badge ── */
+        .mode-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-left: 10px;
         }
 
-        header h1 {
+        .mode-badge.amrap {
+            background: rgba(66, 153, 225, 0.2);
             color: #4299e1;
-            font-size: 1.8em;
-            margin-bottom: 6px;
+            border: 1px solid #4299e1;
         }
 
-        .wod-info {
-            color: #a0aec0;
-            font-size: 0.95em;
+        .mode-badge.fortime {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid #48bb78;
         }
 
+        /* ── Controls / Timer ── */
         .controls {
             background: #2d3748;
             border-radius: 12px;
@@ -167,6 +257,11 @@
             min-width: 180px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+
+        .timer-display.fortime-running {
+            background: linear-gradient(135deg, #276749 0%, #22543d 100%);
         }
 
         .timer-display.warning {
@@ -188,33 +283,22 @@
             transition: all 0.3s;
         }
 
-        .btn-start {
-            background: #00C851;
-            color: white;
-        }
-
-        .btn-pause {
-            background: #ff9800;
-            color: white;
-        }
-
-        .btn-reset {
-            background: #ff4444;
-            color: white;
-        }
+        .btn-start { background: #00C851; color: white; }
+        .btn-pause { background: #ff9800; color: white; }
+        .btn-reset { background: #ff4444; color: white; }
 
         .btn-control:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        /* ── Ateliers grid ── */
         .main-grid {
             display: grid;
             gap: 12px;
             margin-bottom: 15px;
         }
 
-        /* Adaptive grid layouts - max 3 columns to prevent overflow */
         .main-grid.cols-1 { grid-template-columns: 1fr; }
         .main-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
         .main-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
@@ -246,15 +330,12 @@
             text-align: center;
         }
 
-        .atelier-header h3 {
-            font-size: 1.2em;
-            margin-bottom: 3px;
+        .atelier-header.fortime-header {
+            background: linear-gradient(135deg, #276749 0%, #22543d 100%);
         }
 
-        .atelier-duration {
-            font-size: 0.85em;
-            opacity: 0.95;
-        }
+        .atelier-header h3 { font-size: 1.2em; margin-bottom: 3px; }
+        .atelier-duration { font-size: 0.85em; opacity: 0.95; }
 
         .exercises {
             display: flex;
@@ -277,6 +358,8 @@
             border: 2px solid #4299e1;
         }
 
+        .exercise.fortime-ex { border-color: #48bb78; }
+
         .exercise-reps {
             font-size: 1.4em;
             font-weight: bold;
@@ -284,18 +367,18 @@
             margin-bottom: 3px;
         }
 
+        .exercise-reps.fortime-reps { color: #48bb78; }
+
         .exercise-name {
             font-size: 0.75em;
             color: #e0e0e0;
             font-weight: 600;
         }
 
-        .plus-sign {
-            font-size: 1.8em;
-            color: #4299e1;
-            font-weight: bold;
-        }
+        .plus-sign { font-size: 1.8em; color: #4299e1; font-weight: bold; }
+        .plus-sign.fortime-plus { color: #48bb78; }
 
+        /* ── Records section ── */
         .records-section {
             border-top: 2px dashed #4a5568;
             padding-top: 12px;
@@ -308,6 +391,8 @@
             font-size: 1em;
             text-align: center;
         }
+
+        .records-title.fortime-title { color: #48bb78; }
 
         .record-input-form {
             background: #1a202c;
@@ -337,11 +422,10 @@
             border-color: #4299e1;
         }
 
-        .category-selector {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
+        /* For Time: time input gets green accent */
+        .record-input input.time-input:focus { border-color: #48bb78; }
+
+        .category-selector { display: flex; gap: 6px; margin-bottom: 8px; }
 
         .category-btn {
             flex: 1;
@@ -356,15 +440,8 @@
             color: #e0e0e0;
         }
 
-        .category-btn.active {
-            background: #4299e1;
-            color: white;
-            border-color: #4299e1;
-        }
-
-        .category-btn:hover {
-            border-color: #4299e1;
-        }
+        .category-btn.active { background: #4299e1; color: white; border-color: #4299e1; }
+        .category-btn:hover { border-color: #4299e1; }
 
         .btn-add {
             background: #48bb78;
@@ -378,9 +455,7 @@
             font-size: 0.9em;
         }
 
-        .btn-add:hover {
-            background: #38a169;
-        }
+        .btn-add:hover { background: #38a169; }
 
         .records-list {
             margin-top: 10px;
@@ -404,11 +479,7 @@
             gap: 6px;
         }
 
-        .record-name {
-            font-weight: bold;
-            color: #e0e0e0;
-            font-size: 0.9em;
-        }
+        .record-name { font-weight: bold; color: #e0e0e0; font-size: 0.9em; }
 
         .record-category {
             font-size: 0.7em;
@@ -421,17 +492,10 @@
         .category-girls { background: #d53f8c; color: white; }
         .category-mixed { background: #805ad5; color: white; }
 
-        .record-score {
-            color: #4299e1;
-            font-weight: bold;
-            font-size: 1.05em;
-        }
+        .record-score { color: #4299e1; font-weight: bold; font-size: 1.05em; }
+        .record-score.fortime-score { color: #48bb78; }
 
-        .record-actions {
-            display: flex;
-            gap: 4px;
-            margin-left: 8px;
-        }
+        .record-actions { display: flex; gap: 4px; margin-left: 8px; }
 
         .btn-edit-record, .btn-delete-record {
             padding: 4px 8px;
@@ -443,24 +507,12 @@
             transition: all 0.2s;
         }
 
-        .btn-edit-record {
-            background: #4299e1;
-            color: white;
-        }
+        .btn-edit-record { background: #4299e1; color: white; }
+        .btn-edit-record:hover { background: #3182ce; }
+        .btn-delete-record { background: #e53e3e; color: white; }
+        .btn-delete-record:hover { background: #c53030; }
 
-        .btn-edit-record:hover {
-            background: #3182ce;
-        }
-
-        .btn-delete-record {
-            background: #e53e3e;
-            color: white;
-        }
-
-        .btn-delete-record:hover {
-            background: #c53030;
-        }
-
+        /* ── Rankings ── */
         .rankings-section {
             background: #2d3748;
             border-radius: 12px;
@@ -469,33 +521,12 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
-        .rankings-title {
-            color: #4299e1;
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        .rankings-title { color: #4299e1; font-size: 1.5em; font-weight: bold; text-align: center; margin-bottom: 15px; }
 
-        .rankings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
-        }
+        .rankings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
 
-        .ranking-card {
-            background: #1a202c;
-            border-radius: 10px;
-            padding: 12px;
-            border: 2px solid #4299e1;
-        }
-
-        .ranking-card h4 {
-            color: #4299e1;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            text-align: center;
-        }
+        .ranking-card { background: #1a202c; border-radius: 10px; padding: 12px; border: 2px solid #4299e1; }
+        .ranking-card h4 { color: #4299e1; margin-bottom: 10px; font-size: 1.1em; text-align: center; }
 
         .ranking-item {
             background: #2d3748;
@@ -511,6 +542,7 @@
         .ranking-item.second { border-left: 4px solid #c0c0c0; }
         .ranking-item.third { border-left: 4px solid #cd7f32; }
 
+        /* ── Header buttons ── */
         .edit-wod {
             background: #4299e1;
             color: white;
@@ -528,375 +560,6 @@
             background: #3182ce;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
-        }
-
-        @media (max-width: 1200px) {
-            .main-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
-            .main-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
-            .main-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
-            .main-grid.cols-6 { grid-template-columns: repeat(2, 1fr); }
-            .main-grid.cols-7 { grid-template-columns: repeat(2, 1fr); }
-            .main-grid.cols-8 { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr !important; }
-            header h1 { font-size: 1.4em; }
-            .timer-display { font-size: 1.8em; padding: 12px 20px; }
-            .controls { padding: 10px; }
-            header {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .edit-wod {
-                width: 100%;
-            }
-        }
-
-        .no-records {
-            text-align: center;
-            color: #718096;
-            padding: 15px;
-            font-style: italic;
-        }
-
-        .copyright {
-            text-align: center;
-            color: #718096;
-            padding: 20px;
-            font-size: 0.9em;
-            margin-top: 20px;
-        }
-
-        /* Tooltip styles */
-        .exercise-tooltip {
-            position: relative;
-            cursor: help;
-        }
-
-        .tooltip-content {
-            display: none;
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a202c;
-            border: 2px solid #4299e1;
-            border-radius: 8px;
-            padding: 12px;
-            min-width: 250px;
-            max-width: 350px;
-            z-index: 1000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            margin-bottom: 8px;
-        }
-
-        .exercise-tooltip:hover .tooltip-content {
-            display: block;
-        }
-
-        .tooltip-description {
-            color: #e0e0e0;
-            font-size: 0.85em;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .tooltip-images {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .tooltip-images img {
-            max-width: 120px;
-            max-height: 100px;
-            border-radius: 6px;
-            border: 1px solid #4a5568;
-        }
-
-        /* Settings modal styles */
-        .settings-section {
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .exercise-list-item {
-            background: #1a202c;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .exercise-list-item:hover {
-            background: #2d3748;
-        }
-
-        .exercise-info {
-            flex: 1;
-        }
-
-        .exercise-title {
-            color: #4299e1;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .exercise-desc-preview {
-            color: #a0aec0;
-            font-size: 0.85em;
-            font-style: italic;
-        }
-
-        .exercise-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-edit, .btn-delete {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-
-        .btn-edit {
-            background: #4299e1;
-            color: white;
-        }
-
-        .btn-delete {
-            background: #e53e3e;
-            color: white;
-        }
-
-        .add-exercise-form {
-            background: #1a202c;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .image-upload-preview {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .image-preview-item {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            border: 2px dashed #4a5568;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #2d3748;
-        }
-
-        .image-preview-item img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 6px;
-        }
-
-        .remove-image {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #e53e3e;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #4a5568;
-            border-radius: 8px;
-            background: #2d3748;
-            color: #e0e0e0;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #4299e1;
-        }
-
-        .progress-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #4a5568;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.85em;
-            color: #718096;
-            border: 2px solid #4a5568;
-            transition: all 0.3s;
-        }
-
-        .progress-dot.completed {
-            background: #48bb78;
-            border-color: #48bb78;
-            color: white;
-        }
-
-        .progress-dot.active {
-            background: #4299e1;
-            border-color: #4299e1;
-            color: white;
-            transform: scale(1.2);
-            box-shadow: 0 0 15px rgba(66, 153, 225, 0.6);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .slide-in {
-            animation: slideIn 0.4s ease-out;
-        }
-
-        /* WOD List Styles */
-        .wod-card {
-            background: #1a202c;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 2px solid #4a5568;
-            transition: all 0.3s;
-        }
-
-        .wod-card:hover {
-            border-color: #4299e1;
-            transform: translateY(-2px);
-        }
-
-        .wod-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .wod-card-title {
-            color: #4299e1;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .wod-card-info {
-            color: #a0aec0;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .wod-card-preview {
-            background: #2d3748;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            font-size: 0.85em;
-            color: #e0e0e0;
-        }
-
-        .wod-card-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-wod {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .btn-load {
-            background: #48bb78;
-            color: white;
-        }
-
-        .btn-modify {
-            background: #4299e1;
-            color: white;
-        }
-
-        .btn-duplicate {
-            background: #ed8936;
-            color: white;
-        }
-
-        .btn-delete-wod {
-            background: #e53e3e;
-            color: white;
-        }
-
-        .btn-wod:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .save-launch-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10001;
-        }
-
-        .save-launch-box {
-            background: #2d3748;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 400px;
-        }
-
-        .save-launch-box h3 {
-            color: #4299e1;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .save-launch-box button {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 15px;
-            font-size: 1.1em;
         }
 
         .btn-clear-records {
@@ -917,23 +580,238 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
         }
+
+        /* ── Misc ── */
+        @media (max-width: 1200px) {
+            .main-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-6 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-7 { grid-template-columns: repeat(2, 1fr); }
+            .main-grid.cols-8 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr !important; }
+            header h1 { font-size: 1.4em; }
+            .timer-display { font-size: 1.8em; padding: 12px 20px; }
+            .controls { padding: 10px; }
+            header { flex-direction: column; gap: 10px; }
+            .edit-wod { width: 100%; }
+            .mode-selector { flex-wrap: wrap; }
+        }
+
+        .no-records { text-align: center; color: #718096; padding: 15px; font-style: italic; }
+
+        .copyright { text-align: center; color: #718096; padding: 20px; font-size: 0.9em; margin-top: 20px; }
+
+        /* ── Tooltip ── */
+        .exercise-tooltip { position: relative; cursor: help; }
+
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a202c;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 250px;
+            max-width: 350px;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
+        }
+
+        .exercise-tooltip:hover .tooltip-content { display: block; }
+        .tooltip-description { color: #e0e0e0; font-size: 0.85em; margin-bottom: 10px; line-height: 1.4; }
+        .tooltip-images { display: flex; gap: 8px; justify-content: center; }
+        .tooltip-images img { max-width: 120px; max-height: 100px; border-radius: 6px; border: 1px solid #4a5568; }
+
+        /* ── Settings ── */
+        .settings-section { max-height: 60vh; overflow-y: auto; }
+
+        .exercise-list-item {
+            background: #1a202c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercise-list-item:hover { background: #2d3748; }
+        .exercise-info { flex: 1; }
+        .exercise-title { color: #4299e1; font-weight: bold; margin-bottom: 4px; }
+        .exercise-desc-preview { color: #a0aec0; font-size: 0.85em; font-style: italic; }
+        .exercise-actions { display: flex; gap: 8px; }
+
+        .btn-edit, .btn-delete {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .btn-edit { background: #4299e1; color: white; }
+        .btn-delete { background: #e53e3e; color: white; }
+
+        .add-exercise-form { background: #1a202c; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+
+        .image-upload-preview { display: flex; gap: 10px; margin-top: 10px; }
+
+        .image-preview-item {
+            position: relative;
+            width: 120px; height: 120px;
+            border: 2px dashed #4a5568;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2d3748;
+        }
+
+        .image-preview-item img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+
+        .remove-image {
+            position: absolute;
+            top: -8px; right: -8px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            background: #2d3748;
+            color: #e0e0e0;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        textarea:focus { outline: none; border-color: #4299e1; }
+
+        .progress-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #718096;
+            border: 2px solid #4a5568;
+            transition: all 0.3s;
+        }
+
+        .progress-dot.completed { background: #48bb78; border-color: #48bb78; color: white; }
+        .progress-dot.active { background: #4299e1; border-color: #4299e1; color: white; transform: scale(1.2); box-shadow: 0 0 15px rgba(66, 153, 225, 0.6); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in { animation: slideIn 0.4s ease-out; }
+
+        /* ── WOD List ── */
+        .wod-card {
+            background: #1a202c;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #4a5568;
+            transition: all 0.3s;
+        }
+
+        .wod-card:hover { border-color: #4299e1; transform: translateY(-2px); }
+        .wod-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .wod-card-title { color: #4299e1; font-size: 1.3em; font-weight: bold; }
+        .wod-card-info { color: #a0aec0; font-size: 0.9em; margin-bottom: 10px; }
+        .wod-card-preview { background: #2d3748; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 0.85em; color: #e0e0e0; }
+        .wod-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .btn-wod { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: bold; transition: all 0.3s; }
+        .btn-load { background: #48bb78; color: white; }
+        .btn-modify { background: #4299e1; color: white; }
+        .btn-duplicate { background: #ed8936; color: white; }
+        .btn-delete-wod { background: #e53e3e; color: white; }
+        .btn-wod:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+        /* WOD mode pill on cards */
+        .wod-mode-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .wod-mode-pill.amrap { background: rgba(66,153,225,0.25); color: #4299e1; border: 1px solid #4299e1; }
+        .wod-mode-pill.fortime { background: rgba(72,187,120,0.25); color: #48bb78; border: 1px solid #48bb78; }
+
+        /* ── Save / Launch ── */
+        .save-launch-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .save-launch-box { background: #2d3748; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; }
+        .save-launch-box h3 { color: #4299e1; margin-bottom: 20px; font-size: 1.5em; }
+        .save-launch-box button { width: 100%; margin-bottom: 10px; padding: 15px; font-size: 1.1em; }
+
+        /* ── For Time: time input hint ── */
+        .time-hint {
+            font-size: 0.75em;
+            color: #718096;
+            margin-top: 3px;
+            text-align: center;
+        }
+
+        /* ── DNF badge ── */
+        .dnf-badge {
+            background: #e53e3e;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
     <!-- Welcome Screen -->
     <div class="setup-overlay" id="welcomeScreen">
         <div class="setup-box" style="max-width: 500px;">
             <h2>Circuit Training</h2>
             <p>Gestion de vos séances de WOD</p>
-            
             <button class="btn btn-primary" onclick="createNewWOD()" style="margin-bottom: 15px; padding: 20px; font-size: 1.2em;">
                 Nouveau WOD
             </button>
-            
             <button class="btn btn-primary" onclick="showMyWODs()" style="background: #48bb78; padding: 20px; font-size: 1.2em; margin-bottom: 15px;">
                 Mes WODs sauvegardés
             </button>
-
             <button class="btn btn-primary" onclick="openSettingsFromWelcome()" style="background: #ed8936; padding: 20px; font-size: 1.2em;">
                 Gérer les exercices
             </button>
@@ -945,12 +823,8 @@
         <div class="setup-box" style="max-width: 900px;">
             <h2>Mes WODs sauvegardés</h2>
             <p>Chargez, modifiez ou supprimez vos WODs</p>
-            
             <div id="wodsList" style="margin: 20px 0; max-height: 60vh; overflow-y: auto;"></div>
-            
-            <button class="btn" onclick="backToWelcome()" style="background: #718096; color: white;">
-                Retour
-            </button>
+            <button class="btn" onclick="backToWelcome()" style="background: #718096; color: white;">Retour</button>
         </div>
     </div>
 
@@ -959,7 +833,32 @@
         <div class="setup-box">
             <h2>Configuration du WOD</h2>
             <p>Paramétrez votre séance de circuit training</p>
-            
+
+            <!-- MODE SELECTOR -->
+            <div class="form-group">
+                <label>Mode d'entraînement</label>
+                <div class="mode-selector">
+                    <button type="button" class="mode-btn active-amrap" id="modeBtn_amrap" onclick="selectWodMode('amrap')">
+                        <span class="mode-icon">⏳</span>
+                        <span class="mode-label">AMRAP</span>
+                        <span class="mode-sub">Max de reps</span>
+                    </button>
+                    <button type="button" class="mode-btn" id="modeBtn_fortime" onclick="selectWodMode('fortime')">
+                        <span class="mode-icon">⚡</span>
+                        <span class="mode-label">For Time</span>
+                        <span class="mode-sub">Le plus vite</span>
+                    </button>
+                    <button type="button" class="mode-btn disabled" id="modeBtn_emom" onclick="return false;">
+                        <span class="mode-icon">🔄</span>
+                        <span class="mode-label">EMOM</span>
+                        <span class="mode-sub">Toutes les min</span>
+                    </button>
+                </div>
+                <div class="mode-description" id="modeDesc">
+                    <strong>AMRAP</strong> — En un temps limité, réaliser un <em>maximum de répétitions</em>. Le score est le nombre de reps total.
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Nom du WOD</label>
                 <input type="text" id="wodName" placeholder="Ex: WOD Cardio 5ème">
@@ -970,13 +869,14 @@
                 <input type="number" id="numAteliers" min="1" max="8" value="3">
             </div>
 
-            <div class="form-group">
-                <label>Durée AMRAP (minutes)</label>
-                <input type="number" id="duration" min="2" max="15" value="5">
+            <!-- AMRAP : durée compte à rebours -->
+            <div class="form-group" id="durationGroup">
+                <label id="durationLabel">Durée AMRAP (minutes)</label>
+                <input type="number" id="duration" min="2" max="30" value="5">
             </div>
 
             <button class="btn btn-primary" onclick="setupAteliers()">
-                Configurer les ateliers
+                Configurer les ateliers →
             </button>
         </div>
     </div>
@@ -984,22 +884,17 @@
     <!-- Main Container -->
     <div class="container" id="mainContainer">
         <header>
-            <div style="display: flex; gap: 10px;">
-                <button class="edit-wod" id="editButton" onclick="resetApp()" style="display: none;">
-                    Modifier
-                </button>
-                <button class="edit-wod" id="settingsButton" onclick="openSettings()" style="display: none;">
-                    Paramètres
-                </button>
-                <button class="btn-clear-records" id="clearRecordsButton" onclick="clearAllRecords()" style="display: none;">
-                    Effacer les records
-                </button>
-                <button class="edit-wod" id="quitButton" onclick="quitWOD()" style="display: none; background: #e53e3e;">
-                    Quitter
-                </button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="edit-wod" id="editButton" onclick="resetApp()" style="display: none;">Modifier</button>
+                <button class="edit-wod" id="settingsButton" onclick="openSettings()" style="display: none;">Paramètres</button>
+                <button class="btn-clear-records" id="clearRecordsButton" onclick="clearAllRecords()" style="display: none;">Effacer les records</button>
+                <button class="edit-wod" id="quitButton" onclick="quitWOD()" style="display: none; background: #e53e3e;">Quitter</button>
             </div>
             <div class="header-content">
-                <h1><span id="headerWodName">Circuit Training</span></h1>
+                <h1>
+                    <span id="headerWodName">Circuit Training</span>
+                    <span class="mode-badge amrap" id="modeBadge">AMRAP</span>
+                </h1>
                 <div class="wod-info" id="wodInfo"></div>
             </div>
             <div style="width: 100px;"></div>
@@ -1017,7 +912,7 @@
             <h3 class="rankings-title">Classement Général du WOD</h3>
             <div class="rankings-grid">
                 <div class="ranking-card">
-                    <h4>Top 3 Global</h4>
+                    <h4 id="globalRankTitle">Top 3 Global</h4>
                     <div id="globalTop3"></div>
                 </div>
             </div>
@@ -1026,10 +921,7 @@
         <!-- Ateliers Grid -->
         <div class="main-grid" id="ateliersGrid"></div>
 
-        <!-- Copyright Footer -->
-        <div class="copyright">
-            © EUDE Florian - YDM
-        </div>
+        <div class="copyright">© EUDE Florian - YDM</div>
     </div>
 
     <!-- Atelier Configuration Modal -->
@@ -1038,9 +930,8 @@
             <div style="margin-bottom: 15px;">
                 <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;" id="atelierProgress"></div>
             </div>
-            
             <h2>Configuration Atelier <span id="currentAtelierNum"></span></h2>
-            
+
             <div class="form-group">
                 <label>Nombre d'exercices (1-5)</label>
                 <input type="number" id="numExercises" min="1" max="5" value="2">
@@ -1048,9 +939,7 @@
 
             <div id="exercisesConfig"></div>
 
-            <button class="btn btn-primary" onclick="saveAtelierConfig()">
-                Valider cet atelier
-            </button>
+            <button class="btn btn-primary" onclick="saveAtelierConfig()">Valider cet atelier ✓</button>
         </div>
     </div>
 
@@ -1060,68 +949,49 @@
             <h2>Gestion des Exercices</h2>
             <p>Ajoutez, modifiez ou supprimez des exercices</p>
 
-            <!-- Add/Edit Exercise Form -->
             <div class="add-exercise-form">
                 <h3 style="color: #4299e1; margin-bottom: 15px;" id="formTitle">Ajouter un nouvel exercice</h3>
-                
                 <div class="form-group">
                     <label>Nom de l'exercice</label>
                     <input type="text" id="exerciseName" placeholder="Ex: Tractions, Pompes diamant...">
                     <small style="color: #718096;">Créez un nouvel exercice ou sélectionnez-en un dans la liste ci-dessous</small>
                 </div>
-
                 <div class="form-group">
                     <label>Description courte</label>
                     <textarea id="exerciseDescription" placeholder="Ex: Squat avec saut à l'extension" maxlength="150"></textarea>
                     <small style="color: #718096;">Maximum 150 caractères</small>
                 </div>
-
                 <div class="form-group">
                     <label>Images (max 2)</label>
                     <input type="file" id="imageInput1" accept="image/*" onchange="previewImage(0)" style="margin-bottom: 8px;">
                     <input type="file" id="imageInput2" accept="image/*" onchange="previewImage(1)">
                     <div class="image-upload-preview" id="imagePreviewContainer"></div>
                 </div>
-
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="saveExercise()" style="flex: 1;">
                         <span id="saveButtonText">Créer l'exercice</span>
                     </button>
-                    <button class="btn" onclick="cancelEditExercise()" id="cancelEditBtn" style="display: none; background: #718096; color: white;">
-                        Annuler
-                    </button>
+                    <button class="btn" onclick="cancelEditExercise()" id="cancelEditBtn" style="display: none; background: #718096; color: white;">Annuler</button>
                 </div>
             </div>
 
-            <!-- Exercise List -->
             <div class="settings-section">
                 <h3 style="color: #4299e1; margin-bottom: 15px;">Liste des exercices</h3>
                 <div id="exerciseListContainer"></div>
             </div>
 
-            <button class="btn btn-primary" onclick="closeSettings()" style="margin-top: 20px;">
-                Fermer
-            </button>
+            <button class="btn btn-primary" onclick="closeSettings()" style="margin-top: 20px;">Fermer</button>
         </div>
     </div>
 
     <!-- Save or Launch Screen -->
     <div class="save-launch-screen" id="saveLaunchScreen">
         <div class="save-launch-box">
-            <h3>WOD configuré</h3>
+            <h3>WOD configuré ✓</h3>
             <p style="color: #a0aec0; margin-bottom: 25px;">Que souhaitez-vous faire ?</p>
-            
-            <button class="btn btn-primary" onclick="launchNow()" style="background: #48bb78;">
-                Lancer maintenant
-            </button>
-            
-            <button class="btn btn-primary" onclick="saveForLater()">
-                Sauvegarder pour plus tard
-            </button>
-            
-            <button class="btn" onclick="backToConfig()" style="background: #718096; color: white;">
-                Retour à la config
-            </button>
+            <button class="btn btn-primary" onclick="launchNow()" style="background: #48bb78;">Lancer maintenant</button>
+            <button class="btn btn-primary" onclick="saveForLater()">Sauvegarder pour plus tard</button>
+            <button class="btn" onclick="backToConfig()" style="background: #718096; color: white;">Retour à la config</button>
         </div>
     </div>
 
@@ -1130,1066 +1000,1084 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        const EXERCISES = [
-            'Air Squat',
-            'Box Jump Over',
-            'Burpees',
-            'Burpees Pogo',
-            'Butterfly Sit Ups',
-            'Farmer Carry',
-            'Inchworm',
-            'Jumping Jack',
-            'KB High Pull',
-            'KB Swing US',
-            'Knee to Jump',
-            'Lunge Jumps',
-            'MB Russian Twist',
-            'Push Up',
-            'Side Shuffle',
-            'Single Under',
-            'Squat Jumps',
-            'Up & Down Planks',
-            'Wall Ball'
-        ].sort();
+    // ═══════════════════════════════════════════════════════
+    //  EXERCISES LIST
+    // ═══════════════════════════════════════════════════════
+    const EXERCISES = [
+        'Air Squat','Box Jump Over','Burpees','Burpees Pogo','Butterfly Sit Ups',
+        'Farmer Carry','Inchworm','Jumping Jack','KB High Pull','KB Swing US',
+        'Knee to Jump','Lunge Jumps','MB Russian Twist','Push Up','Side Shuffle',
+        'Single Under','Squat Jumps','Up & Down Planks','Wall Ball'
+    ].sort();
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBc0dO60IWnrpgUJ80DPR2foE7_4VXwQx8",
-            authDomain: "circuit-training-college-ydm.firebaseapp.com",
-            databaseURL: "https://circuit-training-college-ydm-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "circuit-training-college-ydm",
-            storageBucket: "circuit-training-college-ydm.firebasestorage.app",
-            messagingSenderId: "795066582832",
-            appId: "1:795066582832:web:90897fb3c24b9b2dae2af5"
-        };
+    // ═══════════════════════════════════════════════════════
+    //  FIREBASE
+    // ═══════════════════════════════════════════════════════
+    const firebaseConfig = {
+        apiKey: "AIzaSyBc0dO60IWnrpgUJ80DPR2foE7_4VXwQx8",
+        authDomain: "circuit-training-college-ydm.firebaseapp.com",
+        databaseURL: "https://circuit-training-college-ydm-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "circuit-training-college-ydm",
+        storageBucket: "circuit-training-college-ydm.firebasestorage.app",
+        messagingSenderId: "795066582832",
+        appId: "1:795066582832:web:90897fb3c24b9b2dae2af5"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    let exerciseData = {};
+    let currentEditingExercise = null;
+    let imagePreviews = [null, null];
 
-        // Exercise database with descriptions and images
-        let exerciseData = {};
+    // ═══════════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════════
+    let wodConfig = {
+        name: '',
+        mode: 'amrap',   // 'amrap' | 'fortime'
+        numAteliers: 3,
+        duration: 5,     // AMRAP: countdown minutes | ForTime: time cap minutes
+        ateliers: []
+    };
 
-        let currentEditingExercise = null;
-        let imagePreviews = [null, null];
+    let selectedWodMode = 'amrap'; // local UI state for setup form
+    let currentWODId = null;
+    let savedWODs = {};
+    let currentAtelierIndex = 0;
+    let timerInterval = null;
+    let timeLeft = 0;     // AMRAP: seconds remaining
+    let timeElapsed = 0;  // For Time: seconds elapsed
+    let isRunning = false;
+    let selectedCategories = {};
+    let audioContext = null;
 
-        let wodConfig = {
-            name: '',
-            numAteliers: 3,
-            duration: 5,
-            ateliers: []
-        };
+    const SESSION_KEY = 'wod_session_data';
+    const SESSION_TIMESTAMP_KEY = 'wod_session_timestamp';
 
-        let currentWODId = null;
-        let savedWODs = {};
+    // ═══════════════════════════════════════════════════════
+    //  MODE SELECTION (setup form)
+    // ═══════════════════════════════════════════════════════
+    function selectWodMode(mode) {
+        selectedWodMode = mode;
 
-        let currentAtelierIndex = 0;
-        let timerInterval = null;
-        let timeLeft = 0;
-        let isRunning = false;
-        let selectedCategories = {};
-
-        // Audio context for beep
-        let audioContext = null;
-
-        // LocalStorage keys for session data
-        const SESSION_KEY = 'wod_session_data';
-        const SESSION_TIMESTAMP_KEY = 'wod_session_timestamp';
-
-        function playBeep() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Reset all buttons
+        ['amrap','fortime'].forEach(m => {
+            const btn = document.getElementById(`modeBtn_${m}`);
+            if (btn) {
+                btn.className = 'mode-btn';
             }
-            
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.value = 800;
-                    oscillator.type = 'sine';
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.5);
-                }, i * 400);
-            }
+        });
+
+        // Activate selected
+        const activeBtn = document.getElementById(`modeBtn_${mode}`);
+        if (activeBtn) activeBtn.className = `mode-btn active-${mode}`;
+
+        // Update description
+        const desc = document.getElementById('modeDesc');
+        const durationLabel = document.getElementById('durationLabel');
+
+        if (mode === 'amrap') {
+            desc.className = 'mode-description';
+            desc.innerHTML = '<strong>AMRAP</strong> — En un temps limité, réaliser un <em>maximum de répétitions</em>. Le score est le nombre de reps total.';
+            durationLabel.textContent = 'Durée AMRAP (minutes)';
+        } else if (mode === 'fortime') {
+            desc.className = 'mode-description fortime';
+            desc.innerHTML = '<strong>For Time</strong> — Réaliser un nombre fixe de répétitions <em>le plus rapidement possible</em>. Le score est le temps réalisé (+ bas = meilleur).';
+            durationLabel.textContent = 'Time cap (limite de temps en minutes)';
         }
+    }
 
-        // LocalStorage management functions
-        function saveSessionData() {
-            try {
-                const sessionData = {
-                    wodName: wodConfig.name,
-                    records: wodConfig.ateliers.map(atelier => atelier.records || [])
-                };
-                localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
-                localStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
-                console.log('Session data saved to localStorage:', sessionData);
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-            }
+    // ═══════════════════════════════════════════════════════
+    //  AUDIO
+    // ═══════════════════════════════════════════════════════
+    function playBeep() {
+        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain); gain.connect(audioContext.destination);
+                osc.frequency.value = 800; osc.type = 'sine';
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                osc.start(audioContext.currentTime);
+                osc.stop(audioContext.currentTime + 0.5);
+            }, i * 400);
         }
+    }
 
-        function loadSessionData() {
-            try {
-                const savedData = localStorage.getItem(SESSION_KEY);
-                const timestamp = localStorage.getItem(SESSION_TIMESTAMP_KEY);
-                
-                if (!savedData || !timestamp) {
-                    return null;
-                }
-
-                const sessionData = JSON.parse(savedData);
-                
-                // Check if it's the same WOD
-                if (sessionData.wodName === wodConfig.name) {
-                    console.log('Loading session data from localStorage:', sessionData);
-                    return sessionData.records;
-                }
-                
-                return null;
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-                return null;
-            }
-        }
-
-        function clearAllRecords() {
-            if (confirm('Effacer tous les records de la séance en cours ?\n\nCette action est irréversible.')) {
-                // Clear localStorage
-                localStorage.removeItem(SESSION_KEY);
-                localStorage.removeItem(SESSION_TIMESTAMP_KEY);
-                
-                // Clear in-memory data
-                wodConfig.ateliers.forEach(atelier => {
-                    atelier.records = [];
-                });
-                
-                // Update displays
-                for (let i = 0; i < wodConfig.numAteliers; i++) {
-                    updateRecordsList(i);
-                }
-                updateGlobalRankings();
-                
-                alert('Tous les records ont été effacés');
-            }
-        }
-
-        function setupAteliers() {
-            const name = document.getElementById('wodName').value.trim();
-            const num = parseInt(document.getElementById('numAteliers').value);
-            const duration = parseInt(document.getElementById('duration').value);
-
-            if (num < 1 || num > 8) {
-                alert('Le nombre d\'ateliers doit être entre 1 et 8');
-                return;
-            }
-
-            if (duration < 2 || duration > 15) {
-                alert('La durée doit être entre 2 et 15 minutes');
-                return;
-            }
-
-            if (!name) {
-                alert('Donnez un nom à votre WOD');
-                return;
-            }
-
-            wodConfig.name = name;
-            wodConfig.numAteliers = num;
-            wodConfig.duration = duration;
-            
-            if (wodConfig.ateliers.length > num) {
-                wodConfig.ateliers = wodConfig.ateliers.slice(0, num);
-            }
-            
-            currentAtelierIndex = 0;
-            
-            document.getElementById('setupOverlay').style.display = 'none';
-            showAtelierConfig();
-        }
-
-        function showAtelierConfig() {
-            if (currentAtelierIndex >= wodConfig.numAteliers) {
-                finishSetup();
-                return;
-            }
-
-            document.getElementById('atelierSetupOverlay').style.display = 'flex';
-            document.getElementById('currentAtelierNum').textContent = currentAtelierIndex + 1;
-            
-            updateProgressDots();
-            
-            const setupBox = document.querySelector('#atelierSetupOverlay .setup-box');
-            setupBox.classList.remove('slide-in');
-            void setupBox.offsetWidth;
-            setupBox.classList.add('slide-in');
-            
-            const existingAtelier = wodConfig.ateliers[currentAtelierIndex];
-            const numExercises = existingAtelier ? existingAtelier.exercises.length : 2;
-            
-            document.getElementById('numExercises').value = numExercises;
-            generateExerciseInputs(numExercises);
-            
-            if (existingAtelier) {
-                existingAtelier.exercises.forEach((ex, i) => {
-                    document.getElementById(`exercise_${i}`).value = ex.name;
-                    document.getElementById(`reps_${i}`).value = ex.reps;
-                });
-            }
-            
-            document.getElementById('numExercises').onchange = function() {
-                const num = parseInt(this.value);
-                if (num >= 1 && num <= 5) {
-                    generateExerciseInputs(num);
-                }
+    // ═══════════════════════════════════════════════════════
+    //  LOCAL STORAGE
+    // ═══════════════════════════════════════════════════════
+    function saveSessionData() {
+        try {
+            const sessionData = {
+                wodName: wodConfig.name,
+                records: wodConfig.ateliers.map(a => a.records || [])
             };
+            localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+            localStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
+        } catch(e) { console.error('localStorage save error:', e); }
+    }
+
+    function loadSessionData() {
+        try {
+            const saved = localStorage.getItem(SESSION_KEY);
+            if (!saved) return null;
+            const data = JSON.parse(saved);
+            if (data.wodName === wodConfig.name) return data.records;
+            return null;
+        } catch(e) { return null; }
+    }
+
+    function clearAllRecords() {
+        if (!confirm('Effacer tous les records de la séance en cours ?\n\nCette action est irréversible.')) return;
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem(SESSION_TIMESTAMP_KEY);
+        wodConfig.ateliers.forEach(a => { a.records = []; });
+        for (let i = 0; i < wodConfig.numAteliers; i++) updateRecordsList(i);
+        updateGlobalRankings();
+        alert('Tous les records ont été effacés');
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  SETUP FLOW
+    // ═══════════════════════════════════════════════════════
+    function setupAteliers() {
+        const name = document.getElementById('wodName').value.trim();
+        const num = parseInt(document.getElementById('numAteliers').value);
+        const duration = parseInt(document.getElementById('duration').value);
+
+        if (!name) { alert('Donnez un nom à votre WOD'); return; }
+        if (num < 1 || num > 8) { alert('Le nombre d\'ateliers doit être entre 1 et 8'); return; }
+        if (duration < 2 || duration > 30) { alert('La durée doit être entre 2 et 30 minutes'); return; }
+
+        wodConfig.name = name;
+        wodConfig.mode = selectedWodMode;
+        wodConfig.numAteliers = num;
+        wodConfig.duration = duration;
+
+        if (wodConfig.ateliers.length > num) wodConfig.ateliers = wodConfig.ateliers.slice(0, num);
+        currentAtelierIndex = 0;
+
+        document.getElementById('setupOverlay').style.display = 'none';
+        showAtelierConfig();
+    }
+
+    function showAtelierConfig() {
+        if (currentAtelierIndex >= wodConfig.numAteliers) { finishSetup(); return; }
+
+        document.getElementById('atelierSetupOverlay').style.display = 'flex';
+        document.getElementById('currentAtelierNum').textContent = currentAtelierIndex + 1;
+        updateProgressDots();
+
+        const box = document.querySelector('#atelierSetupOverlay .setup-box');
+        box.classList.remove('slide-in'); void box.offsetWidth; box.classList.add('slide-in');
+
+        const existing = wodConfig.ateliers[currentAtelierIndex];
+        const numEx = existing ? existing.exercises.length : 2;
+        document.getElementById('numExercises').value = numEx;
+        generateExerciseInputs(numEx);
+
+        if (existing) {
+            existing.exercises.forEach((ex, i) => {
+                document.getElementById(`exercise_${i}`).value = ex.name;
+                document.getElementById(`reps_${i}`).value = ex.reps;
+            });
         }
 
-        function updateProgressDots() {
-            const progressContainer = document.getElementById('atelierProgress');
-            progressContainer.innerHTML = '';
-            
-            for (let i = 0; i < wodConfig.numAteliers; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'progress-dot';
-                dot.textContent = i + 1;
-                
-                if (i < currentAtelierIndex) {
-                    dot.classList.add('completed');
-                } else if (i === currentAtelierIndex) {
-                    dot.classList.add('active');
-                }
-                
-                progressContainer.appendChild(dot);
-            }
+        document.getElementById('numExercises').onchange = function() {
+            const n = parseInt(this.value);
+            if (n >= 1 && n <= 5) generateExerciseInputs(n);
+        };
+    }
+
+    function updateProgressDots() {
+        const pc = document.getElementById('atelierProgress');
+        pc.innerHTML = '';
+        for (let i = 0; i < wodConfig.numAteliers; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'progress-dot';
+            dot.textContent = i + 1;
+            if (i < currentAtelierIndex) dot.classList.add('completed');
+            else if (i === currentAtelierIndex) dot.classList.add('active');
+            pc.appendChild(dot);
+        }
+    }
+
+    function generateExerciseInputs(num) {
+        const container = document.getElementById('exercisesConfig');
+        container.innerHTML = '';
+        const modeLabel = wodConfig.mode === 'fortime' ? 'Répétitions à réaliser' : 'Répétitions';
+        for (let i = 0; i < num; i++) {
+            const group = document.createElement('div');
+            group.className = 'form-group';
+            group.innerHTML = `
+                <label>Exercice ${i + 1}</label>
+                <select id="exercise_${i}" style="margin-bottom: 6px;">
+                    ${EXERCISES.map(ex => `<option value="${ex}">${ex}</option>`).join('')}
+                </select>
+                <input type="number" id="reps_${i}" min="1" max="200" value="10" placeholder="${modeLabel}">
+            `;
+            container.appendChild(group);
+        }
+    }
+
+    function saveAtelierConfig() {
+        const numEx = parseInt(document.getElementById('numExercises').value);
+        const exercises = [];
+        for (let i = 0; i < numEx; i++) {
+            const name = document.getElementById(`exercise_${i}`).value;
+            const reps = parseInt(document.getElementById(`reps_${i}`).value);
+            if (reps < 1 || reps > 200) { alert('Les répétitions doivent être entre 1 et 200'); return; }
+            exercises.push({ name, reps });
+        }
+        if (wodConfig.ateliers[currentAtelierIndex]) {
+            wodConfig.ateliers[currentAtelierIndex] = {
+                exercises,
+                records: wodConfig.ateliers[currentAtelierIndex].records || []
+            };
+        } else {
+            wodConfig.ateliers.push({ exercises, records: [] });
+        }
+        currentAtelierIndex++;
+        showAtelierConfig();
+    }
+
+    function finishSetup() {
+        document.getElementById('atelierSetupOverlay').style.display = 'none';
+        if (wodConfig.ateliers.length < wodConfig.numAteliers) {
+            alert('Erreur : Tous les ateliers ne sont pas configurés.');
+            currentAtelierIndex = 0; showAtelierConfig(); return;
+        }
+        if (currentWODId && savedWODs[currentWODId]) {
+            showMainContainer();
+        } else {
+            document.getElementById('saveLaunchScreen').style.display = 'flex';
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  MAIN CONTAINER
+    // ═══════════════════════════════════════════════════════
+    function showMainContainer() {
+        if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
+            alert('Erreur : WOD invalide.'); location.reload(); return;
+        }
+        const saved = loadSessionData();
+        if (saved && saved.length === wodConfig.ateliers.length) {
+            wodConfig.ateliers.forEach((a, i) => { a.records = saved[i] || []; });
         }
 
-        function generateExerciseInputs(num) {
-            const container = document.getElementById('exercisesConfig');
-            container.innerHTML = '';
+        document.getElementById('mainContainer').classList.add('visible');
+        document.getElementById('editButton').style.display = 'block';
+        document.getElementById('settingsButton').style.display = 'block';
+        document.getElementById('clearRecordsButton').style.display = 'block';
+        document.getElementById('quitButton').style.display = 'block';
 
-            for (let i = 0; i < num; i++) {
-                const group = document.createElement('div');
-                group.className = 'form-group';
-                group.innerHTML = `
-                    <label>Exercice ${i + 1}</label>
-                    <select id="exercise_${i}" style="margin-bottom: 6px;">
-                        ${EXERCISES.map(ex => `<option value="${ex}">${ex}</option>`).join('')}
-                    </select>
-                    <input type="number" id="reps_${i}" min="1" max="100" value="10" placeholder="Répétitions">
-                `;
-                container.appendChild(group);
-            }
+        renderWOD();
+        resetTimer();
+        updateGlobalRankings();
+    }
+
+    function quitWOD() {
+        if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) location.reload();
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  RENDER WOD
+    // ═══════════════════════════════════════════════════════
+    function renderWOD() {
+        const isForTime = wodConfig.mode === 'fortime';
+
+        document.getElementById('headerWodName').textContent = wodConfig.name;
+
+        // Badge
+        const badge = document.getElementById('modeBadge');
+        if (isForTime) {
+            badge.className = 'mode-badge fortime';
+            badge.textContent = '⚡ For Time';
+        } else {
+            badge.className = 'mode-badge amrap';
+            badge.textContent = '⏳ AMRAP';
         }
 
-        function saveAtelierConfig() {
-            const numEx = parseInt(document.getElementById('numExercises').value);
-            const exercises = [];
+        // Info text
+        const infoSuffix = isForTime
+            ? `Time cap : ${wodConfig.duration} min — Finir le plus vite possible`
+            : `${wodConfig.duration} min — AMRAP (max de répétitions)`;
+        document.getElementById('wodInfo').textContent =
+            `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${infoSuffix}`;
 
-            for (let i = 0; i < numEx; i++) {
-                const name = document.getElementById(`exercise_${i}`).value;
-                const reps = parseInt(document.getElementById(`reps_${i}`).value);
-                
-                if (reps < 1 || reps > 100) {
-                    alert('Les répétitions doivent être entre 1 et 100');
-                    return;
-                }
-                
-                exercises.push({ name, reps });
-            }
+        const grid = document.getElementById('ateliersGrid');
+        grid.className = `main-grid cols-${wodConfig.numAteliers}`;
+        grid.innerHTML = '';
 
-            if (wodConfig.ateliers[currentAtelierIndex]) {
-                wodConfig.ateliers[currentAtelierIndex] = {
-                    exercises: exercises,
-                    records: wodConfig.ateliers[currentAtelierIndex].records || []
-                };
-            } else {
-                wodConfig.ateliers.push({
-                    exercises: exercises,
-                    records: []
-                });
-            }
+        wodConfig.ateliers.forEach((atelier, index) => {
+            selectedCategories[index] = 'mixed';
+            const card = document.createElement('div');
+            card.className = 'atelier-card';
 
-            currentAtelierIndex++;
-            showAtelierConfig();
-        }
+            const exercisesHTML = atelier.exercises.map((ex, i) => {
+                const exData = exerciseData[ex.name] || { description: '', images: [] };
+                const hasTooltip = exData.description || (exData.images && exData.images.length > 0);
+                const tooltipHTML = hasTooltip ? `
+                    <div class="tooltip-content">
+                        ${exData.description ? `<div class="tooltip-description">${exData.description}</div>` : ''}
+                        ${exData.images && exData.images.length > 0 ? `
+                            <div class="tooltip-images">
+                                ${exData.images.map(img => `<img src="${img}" alt="${ex.name}">`).join('')}
+                            </div>` : ''}
+                    </div>` : '';
 
-        function finishSetup() {
-            document.getElementById('atelierSetupOverlay').style.display = 'none';
-            
-            if (wodConfig.ateliers.length < wodConfig.numAteliers) {
-                alert('Erreur : Tous les ateliers ne sont pas configurés. Veuillez recommencer.');
-                currentAtelierIndex = 0;
-                showAtelierConfig();
-                return;
-            }
-            
-            if (currentWODId && savedWODs[currentWODId]) {
-                showMainContainer();
-            } else {
-                document.getElementById('saveLaunchScreen').style.display = 'flex';
-            }
-        }
-
-        function showMainContainer() {
-            if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
-                alert('Erreur : WOD invalide. Veuillez reconfigurer.');
-                location.reload();
-                return;
-            }
-            
-            // Try to load saved session data
-            const savedRecords = loadSessionData();
-            if (savedRecords && savedRecords.length === wodConfig.ateliers.length) {
-                wodConfig.ateliers.forEach((atelier, index) => {
-                    atelier.records = savedRecords[index] || [];
-                });
-                console.log('Restored records from localStorage');
-            }
-            
-            document.getElementById('mainContainer').classList.add('visible');
-            document.getElementById('editButton').style.display = 'block';
-            document.getElementById('settingsButton').style.display = 'block';
-            document.getElementById('clearRecordsButton').style.display = 'block';
-            document.getElementById('quitButton').style.display = 'block';
-            
-            renderWOD();
-            resetTimer();
-            updateGlobalRankings();
-        }
-
-        function quitWOD() {
-            if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) {
-                location.reload();
-            }
-        }
-
-        function renderWOD() {
-            console.log('Rendering WOD:', wodConfig);
-            
-            if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
-                console.error('No ateliers found in wodConfig');
-                alert('Erreur : Aucun atelier trouvé. Veuillez reconfigurer le WOD.');
-                return;
-            }
-            
-            document.getElementById('headerWodName').textContent = wodConfig.name;
-            document.getElementById('wodInfo').textContent = 
-                `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${wodConfig.duration} min - Format AMRAP (travail en alterné)`;
-
-            const grid = document.getElementById('ateliersGrid');
-            grid.className = `main-grid cols-${wodConfig.numAteliers}`;
-            grid.innerHTML = '';
-
-            wodConfig.ateliers.forEach((atelier, index) => {
-                console.log(`Rendering atelier ${index + 1}:`, atelier);
-                
-                selectedCategories[index] = 'mixed';
-                
-                const card = document.createElement('div');
-                card.className = 'atelier-card';
-                
-                const exercisesHTML = atelier.exercises.map((ex, i) => {
-                    const exData = exerciseData[ex.name] || { description: '', images: [] };
-                    const hasTooltip = exData.description || (exData.images && exData.images.length > 0);
-                    
-                    const tooltipHTML = hasTooltip ? `
-                        <div class="tooltip-content">
-                            ${exData.description ? `<div class="tooltip-description">${exData.description}</div>` : ''}
-                            ${exData.images && exData.images.length > 0 ? `
-                                <div class="tooltip-images">
-                                    ${exData.images.map(img => `<img src="${img}" alt="${ex.name}">`).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : '';
-                    
-                    return `
-                    <div class="exercise ${hasTooltip ? 'exercise-tooltip' : ''}">
-                        <div class="exercise-reps">${ex.reps}</div>
+                return `
+                    <div class="exercise ${hasTooltip ? 'exercise-tooltip' : ''} ${isForTime ? 'fortime-ex' : ''}">
+                        <div class="exercise-reps ${isForTime ? 'fortime-reps' : ''}">${ex.reps}</div>
                         <div class="exercise-name">${ex.name}</div>
                         ${tooltipHTML}
                     </div>
-                    ${i < atelier.exercises.length - 1 ? '<div class="plus-sign">+</div>' : ''}
-                `}).join('');
-
-                card.innerHTML = `
-                    <div class="atelier-header">
-                        <h3>Atelier ${index + 1}</h3>
-                        <div class="atelier-duration">${wodConfig.duration}' - AMRAP</div>
-                    </div>
-                    
-                    <div class="exercises">
-                        ${exercisesHTML}
-                    </div>
-                    
-                    <div class="records-section">
-                        <div class="records-title">Ajouter un résultat</div>
-                        <div class="record-input-form">
-                            <div class="category-selector">
-                                <button class="category-btn active" onclick="selectCategory(${index}, 'mixed')">Mixte</button>
-                                <button class="category-btn" onclick="selectCategory(${index}, 'boys')">Garçons</button>
-                                <button class="category-btn" onclick="selectCategory(${index}, 'girls')">Filles</button>
-                            </div>
-                            <div class="record-input">
-                                <input type="text" placeholder="Prénom(s) - ex: Tom & Léa" id="name_${index}">
-                                <input type="number" placeholder="Répétitions" id="score_${index}" min="0">
-                            </div>
-                            <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
-                        </div>
-                        <div class="records-title" style="margin-top: 15px;">Top 3</div>
-                        <div class="records-list" id="records_${index}">
-                            <div class="no-records">Aucun résultat pour le moment</div>
-                        </div>
-                    </div>
+                    ${i < atelier.exercises.length - 1
+                        ? `<div class="plus-sign ${isForTime ? 'fortime-plus' : ''}">+</div>` : ''}
                 `;
-                
-                grid.appendChild(card);
-                
-                // Update display with existing records
-                updateRecordsList(index);
-            });
-            
-            console.log(`Successfully rendered ${wodConfig.ateliers.length} ateliers`);
-        }
+            }).join('');
 
-        function selectCategory(atelierIndex, category) {
-            selectedCategories[atelierIndex] = category;
-            
-            const card = document.querySelector(`#records_${atelierIndex}`).closest('.atelier-card');
-            const buttons = card.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            const categoryMap = { 'mixed': 0, 'boys': 1, 'girls': 2 };
-            buttons[categoryMap[category]].classList.add('active');
-        }
+            // Score input label depends on mode
+            const scoreLabel = isForTime ? 'MM:SS' : 'Répétitions';
+            const scorePlaceholder = isForTime ? 'ex: 3:42' : 'Répétitions';
+            const scoreInputClass = isForTime ? 'class="time-input"' : '';
+            const scoreInputType = isForTime ? 'text' : 'number';
+            const timeHint = isForTime
+                ? `<div class="time-hint">Format MM:SS (ex: 3:42) ou laisser vide si DNF</div>` : '';
 
-        function addRecord(atelierIndex) {
-            const name = document.getElementById(`name_${atelierIndex}`).value.trim();
-            const score = parseInt(document.getElementById(`score_${atelierIndex}`).value);
-            const category = selectedCategories[atelierIndex] || 'mixed';
+            const titleColor = isForTime ? 'fortime-title' : '';
+            const headerClass = isForTime ? 'atelier-header fortime-header' : 'atelier-header';
+            const headerSub = isForTime
+                ? `${atelier.exercises.reduce((s, e) => s + e.reps, 0)} reps au total — For Time`
+                : `${wodConfig.duration}' — AMRAP`;
 
-            if (!name || !score || score < 0) {
-                alert('Entrez un nom d\'équipe et un score valide');
-                return;
+            card.innerHTML = `
+                <div class="${headerClass}">
+                    <h3>Atelier ${index + 1}</h3>
+                    <div class="atelier-duration">${headerSub}</div>
+                </div>
+
+                <div class="exercises">${exercisesHTML}</div>
+
+                <div class="records-section">
+                    <div class="records-title ${titleColor}">Ajouter un résultat</div>
+                    <div class="record-input-form">
+                        <div class="category-selector">
+                            <button class="category-btn active" onclick="selectCategory(${index}, 'mixed')">Mixte</button>
+                            <button class="category-btn" onclick="selectCategory(${index}, 'boys')">Garçons</button>
+                            <button class="category-btn" onclick="selectCategory(${index}, 'girls')">Filles</button>
+                        </div>
+                        <div class="record-input">
+                            <input type="text" placeholder="Prénom(s) - ex: Tom & Léa" id="name_${index}">
+                            <input type="${scoreInputType}" ${scoreInputClass} placeholder="${scorePlaceholder}" id="score_${index}" ${scoreInputType === 'number' ? 'min="0"' : ''}>
+                        </div>
+                        ${timeHint}
+                        ${isForTime ? `
+                        <div style="margin-bottom: 8px;">
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85em; color:#a0aec0;">
+                                <input type="checkbox" id="dnf_${index}"> DNF (Did Not Finish)
+                            </label>
+                        </div>` : ''}
+                        <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
+                    </div>
+                    <div class="records-title ${titleColor}" style="margin-top: 15px;">Top 3</div>
+                    <div class="records-list" id="records_${index}">
+                        <div class="no-records">Aucun résultat pour le moment</div>
+                    </div>
+                </div>
+            `;
+
+            grid.appendChild(card);
+            updateRecordsList(index);
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  CATEGORY
+    // ═══════════════════════════════════════════════════════
+    function selectCategory(atelierIndex, category) {
+        selectedCategories[atelierIndex] = category;
+        const card = document.querySelector(`#records_${atelierIndex}`).closest('.atelier-card');
+        const buttons = card.querySelectorAll('.category-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        const map = { 'mixed': 0, 'boys': 1, 'girls': 2 };
+        buttons[map[category]].classList.add('active');
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  RECORDS — ADD
+    // ═══════════════════════════════════════════════════════
+    function parseTimeInput(str) {
+        // Returns seconds. Accepts "3:42" or "3m42" or "222" (raw seconds)
+        if (!str) return null;
+        str = str.trim().replace(',', ':');
+        const colonMatch = str.match(/^(\d+):([0-5]?\d)$/);
+        if (colonMatch) return parseInt(colonMatch[1]) * 60 + parseInt(colonMatch[2]);
+        const numOnly = parseInt(str);
+        if (!isNaN(numOnly) && numOnly > 0) return numOnly;
+        return null;
+    }
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function addRecord(atelierIndex) {
+        const name = document.getElementById(`name_${atelierIndex}`).value.trim();
+        const category = selectedCategories[atelierIndex] || 'mixed';
+        const isForTime = wodConfig.mode === 'fortime';
+
+        if (!name) { alert('Entrez un nom d\'équipe'); return; }
+
+        let score, isDNF = false;
+
+        if (isForTime) {
+            const dnfCheckbox = document.getElementById(`dnf_${atelierIndex}`);
+            isDNF = dnfCheckbox ? dnfCheckbox.checked : false;
+
+            if (isDNF) {
+                score = Infinity; // DNF goes to bottom
+            } else {
+                const raw = document.getElementById(`score_${atelierIndex}`).value;
+                score = parseTimeInput(raw);
+                if (score === null) { alert('Entrez un temps valide au format MM:SS (ex: 3:42)'); return; }
             }
-
-            wodConfig.ateliers[atelierIndex].records.push({ name, score, category });
-            wodConfig.ateliers[atelierIndex].records.sort((a, b) => b.score - a.score);
-
-            // Save to localStorage
-            saveSessionData();
-
-            document.getElementById(`name_${atelierIndex}`).value = '';
-            document.getElementById(`score_${atelierIndex}`).value = '';
-
-            updateRecordsList(atelierIndex);
-            updateGlobalRankings();
+        } else {
+            score = parseInt(document.getElementById(`score_${atelierIndex}`).value);
+            if (!score || score < 0) { alert('Entrez un score valide'); return; }
         }
 
-        function updateRecordsList(atelierIndex) {
-            const list = document.getElementById(`records_${atelierIndex}`);
-            const records = wodConfig.ateliers[atelierIndex].records.slice(0, 3);
+        wodConfig.ateliers[atelierIndex].records.push({ name, score, category, isDNF: isDNF || false });
 
-            if (records.length === 0) {
-                list.innerHTML = '<div class="no-records">Aucun résultat pour le moment</div>';
-                return;
-            }
+        // Sort: AMRAP = desc (more = better), For Time = asc (less = better), DNF at end
+        sortRecords(atelierIndex);
+        saveSessionData();
 
-            const rankClass = ['first', 'second', 'third'];
-            const ranks = ['1er', '2ème', '3ème'];
-            const categoryLabels = {
-                'boys': 'Garçons',
-                'girls': 'Filles',
-                'mixed': 'Mixte'
-            };
+        document.getElementById(`name_${atelierIndex}`).value = '';
+        document.getElementById(`score_${atelierIndex}`).value = '';
+        if (isForTime) {
+            const dnfCb = document.getElementById(`dnf_${atelierIndex}`);
+            if (dnfCb) dnfCb.checked = false;
+        }
 
-            list.innerHTML = records.map((r, i) => `
+        updateRecordsList(atelierIndex);
+        updateGlobalRankings();
+    }
+
+    function sortRecords(atelierIndex) {
+        const recs = wodConfig.ateliers[atelierIndex].records;
+        const isForTime = wodConfig.mode === 'fortime';
+        recs.sort((a, b) => {
+            if (a.isDNF && !b.isDNF) return 1;
+            if (!a.isDNF && b.isDNF) return -1;
+            if (a.isDNF && b.isDNF) return 0;
+            return isForTime ? a.score - b.score : b.score - a.score;
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  RECORDS — DISPLAY
+    // ═══════════════════════════════════════════════════════
+    function updateRecordsList(atelierIndex) {
+        const list = document.getElementById(`records_${atelierIndex}`);
+        const records = wodConfig.ateliers[atelierIndex].records.slice(0, 3);
+        const isForTime = wodConfig.mode === 'fortime';
+
+        if (records.length === 0) {
+            list.innerHTML = '<div class="no-records">Aucun résultat pour le moment</div>';
+            return;
+        }
+
+        const rankClass = ['first', 'second', 'third'];
+        const ranks = ['1er', '2ème', '3ème'];
+        const catLabels = { boys: 'Garçons', girls: 'Filles', mixed: 'Mixte' };
+        const scoreClass = isForTime ? 'record-score fortime-score' : 'record-score';
+
+        list.innerHTML = records.map((r, i) => {
+            const scoreText = r.isDNF
+                ? '<span class="dnf-badge">DNF</span>'
+                : isForTime
+                    ? `<span class="${scoreClass}">${formatTime(r.score)}</span>`
+                    : `<span class="${scoreClass}">${r.score} reps</span>`;
+
+            return `
                 <div class="record-item ${rankClass[i]}">
                     <div class="record-info">
-                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <span style="font-size:1.1em;font-weight:bold;">${ranks[i]}</span>
                         <div>
                             <div class="record-name">${r.name}</div>
-                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                            <span class="record-category category-${r.category}">${catLabels[r.category]}</span>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="record-score">${r.score} reps</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        ${scoreText}
                         <div class="record-actions">
                             <button class="btn-edit-record" onclick="editRecord(${atelierIndex}, ${i})" title="Modifier">✏️</button>
                             <button class="btn-delete-record" onclick="deleteRecord(${atelierIndex}, ${i})" title="Supprimer">🗑️</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+        }).join('');
+    }
+
+    function editRecord(atelierIndex, recordIndex) {
+        const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
+        const isForTime = wodConfig.mode === 'fortime';
+
+        document.getElementById(`name_${atelierIndex}`).value = record.name;
+        if (isForTime) {
+            if (!record.isDNF) document.getElementById(`score_${atelierIndex}`).value = formatTime(record.score);
+            const dnfCb = document.getElementById(`dnf_${atelierIndex}`);
+            if (dnfCb) dnfCb.checked = !!record.isDNF;
+        } else {
+            document.getElementById(`score_${atelierIndex}`).value = record.score;
         }
 
-        function editRecord(atelierIndex, recordIndex) {
-            const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
-            
-            // Pre-fill the form with existing data
-            document.getElementById(`name_${atelierIndex}`).value = record.name;
-            document.getElementById(`score_${atelierIndex}`).value = record.score;
-            
-            // Set the category
-            selectCategory(atelierIndex, record.category);
-            
-            // Delete the old record
+        selectCategory(atelierIndex, record.category);
+        wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
+        saveSessionData();
+        updateRecordsList(atelierIndex);
+        updateGlobalRankings();
+
+        const card = document.getElementById(`records_${atelierIndex}`).closest('.atelier-card');
+        card.querySelector('.record-input-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function deleteRecord(atelierIndex, recordIndex) {
+        const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
+        const label = record.isDNF
+            ? `${record.name} (DNF)`
+            : wodConfig.mode === 'fortime'
+                ? `${record.name} (${formatTime(record.score)})`
+                : `${record.name} (${record.score} reps)`;
+
+        if (confirm(`Supprimer le résultat de "${label}" ?`)) {
             wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
-            
-            // Save to localStorage
             saveSessionData();
-            
-            // Update display
             updateRecordsList(atelierIndex);
             updateGlobalRankings();
-            
-            // Scroll to form
-            const card = document.getElementById(`records_${atelierIndex}`).closest('.atelier-card');
-            card.querySelector('.record-input-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+    }
 
-        function deleteRecord(atelierIndex, recordIndex) {
-            const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
-            
-            if (confirm(`Supprimer le résultat de "${record.name}" (${record.score} reps) ?`)) {
-                // Remove the record
-                wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
-                
-                // Save to localStorage
-                saveSessionData();
-                
-                // Update display
-                updateRecordsList(atelierIndex);
-                updateGlobalRankings();
-            }
-        }
+    // ═══════════════════════════════════════════════════════
+    //  GLOBAL RANKINGS
+    // ═══════════════════════════════════════════════════════
+    function updateGlobalRankings() {
+        const isForTime = wodConfig.mode === 'fortime';
+        const allGroups = {};
 
-        function updateGlobalRankings() {
-            const allGroups = {};
-            
-            wodConfig.ateliers.forEach(atelier => {
-                atelier.records.forEach(record => {
-                    if (!allGroups[record.name]) {
-                        allGroups[record.name] = {
-                            name: record.name,
-                            category: record.category,
-                            totalScore: 0,
-                            atelierCount: 0
-                        };
-                    }
+        wodConfig.ateliers.forEach(atelier => {
+            atelier.records.forEach(record => {
+                if (!allGroups[record.name]) {
+                    allGroups[record.name] = {
+                        name: record.name,
+                        category: record.category,
+                        totalScore: isForTime ? 0 : 0,
+                        atelierCount: 0,
+                        hasDNF: false
+                    };
+                }
+                if (record.isDNF) {
+                    allGroups[record.name].hasDNF = true;
+                } else {
                     allGroups[record.name].totalScore += record.score;
-                    allGroups[record.name].atelierCount++;
-                });
+                }
+                allGroups[record.name].atelierCount++;
             });
+        });
 
-            const rankings = Object.values(allGroups)
-                .filter(g => g.atelierCount === wodConfig.numAteliers)
-                .sort((a, b) => b.totalScore - a.totalScore)
-                .slice(0, 3);
+        let rankings = Object.values(allGroups)
+            .filter(g => g.atelierCount === wodConfig.numAteliers);
 
-            if (rankings.length > 0) {
-                document.getElementById('globalRankings').style.display = 'block';
-                displayGlobalTop3(rankings);
-            } else {
-                document.getElementById('globalRankings').style.display = 'none';
-            }
+        if (isForTime) {
+            rankings.sort((a, b) => {
+                if (a.hasDNF && !b.hasDNF) return 1;
+                if (!a.hasDNF && b.hasDNF) return -1;
+                return a.totalScore - b.totalScore; // lower time = better
+            });
+        } else {
+            rankings.sort((a, b) => b.totalScore - a.totalScore);
         }
 
-        function displayGlobalTop3(rankings) {
-            const container = document.getElementById('globalTop3');
-            
-            if (rankings.length === 0) {
-                container.innerHTML = '<div class="no-records">Aucune équipe n\'a terminé tous les ateliers</div>';
-                return;
-            }
+        rankings = rankings.slice(0, 3);
 
-            const rankClass = ['first', 'second', 'third'];
-            const ranks = ['1er', '2ème', '3ème'];
-            const categoryLabels = {
-                'boys': 'Garçons',
-                'girls': 'Filles',
-                'mixed': 'Mixte'
-            };
+        if (rankings.length > 0) {
+            document.getElementById('globalRankings').style.display = 'block';
+            document.getElementById('globalRankTitle').textContent =
+                isForTime ? 'Top 3 — Meilleurs temps cumulés' : 'Top 3 — Meilleurs scores cumulés';
+            displayGlobalTop3(rankings);
+        } else {
+            document.getElementById('globalRankings').style.display = 'none';
+        }
+    }
 
-            container.innerHTML = rankings.map((r, i) => `
+    function displayGlobalTop3(rankings) {
+        const container = document.getElementById('globalTop3');
+        const isForTime = wodConfig.mode === 'fortime';
+
+        if (rankings.length === 0) {
+            container.innerHTML = '<div class="no-records">Aucune équipe n\'a terminé tous les ateliers</div>';
+            return;
+        }
+
+        const rankClass = ['first', 'second', 'third'];
+        const ranks = ['1er', '2ème', '3ème'];
+        const catLabels = { boys: 'Garçons', girls: 'Filles', mixed: 'Mixte' };
+
+        container.innerHTML = rankings.map((r, i) => {
+            const scoreText = r.hasDNF
+                ? '<span class="dnf-badge">DNF</span>'
+                : isForTime
+                    ? `<span class="record-score fortime-score">${formatTime(r.totalScore)}</span>`
+                    : `<span class="record-score">${r.totalScore} reps</span>`;
+
+            return `
                 <div class="ranking-item ${rankClass[i]}">
                     <div class="record-info">
-                        <span style="font-size: 1.1em; font-weight: bold;">${ranks[i]}</span>
+                        <span style="font-size:1.1em;font-weight:bold;">${ranks[i]}</span>
                         <div>
                             <div class="record-name">${r.name}</div>
-                            <span class="record-category category-${r.category}">${categoryLabels[r.category]}</span>
+                            <span class="record-category category-${r.category}">${catLabels[r.category]}</span>
                         </div>
                     </div>
-                    <span class="record-score">${r.totalScore} reps</span>
+                    ${scoreText}
                 </div>
-            `).join('');
-        }
+            `;
+        }).join('');
+    }
 
-        // Timer functions
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                if (timeLeft === 0) {
-                    timeLeft = wodConfig.duration * 60;
-                }
-                timerInterval = setInterval(updateTimer, 1000);
-            }
-        }
+    // ═══════════════════════════════════════════════════════
+    //  TIMER
+    // ═══════════════════════════════════════════════════════
+    function startTimer() {
+        if (isRunning) return;
+        isRunning = true;
+        const isForTime = wodConfig.mode === 'fortime';
 
-        function pauseTimer() {
-            isRunning = false;
-            clearInterval(timerInterval);
-        }
+        if (isForTime) {
+            // Stopwatch: count UP
+            document.getElementById('timerDisplay').classList.add('fortime-running');
+            timerInterval = setInterval(() => {
+                timeElapsed++;
+                const m = Math.floor(timeElapsed / 60);
+                const s = timeElapsed % 60;
+                document.getElementById('timerDisplay').textContent =
+                    `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
-        function resetTimer() {
-            isRunning = false;
-            clearInterval(timerInterval);
-            timeLeft = wodConfig.duration * 60;
-            updateDisplay();
-            document.getElementById('timerDisplay').classList.remove('warning');
-        }
-
-        function updateTimer() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateDisplay();
-                
-                if (timeLeft <= 10 && timeLeft > 0) {
+                // Warn near time cap
+                const cap = wodConfig.duration * 60;
+                const remaining = cap - timeElapsed;
+                if (remaining <= 10 && remaining > 0) {
                     document.getElementById('timerDisplay').classList.add('warning');
+                    document.getElementById('timerDisplay').classList.remove('fortime-running');
                 }
-                
-                if (timeLeft === 0) {
+                if (timeElapsed >= cap) {
                     pauseTimer();
                     document.getElementById('timerDisplay').classList.remove('warning');
                     playBeep();
-                    setTimeout(() => {
-                        alert('TEMPS ÉCOULÉ ! STOP !');
-                    }, 1200);
+                    setTimeout(() => alert('TIME CAP ATTEINT ! STOP !'), 1200);
                 }
+            }, 1000);
+        } else {
+            // AMRAP: count DOWN
+            if (timeLeft === 0) timeLeft = wodConfig.duration * 60;
+            timerInterval = setInterval(updateTimerAMRAP, 1000);
+        }
+    }
+
+    function updateTimerAMRAP() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent =
+                `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+            if (timeLeft <= 10 && timeLeft > 0) {
+                document.getElementById('timerDisplay').classList.add('warning');
+            }
+            if (timeLeft === 0) {
+                pauseTimer();
+                document.getElementById('timerDisplay').classList.remove('warning');
+                playBeep();
+                setTimeout(() => alert('TEMPS ÉCOULÉ ! STOP !'), 1200);
             }
         }
+    }
 
-        function updateDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    function pauseTimer() {
+        isRunning = false;
+        clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+        isRunning = false;
+        clearInterval(timerInterval);
+        const isForTime = wodConfig.mode === 'fortime';
+        const display = document.getElementById('timerDisplay');
+
+        if (isForTime) {
+            timeElapsed = 0;
+            display.textContent = '00:00';
+            display.classList.remove('warning', 'fortime-running');
+        } else {
+            timeLeft = wodConfig.duration * 60;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            display.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            display.classList.remove('warning', 'fortime-running');
         }
+    }
 
-        function resetApp() {
-            if (confirm('Recommencer la configuration ?\n\nLes records seront conservés en localStorage.')) {
-                location.reload();
-            }
-        }
+    // ═══════════════════════════════════════════════════════
+    //  APP NAVIGATION
+    // ═══════════════════════════════════════════════════════
+    function resetApp() {
+        if (confirm('Recommencer la configuration ?\n\nLes records seront conservés en localStorage.')) location.reload();
+    }
 
-        // WOD Management Functions
-        function createNewWOD() {
-            currentWODId = null;
-            wodConfig = { name: '', numAteliers: 3, duration: 5, ateliers: [] };
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('setupOverlay').style.display = 'flex';
-        }
+    function createNewWOD() {
+        currentWODId = null;
+        wodConfig = { name:'', mode:'amrap', numAteliers:3, duration:5, ateliers:[] };
+        selectedWodMode = 'amrap';
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('setupOverlay').style.display = 'flex';
+        selectWodMode('amrap');
+    }
 
-        function backToWelcome() {
-            document.getElementById('myWODsScreen').style.display = 'none';
-            document.getElementById('welcomeScreen').style.display = 'flex';
-        }
+    function backToWelcome() {
+        document.getElementById('myWODsScreen').style.display = 'none';
+        document.getElementById('welcomeScreen').style.display = 'flex';
+    }
 
-        async function showMyWODs() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('myWODsScreen').style.display = 'flex';
-            await loadSavedWODs();
-        }
+    async function showMyWODs() {
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('myWODsScreen').style.display = 'flex';
+        await loadSavedWODs();
+    }
 
-        async function loadSavedWODs() {
-            try {
-                const snapshot = await database.ref('wods').once('value');
-                const container = document.getElementById('wodsList');
-                
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<div class="no-records" style="padding: 20px;">Aucun WOD sauvegardé pour le moment</div>';
-                    return;
-                }
-                
-                savedWODs = snapshot.val();
-                const wodArray = Object.entries(savedWODs).map(([id, data]) => ({ id, ...data }));
-                wodArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                container.innerHTML = wodArray.map(wod => {
-                    const preview = wod.ateliers.map((a, i) => 
-                        `Atelier ${i+1}: ${a.exercises.map(e => `${e.reps} ${e.name}`).join(' + ')}`
-                    ).join(' | ');
-                    
-                    return `
-                        <div class="wod-card">
-                            <div class="wod-card-header">
-                                <div class="wod-card-title">${wod.name}</div>
-                            </div>
-                            <div class="wod-card-info">
-                                ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''} × ${wod.duration} min
-                            </div>
-                            <div class="wod-card-preview">${preview.substring(0, 150)}${preview.length > 150 ? '...' : ''}</div>
-                            <div class="wod-card-actions">
-                                <button class="btn-wod btn-load" onclick="loadWOD('${wod.id}')">Charger</button>
-                                <button class="btn-wod btn-modify" onclick="modifyWOD('${wod.id}')">Modifier</button>
-                                <button class="btn-wod btn-duplicate" onclick="duplicateWOD('${wod.id}')">Dupliquer</button>
-                                <button class="btn-wod btn-delete-wod" onclick="deleteWOD('${wod.id}')">Supprimer</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (error) {
-                console.error('Erreur chargement WODs:', error);
-                alert('Erreur lors du chargement des WODs');
-            }
-        }
-
-        async function loadWOD(id) {
-            const wod = savedWODs[id];
-            if (!wod) return;
-            
-            currentWODId = id;
-            wodConfig = { ...wod };
-            
-            document.getElementById('myWODsScreen').style.display = 'none';
-            finishSetup();
-        }
-
-        async function modifyWOD(id) {
-            const wod = savedWODs[id];
-            if (!wod) return;
-            
-            currentWODId = id;
-            wodConfig = { ...wod };
-            
-            document.getElementById('myWODsScreen').style.display = 'none';
-            document.getElementById('setupOverlay').style.display = 'flex';
-            
-            document.getElementById('wodName').value = wod.name;
-            document.getElementById('numAteliers').value = wod.numAteliers;
-            document.getElementById('duration').value = wod.duration;
-        }
-
-        async function duplicateWOD(id) {
-            const wod = savedWODs[id];
-            if (!wod) return;
-            
-            const newName = prompt('Nom du WOD dupliqué:', wod.name + ' (copie)');
-            if (!newName) return;
-            
-            const newWOD = {
-                ...wod,
-                name: newName,
-                createdAt: new Date().toISOString()
-            };
-            
-            try {
-                await database.ref('wods').push(newWOD);
-                alert('WOD dupliqué avec succès !');
-                await loadSavedWODs();
-            } catch (error) {
-                console.error('Erreur duplication:', error);
-                alert('Erreur lors de la duplication');
-            }
-        }
-
-        async function deleteWOD(id) {
-            const wod = savedWODs[id];
-            if (!wod) return;
-            
-            if (!confirm(`Supprimer le WOD "${wod.name}" ?\n\nCette action est irréversible.`)) return;
-            
-            try {
-                await database.ref('wods/' + id).remove();
-                alert('WOD supprimé !');
-                await loadSavedWODs();
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                alert('Erreur lors de la suppression');
-            }
-        }
-
-        async function saveWODToFirebase() {
-            try {
-                if (!wodConfig.name) {
-                    alert('Le WOD doit avoir un nom');
-                    return false;
-                }
-                
-                const wodData = {
-                    name: wodConfig.name,
-                    numAteliers: wodConfig.numAteliers,
-                    duration: wodConfig.duration,
-                    ateliers: wodConfig.ateliers.map(a => ({ exercises: a.exercises })), // Don't save records to Firebase
-                    createdAt: currentWODId && savedWODs[currentWODId] ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                if (currentWODId) {
-                    await database.ref('wods/' + currentWODId).set(wodData);
-                } else {
-                    const newRef = await database.ref('wods').push(wodData);
-                    currentWODId = newRef.key;
-                }
-                
-                return true;
-            } catch (error) {
-                console.error('Erreur sauvegarde WOD:', error);
-                console.error('WOD data:', wodConfig);
-                alert('Erreur lors de la sauvegarde du WOD: ' + error.message);
-                return false;
-            }
-        }
-
-        function backToConfig() {
-            document.getElementById('saveLaunchScreen').style.display = 'none';
-            currentAtelierIndex = Math.max(0, wodConfig.ateliers.length - 1);
-            document.getElementById('atelierSetupOverlay').style.display = 'flex';
-            showAtelierConfig();
-        }
-
-        async function launchNow() {
-            document.getElementById('saveLaunchScreen').style.display = 'none';
-            showMainContainer();
-        }
-
-        async function saveForLater() {
-            const saved = await saveWODToFirebase();
-            if (saved) {
-                alert(`WOD "${wodConfig.name}" sauvegardé !`);
-                location.reload();
-            }
-        }
-
-        // Settings functions
-        function openSettings() {
-            document.getElementById('settingsOverlay').style.display = 'flex';
-            renderExerciseList();
-        }
-
-        function openSettingsFromWelcome() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('settingsOverlay').style.display = 'flex';
-            renderExerciseList();
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsOverlay').style.display = 'none';
-            cancelEditExercise();
-            
-            if (document.getElementById('mainContainer').classList.contains('visible')) {
+    async function loadSavedWODs() {
+        try {
+            const snapshot = await database.ref('wods').once('value');
+            const container = document.getElementById('wodsList');
+            if (!snapshot.exists()) {
+                container.innerHTML = '<div class="no-records" style="padding:20px;">Aucun WOD sauvegardé pour le moment</div>';
                 return;
-            } else {
-                document.getElementById('welcomeScreen').style.display = 'flex';
             }
-        }
+            savedWODs = snapshot.val();
+            const wodArray = Object.entries(savedWODs).map(([id, data]) => ({ id, ...data }));
+            wodArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        async function loadExercisesFromFirebase() {
-            try {
-                const snapshot = await database.ref('exercises').once('value');
-                if (snapshot.exists()) {
-                    const firebaseExercises = snapshot.val();
-                    
-                    exerciseData = { ...exerciseData, ...firebaseExercises };
-                    
-                    Object.keys(firebaseExercises).forEach(name => {
-                        if (!EXERCISES.includes(name)) {
-                            EXERCISES.push(name);
-                        }
-                    });
-                    EXERCISES.sort();
-                }
-            } catch (error) {
-                console.error('Erreur chargement Firebase:', error);
-            }
-        }
+            container.innerHTML = wodArray.map(wod => {
+                const mode = wod.mode || 'amrap';
+                const modeLabel = mode === 'fortime' ? 'For Time' : 'AMRAP';
+                const preview = wod.ateliers.map((a, i) =>
+                    `Atelier ${i+1}: ${a.exercises.map(e => `${e.reps} ${e.name}`).join(' + ')}`
+                ).join(' | ');
 
-        async function saveExerciseToFirebase(name, data) {
-            try {
-                await database.ref('exercises/' + name).set(data);
-                return true;
-            } catch (error) {
-                console.error('Erreur sauvegarde Firebase:', error);
-                alert('Erreur lors de la sauvegarde sur Firebase');
-                return false;
-            }
-        }
-
-        async function deleteExerciseFromFirebase(name) {
-            try {
-                await database.ref('exercises/' + name).remove();
-                return true;
-            } catch (error) {
-                console.error('Erreur suppression Firebase:', error);
-                return false;
-            }
-        }
-
-        function renderExerciseList() {
-            const container = document.getElementById('exerciseListContainer');
-            
-            const sortedExercises = EXERCISES.sort();
-            
-            container.innerHTML = sortedExercises.map(name => {
-                const data = exerciseData[name] || { description: '', images: [] };
-                const hasData = data.description || data.images.length > 0;
-                const preview = data.description ? data.description.substring(0, 50) + (data.description.length > 50 ? '...' : '') : 'Aucune description';
-                
                 return `
-                    <div class="exercise-list-item" style="${!hasData ? 'opacity: 0.7;' : ''}">
-                        <div class="exercise-info">
-                            <div class="exercise-title">${name}${!hasData ? ' <span style="font-size: 0.8em; opacity: 0.6;">(non documenté)</span>' : ''}</div>
-                            <div class="exercise-desc-preview">${preview}</div>
+                    <div class="wod-card">
+                        <div class="wod-card-header">
+                            <div class="wod-card-title">${wod.name}</div>
+                            <span class="wod-mode-pill ${mode}">${modeLabel}</span>
                         </div>
-                        <div class="exercise-actions">
-                            <button class="btn-edit" onclick="editExercise('${name}')">${hasData ? 'Modifier' : 'Documenter'}</button>
-                            ${hasData ? `<button class="btn-delete" onclick="deleteExerciseData('${name}')">Supprimer données</button>` : ''}
+                        <div class="wod-card-info">
+                            ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''} × ${wod.duration} min
+                        </div>
+                        <div class="wod-card-preview">${preview.substring(0, 150)}${preview.length > 150 ? '...' : ''}</div>
+                        <div class="wod-card-actions">
+                            <button class="btn-wod btn-load" onclick="loadWOD('${wod.id}')">Charger</button>
+                            <button class="btn-wod btn-modify" onclick="modifyWOD('${wod.id}')">Modifier</button>
+                            <button class="btn-wod btn-duplicate" onclick="duplicateWOD('${wod.id}')">Dupliquer</button>
+                            <button class="btn-wod btn-delete-wod" onclick="deleteWOD('${wod.id}')">Supprimer</button>
                         </div>
                     </div>
                 `;
             }).join('');
+        } catch(e) {
+            console.error('Erreur chargement WODs:', e);
+            alert('Erreur lors du chargement des WODs');
         }
+    }
 
-        function previewImage(index) {
-            const input = document.getElementById(`imageInput${index + 1}`);
-            const file = input.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreviews[index] = e.target.result;
-                    updateImagePreview();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+    async function loadWOD(id) {
+        const wod = savedWODs[id];
+        if (!wod) return;
+        currentWODId = id;
+        wodConfig = { ...wod, mode: wod.mode || 'amrap' };
+        document.getElementById('myWODsScreen').style.display = 'none';
+        finishSetup();
+    }
 
-        function updateImagePreview() {
-            const container = document.getElementById('imagePreviewContainer');
-            container.innerHTML = imagePreviews.map((img, i) => {
-                if (!img) return '';
-                return `
-                    <div class="image-preview-item">
-                        <img src="${img}" alt="Preview ${i + 1}">
-                        <button class="remove-image" onclick="removeImage(${i})">×</button>
-                    </div>
-                `;
-            }).filter(Boolean).join('');
-        }
+    async function modifyWOD(id) {
+        const wod = savedWODs[id];
+        if (!wod) return;
+        currentWODId = id;
+        wodConfig = { ...wod, mode: wod.mode || 'amrap' };
+        selectedWodMode = wodConfig.mode;
 
-        function removeImage(index) {
-            imagePreviews[index] = null;
-            document.getElementById(`imageInput${index + 1}`).value = '';
-            updateImagePreview();
-        }
+        document.getElementById('myWODsScreen').style.display = 'none';
+        document.getElementById('setupOverlay').style.display = 'flex';
+        document.getElementById('wodName').value = wod.name;
+        document.getElementById('numAteliers').value = wod.numAteliers;
+        document.getElementById('duration').value = wod.duration;
+        selectWodMode(wodConfig.mode);
+    }
 
-        async function saveExercise() {
-            const name = document.getElementById('exerciseName').value.trim();
-            const description = document.getElementById('exerciseDescription').value.trim();
-            
-            if (!name) {
-                alert('Entrez un nom d\'exercice');
-                return;
-            }
-            
-            const isNewExercise = !EXERCISES.includes(name);
-            
-            const exerciseInfo = {
-                description: description,
-                images: imagePreviews.filter(Boolean)
+    async function duplicateWOD(id) {
+        const wod = savedWODs[id];
+        if (!wod) return;
+        const newName = prompt('Nom du WOD dupliqué:', wod.name + ' (copie)');
+        if (!newName) return;
+        try {
+            await database.ref('wods').push({ ...wod, name: newName, createdAt: new Date().toISOString() });
+            alert('WOD dupliqué !');
+            await loadSavedWODs();
+        } catch(e) { alert('Erreur lors de la duplication'); }
+    }
+
+    async function deleteWOD(id) {
+        const wod = savedWODs[id];
+        if (!wod) return;
+        if (!confirm(`Supprimer le WOD "${wod.name}" ?\n\nCette action est irréversible.`)) return;
+        try {
+            await database.ref('wods/' + id).remove();
+            alert('WOD supprimé !');
+            await loadSavedWODs();
+        } catch(e) { alert('Erreur lors de la suppression'); }
+    }
+
+    async function saveWODToFirebase() {
+        try {
+            if (!wodConfig.name) { alert('Le WOD doit avoir un nom'); return false; }
+            const wodData = {
+                name: wodConfig.name,
+                mode: wodConfig.mode || 'amrap',
+                numAteliers: wodConfig.numAteliers,
+                duration: wodConfig.duration,
+                ateliers: wodConfig.ateliers.map(a => ({ exercises: a.exercises })),
+                createdAt: currentWODId && savedWODs[currentWODId]
+                    ? savedWODs[currentWODId].createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
-            
-            const saved = await saveExerciseToFirebase(name, exerciseInfo);
-            
-            if (!saved) return;
-            
-            exerciseData[name] = exerciseInfo;
-            
-            if (isNewExercise) {
-                EXERCISES.push(name);
+            if (currentWODId) {
+                await database.ref('wods/' + currentWODId).set(wodData);
+            } else {
+                const ref = await database.ref('wods').push(wodData);
+                currentWODId = ref.key;
+            }
+            return true;
+        } catch(e) {
+            console.error('Erreur sauvegarde:', e);
+            alert('Erreur lors de la sauvegarde: ' + e.message);
+            return false;
+        }
+    }
+
+    function backToConfig() {
+        document.getElementById('saveLaunchScreen').style.display = 'none';
+        currentAtelierIndex = Math.max(0, wodConfig.ateliers.length - 1);
+        document.getElementById('atelierSetupOverlay').style.display = 'flex';
+        showAtelierConfig();
+    }
+
+    async function launchNow() {
+        document.getElementById('saveLaunchScreen').style.display = 'none';
+        showMainContainer();
+    }
+
+    async function saveForLater() {
+        const saved = await saveWODToFirebase();
+        if (saved) { alert(`WOD "${wodConfig.name}" sauvegardé !`); location.reload(); }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  SETTINGS / EXERCISES
+    // ═══════════════════════════════════════════════════════
+    function openSettings() {
+        document.getElementById('settingsOverlay').style.display = 'flex';
+        renderExerciseList();
+    }
+
+    function openSettingsFromWelcome() {
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('settingsOverlay').style.display = 'flex';
+        renderExerciseList();
+    }
+
+    function closeSettings() {
+        document.getElementById('settingsOverlay').style.display = 'none';
+        cancelEditExercise();
+        if (!document.getElementById('mainContainer').classList.contains('visible')) {
+            document.getElementById('welcomeScreen').style.display = 'flex';
+        }
+    }
+
+    async function loadExercisesFromFirebase() {
+        try {
+            const snapshot = await database.ref('exercises').once('value');
+            if (snapshot.exists()) {
+                const fb = snapshot.val();
+                exerciseData = { ...exerciseData, ...fb };
+                Object.keys(fb).forEach(name => {
+                    if (!EXERCISES.includes(name)) EXERCISES.push(name);
+                });
                 EXERCISES.sort();
             }
-            
-            document.getElementById('exerciseName').value = '';
-            document.getElementById('exerciseName').disabled = false;
-            document.getElementById('exerciseDescription').value = '';
-            document.getElementById('imageInput1').value = '';
-            document.getElementById('imageInput2').value = '';
-            imagePreviews = [null, null];
-            updateImagePreview();
-            
-            renderExerciseList();
-            currentEditingExercise = null;
-            document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
-            document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-            
-            if (isNewExercise) {
-                alert(`Nouvel exercice "${name}" créé et sauvegardé sur Firebase !`);
-            } else {
-                alert(`Documentation de "${name}" mise à jour sur Firebase !`);
-            }
-        }
+        } catch(e) { console.error('Erreur chargement exercices:', e); }
+    }
 
-        function editExercise(name) {
-            currentEditingExercise = name;
+    async function saveExerciseToFirebase(name, data) {
+        try {
+            await database.ref('exercises/' + name).set(data);
+            return true;
+        } catch(e) {
+            alert('Erreur lors de la sauvegarde sur Firebase');
+            return false;
+        }
+    }
+
+    async function deleteExerciseFromFirebase(name) {
+        try {
+            await database.ref('exercises/' + name).remove();
+            return true;
+        } catch(e) { return false; }
+    }
+
+    function renderExerciseList() {
+        const container = document.getElementById('exerciseListContainer');
+        container.innerHTML = EXERCISES.sort().map(name => {
             const data = exerciseData[name] || { description: '', images: [] };
-            
-            document.getElementById('exerciseName').value = name;
-            document.getElementById('exerciseName').disabled = true;
-            document.getElementById('exerciseDescription').value = data.description || '';
-            imagePreviews = data.images ? [...data.images] : [];
-            while (imagePreviews.length < 2) imagePreviews.push(null);
-            updateImagePreview();
-            
             const hasData = data.description || data.images.length > 0;
-            document.getElementById('formTitle').textContent = hasData ? 'Modifier l\'exercice' : 'Documenter l\'exercice';
-            document.getElementById('saveButtonText').textContent = 'Enregistrer';
-            document.getElementById('cancelEditBtn').style.display = 'block';
-            
-            document.querySelector('.add-exercise-form').scrollIntoView({ behavior: 'smooth' });
-        }
+            const preview = data.description
+                ? data.description.substring(0, 50) + (data.description.length > 50 ? '...' : '')
+                : 'Aucune description';
+            return `
+                <div class="exercise-list-item" style="${!hasData ? 'opacity:0.7;' : ''}">
+                    <div class="exercise-info">
+                        <div class="exercise-title">${name}${!hasData ? ' <span style="font-size:0.8em;opacity:0.6;">(non documenté)</span>' : ''}</div>
+                        <div class="exercise-desc-preview">${preview}</div>
+                    </div>
+                    <div class="exercise-actions">
+                        <button class="btn-edit" onclick="editExercise('${name}')">${hasData ? 'Modifier' : 'Documenter'}</button>
+                        ${hasData ? `<button class="btn-delete" onclick="deleteExerciseData('${name}')">Supprimer données</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 
-        function cancelEditExercise() {
-            currentEditingExercise = null;
-            document.getElementById('exerciseName').value = '';
-            document.getElementById('exerciseName').disabled = false;
-            document.getElementById('exerciseDescription').value = '';
-            document.getElementById('imageInput1').value = '';
-            document.getElementById('imageInput2').value = '';
-            imagePreviews = [null, null];
-            updateImagePreview();
-            
-            document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
-            document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
-            document.getElementById('cancelEditBtn').style.display = 'none';
+    function previewImage(index) {
+        const input = document.getElementById(`imageInput${index + 1}`);
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => { imagePreviews[index] = e.target.result; updateImagePreview(); };
+            reader.readAsDataURL(file);
         }
+    }
 
-        async function deleteExerciseData(name) {
-            if (confirm(`Supprimer la description et les images de "${name}" ?\n\nL'exercice restera disponible dans la liste, mais sans documentation.`)) {
-                const deleted = await deleteExerciseFromFirebase(name);
-                
-                if (!deleted) return;
-                
-                delete exerciseData[name];
-                
-                renderExerciseList();
-                alert(`Documentation de "${name}" supprimée !`);
-            }
-        }
+    function updateImagePreview() {
+        const container = document.getElementById('imagePreviewContainer');
+        container.innerHTML = imagePreviews.map((img, i) => {
+            if (!img) return '';
+            return `
+                <div class="image-preview-item">
+                    <img src="${img}" alt="Preview ${i+1}">
+                    <button class="remove-image" onclick="removeImage(${i})">×</button>
+                </div>
+            `;
+        }).filter(Boolean).join('');
+    }
 
-        // Initialize
-        window.onload = async function() {
-            generateExerciseInputs(2);
-            await loadExercisesFromFirebase();
-        };
+    function removeImage(index) {
+        imagePreviews[index] = null;
+        document.getElementById(`imageInput${index + 1}`).value = '';
+        updateImagePreview();
+    }
+
+    async function saveExercise() {
+        const name = document.getElementById('exerciseName').value.trim();
+        const description = document.getElementById('exerciseDescription').value.trim();
+        if (!name) { alert('Entrez un nom d\'exercice'); return; }
+
+        const isNew = !EXERCISES.includes(name);
+        const info = { description, images: imagePreviews.filter(Boolean) };
+        const saved = await saveExerciseToFirebase(name, info);
+        if (!saved) return;
+
+        exerciseData[name] = info;
+        if (isNew) { EXERCISES.push(name); EXERCISES.sort(); }
+
+        document.getElementById('exerciseName').value = '';
+        document.getElementById('exerciseName').disabled = false;
+        document.getElementById('exerciseDescription').value = '';
+        document.getElementById('imageInput1').value = '';
+        document.getElementById('imageInput2').value = '';
+        imagePreviews = [null, null];
+        updateImagePreview();
+        renderExerciseList();
+        currentEditingExercise = null;
+        document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
+        document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+
+        alert(isNew ? `Exercice "${name}" créé !` : `Documentation de "${name}" mise à jour !`);
+    }
+
+    function editExercise(name) {
+        currentEditingExercise = name;
+        const data = exerciseData[name] || { description: '', images: [] };
+        document.getElementById('exerciseName').value = name;
+        document.getElementById('exerciseName').disabled = true;
+        document.getElementById('exerciseDescription').value = data.description || '';
+        imagePreviews = data.images ? [...data.images] : [];
+        while (imagePreviews.length < 2) imagePreviews.push(null);
+        updateImagePreview();
+        const hasData = data.description || data.images.length > 0;
+        document.getElementById('formTitle').textContent = hasData ? 'Modifier l\'exercice' : 'Documenter l\'exercice';
+        document.getElementById('saveButtonText').textContent = 'Enregistrer';
+        document.getElementById('cancelEditBtn').style.display = 'block';
+        document.querySelector('.add-exercise-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelEditExercise() {
+        currentEditingExercise = null;
+        document.getElementById('exerciseName').value = '';
+        document.getElementById('exerciseName').disabled = false;
+        document.getElementById('exerciseDescription').value = '';
+        document.getElementById('imageInput1').value = '';
+        document.getElementById('imageInput2').value = '';
+        imagePreviews = [null, null];
+        updateImagePreview();
+        document.getElementById('formTitle').textContent = 'Ajouter un nouvel exercice';
+        document.getElementById('saveButtonText').textContent = 'Créer l\'exercice';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+    }
+
+    async function deleteExerciseData(name) {
+        if (!confirm(`Supprimer la description et les images de "${name}" ?`)) return;
+        const deleted = await deleteExerciseFromFirebase(name);
+        if (!deleted) return;
+        delete exerciseData[name];
+        renderExerciseList();
+        alert(`Documentation de "${name}" supprimée !`);
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  INIT
+    // ═══════════════════════════════════════════════════════
+    window.onload = async function() {
+        generateExerciseInputs(2);
+        await loadExercisesFromFirebase();
+    };
     </script>
 </body>
 </html>
