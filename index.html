@@ -1755,7 +1755,7 @@
             toursGroup.style.display = 'none';
         } else if (mode === 'emom') {
             desc.className = 'mode-description emom';
-            desc.innerHTML = '<strong>EMOM</strong> — <em>Every Minute On the Minute</em> : au début de chaque minute, réaliser les reps de l'exercice. Le reste de la minute = récupération. On change d'exercice à chaque minute.';
+            desc.innerHTML = "<strong>EMOM</strong> — <em>Every Minute On the Minute</em> : au début de chaque minute, réaliser les reps de l'exercice. Le reste de la minute = récupération. On change d'exercice à chaque minute.";
             durationGroup.style.display = 'none';
             toursGroup.style.display = 'block';
         }
@@ -1830,7 +1830,7 @@
         const num = parseInt(document.getElementById('numAteliers').value);
 
         if (!name) { alert('Donnez un nom à votre WOD'); return; }
-        if (num < 1 || num > 8) { alert('Le nombre d ateliers doit être entre 1 et 8'); return; }
+        if (num < 1 || num > 8) { alert("Le nombre d'ateliers doit être entre 1 et 8"); return; }
 
         let duration = 5, numTours = 3;
 
@@ -3037,5 +3037,3 @@
     </script>
 </body>
 </html>
-
-
