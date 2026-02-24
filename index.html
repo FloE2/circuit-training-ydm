@@ -81,6 +81,59 @@
             border-color: #4299e1;
         }
 
+        /* ── Team size selector ── */
+        .team-selector {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .team-btn {
+            flex: 1;
+            min-width: 52px;
+            padding: 10px 6px;
+            border: 2px solid #4a5568;
+            background: #1a202c;
+            color: #a0aec0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .team-btn .team-icon { font-size: 1.3em; display: block; margin-bottom: 3px; }
+        .team-btn .team-label { display: block; font-size: 0.85em; }
+
+        .team-btn:hover {
+            border-color: #9f7aea;
+            color: #e0e0e0;
+        }
+
+        .team-btn.active-team {
+            background: linear-gradient(135deg, #553c9a, #44337a);
+            border-color: #9f7aea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(159, 122, 234, 0.4);
+        }
+
+        /* Team badge in header */
+        .team-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.78em;
+            margin-left: 8px;
+            background: rgba(159, 122, 234, 0.2);
+            color: #9f7aea;
+            border: 1px solid #9f7aea;
+        }
+
         /* ── Mode selector ── */
         .mode-selector {
             display: flex;
@@ -875,6 +928,33 @@
                 <input type="number" id="duration" min="2" max="30" value="5">
             </div>
 
+            <!-- TEAM SIZE -->
+            <div class="form-group">
+                <label>Format de travail</label>
+                <div class="team-selector">
+                    <button type="button" class="team-btn active-team" id="teamBtn_1" onclick="selectTeamSize(1)">
+                        <span class="team-icon">🧍</span>
+                        <span class="team-label">Indiv</span>
+                    </button>
+                    <button type="button" class="team-btn" id="teamBtn_2" onclick="selectTeamSize(2)">
+                        <span class="team-icon">👥</span>
+                        <span class="team-label">Duo</span>
+                    </button>
+                    <button type="button" class="team-btn" id="teamBtn_3" onclick="selectTeamSize(3)">
+                        <span class="team-icon">👥</span>
+                        <span class="team-label">Trio</span>
+                    </button>
+                    <button type="button" class="team-btn" id="teamBtn_4" onclick="selectTeamSize(4)">
+                        <span class="team-icon">👨‍👩‍👧‍👦</span>
+                        <span class="team-label">4 élèves</span>
+                    </button>
+                    <button type="button" class="team-btn" id="teamBtn_5" onclick="selectTeamSize(5)">
+                        <span class="team-icon">🏅</span>
+                        <span class="team-label">5 élèves</span>
+                    </button>
+                </div>
+            </div>
+
             <button class="btn btn-primary" onclick="setupAteliers()">
                 Configurer les ateliers →
             </button>
@@ -894,6 +974,7 @@
                 <h1>
                     <span id="headerWodName">Circuit Training</span>
                     <span class="mode-badge amrap" id="modeBadge">AMRAP</span>
+                    <span class="team-badge" id="teamBadge">🧍 Indiv</span>
                 </h1>
                 <div class="wod-info" id="wodInfo"></div>
             </div>
@@ -1035,12 +1116,14 @@
     let wodConfig = {
         name: '',
         mode: 'amrap',   // 'amrap' | 'fortime'
+        teamSize: 1,     // 1 = indiv, 2-5 = groupe
         numAteliers: 3,
         duration: 5,     // AMRAP: countdown minutes | ForTime: time cap minutes
         ateliers: []
     };
 
     let selectedWodMode = 'amrap'; // local UI state for setup form
+    let selectedTeamSize = 1; // 1-5
     let currentWODId = null;
     let savedWODs = {};
     let currentAtelierIndex = 0;
@@ -1084,6 +1167,14 @@
             desc.className = 'mode-description fortime';
             desc.innerHTML = '<strong>For Time</strong> — Réaliser un nombre fixe de répétitions <em>le plus rapidement possible</em>. Le score est le temps réalisé (+ bas = meilleur).';
             durationLabel.textContent = 'Time cap (limite de temps en minutes)';
+        }
+    }
+
+    function selectTeamSize(size) {
+        selectedTeamSize = size;
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.getElementById(`teamBtn_${i}`);
+            if (btn) btn.className = 'team-btn' + (i === size ? ' active-team' : '');
         }
     }
 
@@ -1154,6 +1245,7 @@
 
         wodConfig.name = name;
         wodConfig.mode = selectedWodMode;
+        wodConfig.teamSize = selectedTeamSize;
         wodConfig.numAteliers = num;
         wodConfig.duration = duration;
 
@@ -1292,7 +1384,7 @@
 
         document.getElementById('headerWodName').textContent = wodConfig.name;
 
-        // Badge
+        // Mode Badge
         const badge = document.getElementById('modeBadge');
         if (isForTime) {
             badge.className = 'mode-badge fortime';
@@ -1302,12 +1394,19 @@
             badge.textContent = '⏳ AMRAP';
         }
 
+        // Team badge
+        const teamSize = wodConfig.teamSize || 1;
+        const teamBadge = document.getElementById('teamBadge');
+        const teamLabels = { 1: '🧍 Indiv', 2: '👥 Duo', 3: '👥 Trio', 4: '👨‍👩‍👧‍👦 4 élèves', 5: '🏅 5 élèves' };
+        teamBadge.textContent = teamLabels[teamSize] || '🧍 Indiv';
+
         // Info text
         const infoSuffix = isForTime
             ? `Time cap : ${wodConfig.duration} min — Finir le plus vite possible`
             : `${wodConfig.duration} min — AMRAP (max de répétitions)`;
+        const teamSizeLabel = teamSize === 1 ? 'Individuel' : `Équipes de ${teamSize}`;
         document.getElementById('wodInfo').textContent =
-            `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${infoSuffix}`;
+            `${wodConfig.numAteliers} atelier${wodConfig.numAteliers > 1 ? 's' : ''} × ${infoSuffix} — ${teamSizeLabel}`;
 
         const grid = document.getElementById('ateliersGrid');
         grid.className = `main-grid cols-${wodConfig.numAteliers}`;
@@ -1745,8 +1844,9 @@
 
     function createNewWOD() {
         currentWODId = null;
-        wodConfig = { name:'', mode:'amrap', numAteliers:3, duration:5, ateliers:[] };
+        wodConfig = { name:'', mode:'amrap', teamSize:1, numAteliers:3, duration:5, ateliers:[] };
         selectedWodMode = 'amrap';
+        selectedTeamSize = 1;
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('setupOverlay').style.display = 'flex';
         selectWodMode('amrap');
@@ -1777,6 +1877,7 @@
 
             container.innerHTML = wodArray.map(wod => {
                 const mode = wod.mode || 'amrap';
+                const teamLabelsMap = { 1:'🧍 Indiv', 2:'👥 Duo', 3:'👥 Trio', 4:'👨‍👩‍👧‍👦 4 élèves', 5:'🏅 5 élèves' };
                 const modeLabel = mode === 'fortime' ? 'For Time' : 'AMRAP';
                 const preview = wod.ateliers.map((a, i) =>
                     `Atelier ${i+1}: ${a.exercises.map(e => `${e.reps} ${e.name}`).join(' + ')}`
@@ -1787,6 +1888,7 @@
                         <div class="wod-card-header">
                             <div class="wod-card-title">${wod.name}</div>
                             <span class="wod-mode-pill ${mode}">${modeLabel}</span>
+                            <span class="team-badge" style="font-size:0.7em;">${teamLabelsMap[wod.teamSize||1]||'🧍 Indiv'}</span>
                         </div>
                         <div class="wod-card-info">
                             ${wod.numAteliers} atelier${wod.numAteliers > 1 ? 's' : ''} × ${wod.duration} min
@@ -1811,7 +1913,7 @@
         const wod = savedWODs[id];
         if (!wod) return;
         currentWODId = id;
-        wodConfig = { ...wod, mode: wod.mode || 'amrap' };
+        wodConfig = { ...wod, mode: wod.mode || 'amrap', teamSize: wod.teamSize || 1 };
         document.getElementById('myWODsScreen').style.display = 'none';
         finishSetup();
     }
@@ -1822,6 +1924,7 @@
         currentWODId = id;
         wodConfig = { ...wod, mode: wod.mode || 'amrap' };
         selectedWodMode = wodConfig.mode;
+        selectedTeamSize = wodConfig.teamSize || 1;
 
         document.getElementById('myWODsScreen').style.display = 'none';
         document.getElementById('setupOverlay').style.display = 'flex';
@@ -1829,6 +1932,7 @@
         document.getElementById('numAteliers').value = wod.numAteliers;
         document.getElementById('duration').value = wod.duration;
         selectWodMode(wodConfig.mode);
+        selectTeamSize(selectedTeamSize);
     }
 
     async function duplicateWOD(id) {
@@ -1860,6 +1964,7 @@
             const wodData = {
                 name: wodConfig.name,
                 mode: wodConfig.mode || 'amrap',
+                teamSize: wodConfig.teamSize || 1,
                 numAteliers: wodConfig.numAteliers,
                 duration: wodConfig.duration,
                 ateliers: wodConfig.ateliers.map(a => ({ exercises: a.exercises })),
