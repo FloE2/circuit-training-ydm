@@ -15,6 +15,57 @@
             color: #e0e0e0;
         }
 
+        /* ── EMOM fullscreen mode ── */
+        body.emom-mode {
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        body.emom-mode header {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+        }
+
+        body.emom-mode header h1 { font-size: 1.2em; margin-bottom: 2px; }
+        body.emom-mode .wod-info { font-size: 0.78em; }
+        body.emom-mode .mode-badge, body.emom-mode .team-badge { font-size: 0.72em; padding: 2px 8px; }
+        body.emom-mode .auth-user-bar { margin-bottom: 4px; font-size: 0.78em; }
+        body.emom-mode .btn-logout-prominent { padding: 4px 10px; font-size: 0.75em; }
+        body.emom-mode .edit-wod { padding: 5px 12px; font-size: 0.78em; }
+        body.emom-mode .btn-clear-records { padding: 5px 12px; font-size: 0.78em; }
+
+        body.emom-mode .emom-panel {
+            padding: 10px 12px;
+            margin-bottom: 6px;
+        }
+
+        body.emom-mode .emom-topbar { margin-bottom: 6px; }
+
+        body.emom-mode .emom-stat { padding: 6px 14px; min-width: 80px; }
+        body.emom-mode .emom-stat-value { font-size: 1.6em; }
+        body.emom-mode .emom-stat-label { font-size: 0.62em; }
+
+        body.emom-mode .emom-countdown-big { font-size: 3em; padding: 8px 24px; min-width: 130px; }
+
+        body.emom-mode .emom-controls { gap: 6px; margin-bottom: 8px; }
+        body.emom-mode .emom-controls button { padding: 6px 12px !important; font-size: 0.8em !important; }
+
+        body.emom-mode .emom-progress-bar-wrap { height: 6px; margin-bottom: 8px; }
+
+        body.emom-mode .emom-active-card { padding: 10px 16px; margin-bottom: 8px; border-radius: 10px; }
+        body.emom-mode .emom-active-label { font-size: 0.65em; margin-bottom: 4px; }
+        body.emom-mode .emom-active-name { font-size: clamp(1.4em, 3vw, 2.2em); margin-bottom: 6px; }
+        body.emom-mode .emom-active-reps { font-size: clamp(2.2em, 5vw, 4em); }
+        body.emom-mode .emom-active-reps-label { font-size: 0.72em; margin-top: 2px; }
+
+        body.emom-mode .emom-others-row { gap: 6px; }
+        body.emom-mode .emom-other-card { padding: 8px 6px; border-radius: 10px; gap: 4px; min-height: 0; }
+        body.emom-mode .emom-other-num { font-size: 0.58em; }
+        body.emom-mode .emom-other-name { font-size: clamp(0.72em, 1.3vw, 0.95em); }
+        body.emom-mode .emom-other-reps { font-size: clamp(1.2em, 2.2vw, 1.7em); }
+        body.emom-mode .emom-other-reps-label { font-size: 0.58em; }
+
         .setup-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -2110,6 +2161,13 @@
         // Hide the generic timer bar for EMOM (it has its own countdown)
         document.querySelector('.controls').style.display = wodConfig.mode === 'emom' ? 'none' : 'flex';
 
+        // EMOM fullscreen compact mode
+        if (wodConfig.mode === 'emom') {
+            document.body.classList.add('emom-mode');
+        } else {
+            document.body.classList.remove('emom-mode');
+        }
+
         renderWOD();
         if (wodConfig.mode !== 'emom') {
             resetTimer();
@@ -2120,6 +2178,7 @@
     function quitWOD() {
         if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) {
             pauseEmom();
+            document.body.classList.remove('emom-mode');
             location.reload();
         }
     }
