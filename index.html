@@ -1050,7 +1050,7 @@
         .emom-active-card {
             background: linear-gradient(160deg, #c05621 0%, #9c4221 100%);
             border-radius: 14px;
-            padding: 30px 20px;
+            padding: 18px 20px;
             text-align: center;
             margin-bottom: 12px;
             box-shadow: 0 8px 30px rgba(237,137,54,0.5);
@@ -1571,6 +1571,10 @@
                 <div class="emom-stat">
                     <div class="emom-stat-value" id="emomTourNum">1</div>
                     <div class="emom-stat-label">Tour</div>
+                </div>
+                <div class="emom-stat">
+                    <div class="emom-stat-value" style="font-size:1.1em; line-height:1.2;" id="emomPositionLabel">T1 / Ex.1</div>
+                    <div class="emom-stat-label">Position</div>
                 </div>
             </div>
 
@@ -2599,6 +2603,8 @@
 
         // Big active card
         document.getElementById('emomActiveLabel').textContent = `Exercice ${posInTour + 1} / ${tourTotal}`;
+        const posEl = document.getElementById('emomPositionLabel');
+        if (posEl) posEl.textContent = `T${step.tour} / Ex.${posInTour + 1}`;
         document.getElementById('emomActiveName').textContent  = step.name;
         document.getElementById('emomActiveReps').textContent  = step.reps;
 
