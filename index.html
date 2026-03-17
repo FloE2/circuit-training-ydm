@@ -1058,6 +1058,7 @@
         .emom-ex-card {
             flex: 1;
             min-width: 0;          /* allow shrink */
+            min-height: 180px;
             background: #2d3748;
             border: 3px solid #4a5568;
             border-radius: 14px;
@@ -2556,7 +2557,7 @@
         const exercises = wodConfig.ateliers[0].exercises;
         const n = exercises.length;
         const grid = document.getElementById('emomExGrid');
-        grid.className = `emom-ex-grid ex-count-${Math.min(n, 5)}`;
+        grid.className = 'emom-ex-grid';
         grid.innerHTML = exercises.map((ex, i) => `
             <div class="emom-ex-card" id="emomExCard_${i}">
                 <div class="emom-ex-num">Exercice ${i + 1}</div>
