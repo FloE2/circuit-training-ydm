@@ -1046,121 +1046,128 @@
         .emom-progress-bar { height: 100%; background: linear-gradient(90deg,#ed8936,#fbd38d); border-radius:8px; transition: width 1s linear; }
 
         /* ── Big exercise cards grid ── */
-        /* ── 5 exercise cards — always all visible side by side ── */
-        .emom-ex-grid {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            margin-bottom: 16px;
-            align-items: stretch;
+        /* ── ACTIVE exercise big card ── */
+        .emom-active-card {
+            background: linear-gradient(160deg, #c05621 0%, #9c4221 100%);
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 30px rgba(237,137,54,0.5);
         }
 
-        .emom-ex-card {
+        .emom-active-label {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+
+        .emom-active-name {
+            font-size: clamp(1.8em, 4vw, 3em);
+            font-weight: bold;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .emom-active-reps {
+            font-size: clamp(3em, 8vw, 6em);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #fef08a;
+            line-height: 1;
+        }
+
+        .emom-active-reps-label {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.55);
+            margin-top: 6px;
+        }
+
+        /* ── OTHER exercises — small cards row ── */
+        .emom-others-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .emom-other-card {
             flex: 1;
-            min-width: 0;          /* allow shrink */
-            min-height: 180px;
+            min-width: 0;
             background: #2d3748;
-            border: 3px solid #4a5568;
-            border-radius: 14px;
-            padding: 16px 8px;
+            border: 2px solid #4a5568;
+            border-radius: 12px;
+            padding: 14px 8px;
             text-align: center;
-            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
+            transition: border-color 0.3s, background 0.3s;
         }
 
-        /* Done */
-        .emom-ex-card.ex-done {
-            background: rgba(72,187,120,0.1);
-            border-color: #48bb78;
-        }
-
-        .emom-ex-card.ex-done::after {
-            content: '✓';
-            position: absolute;
-            top: 6px; right: 8px;
-            font-size: 1em;
-            color: #48bb78;
-            font-weight: bold;
-        }
-
-        /* ACTIVE — orange, no transform (keeps layout stable) */
-        .emom-ex-card.ex-active {
-            background: linear-gradient(160deg, #c05621 0%, #9c4221 100%);
-            border-color: #ed8936;
-            box-shadow: 0 6px 28px rgba(237,137,54,0.6), inset 0 0 0 2px rgba(255,255,255,0.08);
-        }
-
-        /* Next */
-        .emom-ex-card.ex-next {
-            background: rgba(237,137,54,0.07);
-            border-color: rgba(237,137,54,0.45);
+        /* Next (immediate suivant) */
+        .emom-other-card.other-next {
+            border-color: rgba(237,137,54,0.55);
             border-style: dashed;
+            background: rgba(237,137,54,0.07);
         }
 
-        /* ── Texts inside cards ── */
-        .emom-ex-num {
-            font-size: 0.65em;
+        /* Already done this tour */
+        .emom-other-card.other-done {
+            border-color: #48bb78;
+            background: rgba(72,187,120,0.08);
+            opacity: 0.8;
+        }
+
+        .emom-other-num {
+            font-size: 0.62em;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             color: #718096;
         }
 
-        .emom-ex-card.ex-active .emom-ex-num  { color: rgba(255,255,255,0.55); }
-        .emom-ex-card.ex-next   .emom-ex-num  { color: #ed8936; }
-        .emom-ex-card.ex-done   .emom-ex-num  { color: #48bb78; }
+        .emom-other-card.other-next .emom-other-num { color: #ed8936; }
+        .emom-other-card.other-done .emom-other-num { color: #48bb78; }
 
-        .emom-ex-name {
-            font-size: clamp(0.8em, 1.4vw, 1.3em);
+        .emom-other-name {
+            font-size: clamp(0.78em, 1.5vw, 1.05em);
             font-weight: bold;
             color: #e0e0e0;
             line-height: 1.2;
             word-break: break-word;
         }
 
-        .emom-ex-card.ex-active .emom-ex-name { color: #fff; font-size: clamp(1em, 1.8vw, 1.6em); }
-        .emom-ex-card.ex-done   .emom-ex-name { color: #68d391; }
+        .emom-other-card.other-next .emom-other-name { color: #fbd38d; }
+        .emom-other-card.other-done .emom-other-name { color: #68d391; }
 
-        .emom-ex-reps {
-            font-size: clamp(1.6em, 3.5vw, 2.8em);
+        .emom-other-reps {
+            font-size: clamp(1.4em, 2.8vw, 2em);
             font-weight: bold;
             font-family: 'Courier New', monospace;
             color: #4299e1;
             line-height: 1;
         }
 
-        .emom-ex-card.ex-active .emom-ex-reps { color: #fef08a; font-size: clamp(2em, 4.5vw, 3.8em); }
-        .emom-ex-card.ex-next   .emom-ex-reps { color: #ed8936; }
-        .emom-ex-card.ex-done   .emom-ex-reps { color: #48bb78; }
+        .emom-other-card.other-next .emom-other-reps { color: #ed8936; }
+        .emom-other-card.other-done .emom-other-reps { color: #48bb78; }
 
-        .emom-ex-reps-label {
-            font-size: 0.7em;
+        .emom-other-reps-label {
+            font-size: 0.65em;
             color: #718096;
         }
 
-        .emom-ex-card.ex-active .emom-ex-reps-label { color: rgba(255,255,255,0.55); }
-
-        /* Suivant badge */
-        .emom-next-badge {
-            position: absolute;
-            top: 5px; left: 6px;
-            background: #ed8936;
-            color: white;
-            font-size: 0.58em;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 8px;
-            text-transform: uppercase;
+        /* Done checkmark */
+        .emom-other-card.other-done .emom-other-name::before {
+            content: '✓ ';
+            color: #48bb78;
         }
 
         @media (max-width: 700px) {
-            .emom-ex-grid { flex-wrap: wrap; }
-            .emom-ex-card  { flex: 1 1 calc(50% - 10px); }
+            .emom-others-row { flex-wrap: wrap; }
+            .emom-other-card { flex: 1 1 calc(50% - 10px); }
         }
 
         /* ── Timeline (15 bubbles) ── */
@@ -1553,7 +1560,6 @@
                     <div class="emom-stat-value" id="emomMinuteNum">1</div>
                     <div class="emom-stat-label">Minute</div>
                 </div>
-
                 <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
                     <div class="emom-countdown-big" id="emomCountdown">60</div>
                     <div class="emom-controls">
@@ -1562,26 +1568,28 @@
                         <button class="btn-control btn-reset" onclick="resetEmom()" style="padding:8px 20px;">🔄 Reset</button>
                     </div>
                 </div>
-
                 <div class="emom-stat">
                     <div class="emom-stat-value" id="emomTourNum">1</div>
                     <div class="emom-stat-label">Tour</div>
                 </div>
             </div>
 
-            <!-- Progress bar (seconds in current minute) -->
+            <!-- Progress bar -->
             <div class="emom-progress-bar-wrap">
                 <div class="emom-progress-bar" id="emomProgressBar" style="width:100%;"></div>
             </div>
 
-            <!-- BIG EXERCISE CARDS -->
-            <div class="emom-ex-grid" id="emomExGrid"></div>
-
-            <!-- TIMELINE -->
-            <div class="emom-timeline">
-                <div class="emom-timeline-title">⏱ Timeline — progression sur les <span id="emomTotalMinLabel">15</span> minutes</div>
-                <div class="emom-timeline-tours" id="emomTimelineTours"></div>
+            <!-- ACTIVE exercise — big card -->
+            <div class="emom-active-card" id="emomActiveCard">
+                <div class="emom-active-label" id="emomActiveLabel">EXERCICE 1</div>
+                <div class="emom-active-name" id="emomActiveName">—</div>
+                <div class="emom-active-reps" id="emomActiveReps">—</div>
+                <div class="emom-active-reps-label">reps</div>
             </div>
+
+            <!-- OTHER exercises — small cards row -->
+            <div class="emom-others-row" id="emomOthersRow"></div>
+
         </div>
 
         <!-- EMOM Finished -->
@@ -2513,18 +2521,27 @@
     let emomTotalMinutes = 0;
 
     function buildEmomSequence() {
-        // Sequence = tours × exercises of atelier[0] (all ateliers identical)
+        // Each minute = one exercise from the sequence of ateliers
+        // Support: 5 ateliers × 1 ex each, OR 1 atelier × 5 ex
         emomSequence = [];
         const tours = wodConfig.numTours || 3;
-        const exercises = wodConfig.ateliers[0].exercises;
+
+        // Flatten all exercises from all ateliers into one ordered list per tour
+        const flatExercises = [];
+        wodConfig.ateliers.forEach((atelier, ai) => {
+            atelier.exercises.forEach((ex, ei) => {
+                flatExercises.push({ name: ex.name, reps: ex.reps, atelierIdx: ai, exIdx: ei });
+            });
+        });
+
         for (let t = 0; t < tours; t++) {
-            exercises.forEach((ex, ei) => {
+            flatExercises.forEach((ex, i) => {
                 emomSequence.push({
-                    exIdx: ei,
-                    name: ex.name,
-                    reps: ex.reps,
+                    ...ex,
                     tour: t + 1,
-                    minuteNum: emomSequence.length + 1
+                    minuteNum: emomSequence.length + 1,
+                    posInTour: i,
+                    tourTotal: flatExercises.length
                 });
             });
         }
@@ -2554,76 +2571,19 @@
     }
 
     function buildEmomExGrid() {
-        const exercises = wodConfig.ateliers[0].exercises;
-        const n = exercises.length;
-        const grid = document.getElementById('emomExGrid');
-        grid.className = 'emom-ex-grid';
-        grid.innerHTML = exercises.map((ex, i) => `
-            <div class="emom-ex-card" id="emomExCard_${i}">
-                <div class="emom-ex-num">Exercice ${i + 1}</div>
-                <div class="emom-ex-name">${ex.name}</div>
-                <div class="emom-ex-reps" id="emomExReps_${i}">${ex.reps}</div>
-                <div class="emom-ex-reps-label">reps</div>
-            </div>
-        `).join('');
+        // Nothing to build statically — updateEmomDisplay handles the cards dynamically
     }
 
     function buildEmomTimeline() {
-        const tours    = wodConfig.numTours || 3;
-        const exercises = wodConfig.ateliers[0].exercises;
-        const numEx    = exercises.length;
-        const container = document.getElementById('emomTimelineTours');
-        container.innerHTML = '';
-
-        for (let t = 0; t < tours; t++) {
-            const group = document.createElement('div');
-            group.className = 'emom-tour-group';
-
-            // Vertical tour label on the left
-            const label = document.createElement('div');
-            label.className = 'emom-tour-label';
-            label.textContent = `Tour ${t + 1}`;
-            group.appendChild(label);
-
-            // Row of cells (dot + name)
-            const dotsDiv = document.createElement('div');
-            dotsDiv.className = 'emom-tour-dots';
-
-            for (let e = 0; e < numEx; e++) {
-                const globalIdx = t * numEx + e;
-
-                const cell = document.createElement('div');
-                cell.className = 'emom-tl-cell';
-
-                const dot = document.createElement('div');
-                dot.className = 'emom-tl-dot tl-future';
-                dot.id = `emomTlDot_${globalIdx}`;
-                dot.title = `Min ${globalIdx + 1} — ${exercises[e].name}`;
-                dot.textContent = globalIdx + 1; // minute number
-
-                const name = document.createElement('div');
-                name.className = 'emom-tl-name';
-                name.id = `emomTlName_${globalIdx}`;
-                name.textContent = exercises[e].name;
-
-                cell.appendChild(dot);
-                cell.appendChild(name);
-                dotsDiv.appendChild(cell);
-            }
-
-            group.appendChild(dotsDiv);
-            container.appendChild(group);
-        }
+        // Timeline removed — display handled by others row
     }
 
     function updateEmomDisplay() {
         if (emomCurrentStep >= emomTotalMinutes) { stopEmom(true); return; }
 
         const step = emomSequence[emomCurrentStep];
-        const numEx = wodConfig.ateliers[0].exercises.length;
-        const currentExIdx = emomCurrentStep % numEx;
-        const nextExIdx    = (emomCurrentStep + 1) % numEx;
-        const isLastStep   = emomCurrentStep === emomTotalMinutes - 1;
+        const tourTotal = step.tourTotal;
+        const posInTour = step.posInTour;
 
         // Stats
         document.getElementById('emomMinuteNum').textContent = step.minuteNum;
@@ -2631,42 +2591,43 @@
 
         // Countdown
         const cd = document.getElementById('emomCountdown');
-        cd.textContent  = emomSecondsLeft;
-        cd.className    = 'emom-countdown-big' + (emomSecondsLeft <= 10 ? ' warning-emom' : '');
+        cd.textContent = emomSecondsLeft;
+        cd.className   = 'emom-countdown-big' + (emomSecondsLeft <= 10 ? ' warning-emom' : '');
 
-        // Progress bar (minute-level)
+        // Progress bar
         document.getElementById('emomProgressBar').style.width = ((emomSecondsLeft / 60) * 100) + '%';
 
-        // Exercise cards state
-        for (let i = 0; i < numEx; i++) {
-            const card = document.getElementById(`emomExCard_${i}`);
-            if (!card) continue;
-            card.className = 'emom-ex-card';
-            // Remove any badge
-            const existing = card.querySelector('.emom-next-badge');
-            if (existing) existing.remove();
+        // Big active card
+        document.getElementById('emomActiveLabel').textContent = `Exercice ${posInTour + 1} / ${tourTotal}`;
+        document.getElementById('emomActiveName').textContent  = step.name;
+        document.getElementById('emomActiveReps').textContent  = step.reps;
 
-            if (i === currentExIdx) {
-                card.classList.add('ex-active');
-            } else if (i === nextExIdx && !isLastStep) {
-                card.classList.add('ex-next');
-                const badge = document.createElement('div');
-                badge.className = 'emom-next-badge';
-                badge.textContent = '⏭ Suivant';
-                card.appendChild(badge);
-            } else if (i < currentExIdx) {
-                // already done this tour
-                card.classList.add('ex-done');
-            }
-        }
+        // Other cards — all exercises of the current tour except the active one
+        const tourStart = emomCurrentStep - posInTour; // index of first step in this tour
+        const othersRow = document.getElementById('emomOthersRow');
+        othersRow.innerHTML = '';
 
-        // Timeline dots
-        for (let i = 0; i < emomTotalMinutes; i++) {
-            const dot = document.getElementById(`emomTlDot_${i}`);
-            if (!dot) continue;
-            if (i < emomCurrentStep)       dot.className = 'emom-tl-dot tl-done';
-            else if (i === emomCurrentStep) dot.className = 'emom-tl-dot tl-active';
-            else                            dot.className = 'emom-tl-dot tl-future';
+        for (let i = 0; i < tourTotal; i++) {
+            if (i === posInTour) continue; // skip active
+            const s = emomSequence[tourStart + i];
+            if (!s) continue;
+
+            const isDone = i < posInTour;
+            const isNext = i === posInTour + 1;
+
+            let cardClass = 'emom-other-card';
+            if (isDone) cardClass += ' other-done';
+            else if (isNext) cardClass += ' other-next';
+
+            const card = document.createElement('div');
+            card.className = cardClass;
+            card.innerHTML = `
+                <div class="emom-other-num">${isDone ? '✓' : (isNext ? '⏭ Suivant' : `Ex. ${i + 1}`)}</div>
+                <div class="emom-other-name">${s.name}</div>
+                <div class="emom-other-reps">${s.reps}</div>
+                <div class="emom-other-reps-label">reps</div>
+            `;
+            othersRow.appendChild(card);
         }
     }
 
@@ -2701,14 +2662,12 @@
 
             if (emomCurrentStep >= emomTotalMinutes) { stopEmom(true); return; }
 
-            // Flash active card
-            const numEx = wodConfig.ateliers[0].exercises.length;
-            const newIdx = emomCurrentStep % numEx;
-            const card = document.getElementById(`emomExCard_${newIdx}`);
-            if (card) {
-                card.style.transition = 'none';
-                card.style.transform  = 'scale(1.15)';
-                setTimeout(() => { card.style.transition = ''; card.style.transform = ''; }, 300);
+            // Flash active card name
+            const ac = document.getElementById('emomActiveCard');
+            if (ac) {
+                ac.style.transition = 'none';
+                ac.style.opacity = '0.6';
+                setTimeout(() => { ac.style.transition = 'opacity 0.3s'; ac.style.opacity = '1'; }, 80);
             }
         }
 
@@ -2724,11 +2683,7 @@
             document.getElementById('emomFinished').style.display = 'block';
             document.getElementById('emomFinishedMsg').textContent =
                 `${tours} tour${tours>1?'s':''} × ${numEx} exercice${numEx>1?'s':''} = ${emomTotalMinutes} minutes. Bravo à tous ! 💪`;
-            // All timeline dots green
-            for (let i = 0; i < emomTotalMinutes; i++) {
-                const d = document.getElementById(`emomTlDot_${i}`);
-                if (d) d.className = 'emom-tl-dot tl-done';
-            }
+                // no timeline dots to update
         }
     }
 
