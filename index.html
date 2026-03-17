@@ -1543,6 +1543,66 @@
 
         /* Hide footer */
         body.wod-mode .copyright { display: none; }
+
+        /* ── Collapsible record form in wod-mode ── */
+        body.wod-mode .record-input-form,
+        body.wod-mode .category-selector,
+        body.wod-mode .time-hint {
+            display: none;
+        }
+
+        body.wod-mode .records-section {
+            padding-top: 4px;
+        }
+
+        body.wod-mode .records-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 4px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            background: rgba(66,153,225,0.08);
+            transition: background 0.2s;
+        }
+        body.wod-mode .records-title:hover { background: rgba(66,153,225,0.15); }
+
+        body.wod-mode .records-title::after {
+            content: '＋';
+            font-size: 1em;
+            color: #4299e1;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        body.wod-mode .records-title.form-open::after {
+            content: '－';
+        }
+
+        body.wod-mode .records-section.form-open .record-input-form,
+        body.wod-mode .records-section.form-open .category-selector {
+            display: block;
+        }
+
+        body.wod-mode .records-section.form-open .record-input-form {
+            display: block;
+        }
+
+        /* Records list tighter */
+        body.wod-mode .records-list { max-height: 80px; margin-top: 4px; }
+        body.wod-mode .record-item { padding: 3px 5px; margin-bottom: 2px; }
+        body.wod-mode .record-name { font-size: 0.72em; }
+        body.wod-mode .record-score { font-size: 0.82em; }
+        body.wod-mode .record-category { font-size: 0.58em; }
+        body.wod-mode .btn-edit-record,
+        body.wod-mode .btn-delete-record { padding: 2px 4px; font-size: 0.6em; }
+        body.wod-mode .no-records { padding: 6px; font-size: 0.75em; }
+
+        /* Second records-title (Top 3 label) — not clickable */
+        body.wod-mode .records-title + .records-title { cursor: default; background: none; }
+        body.wod-mode .records-title + .records-title::after { content: ''; }
     </style>
 </head>
 <body>
@@ -2439,7 +2499,7 @@
                 </div>
                 <div class="exercises">${exercisesHTML}</div>
                 <div class="records-section">
-                    <div class="records-title ${titleColor}">Ajouter un résultat</div>
+                    <div class="records-title ${titleColor}" onclick="toggleRecordForm(this)">Ajouter un résultat</div>
                     <div class="record-input-form">
                         <div class="category-selector">
                             <button class="category-btn active" onclick="selectCategory(${index}, 'mixed')">Mixte</button>
@@ -3339,6 +3399,17 @@
     // ═══════════════════════════════════════════════════════
     //  INIT
     // ═══════════════════════════════════════════════════════
+    function toggleRecordForm(titleEl) {
+        const section = titleEl.closest('.records-section');
+        const isOpen = section.classList.toggle('form-open');
+        titleEl.classList.toggle('form-open', isOpen);
+        // Focus first input when opening
+        if (isOpen) {
+            const input = section.querySelector('input[type="text"]');
+            if (input) setTimeout(() => input.focus(), 50);
+        }
+    }
+
     function toggleRankings() {
         const section = document.getElementById('globalRankings');
         const btn = document.getElementById('rankingsToggleBtn');
