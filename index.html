@@ -1406,6 +1406,143 @@
             color: #718096;
             font-size: 0.9em;
         }
+
+        /* ══════════ AMRAP / FOR TIME FULLSCREEN MODE ══════════ */
+        body.wod-mode {
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        /* Header compact */
+        body.wod-mode header {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+        }
+        body.wod-mode header h1 { font-size: 1.2em; margin-bottom: 2px; }
+        body.wod-mode .wod-info { font-size: 0.75em; }
+        body.wod-mode .mode-badge, body.wod-mode .team-badge { font-size: 0.7em; padding: 2px 7px; }
+        body.wod-mode .auth-user-bar { margin-bottom: 3px; font-size: 0.75em; }
+        body.wod-mode .btn-logout-prominent { padding: 4px 10px; font-size: 0.72em; }
+        body.wod-mode .edit-wod { padding: 5px 10px; font-size: 0.75em; }
+        body.wod-mode .btn-clear-records { padding: 5px 10px; font-size: 0.75em; }
+
+        /* Timer bar compact */
+        body.wod-mode .controls {
+            padding: 8px;
+            margin-bottom: 6px;
+            gap: 8px;
+            border-radius: 8px;
+        }
+        body.wod-mode .timer-display {
+            font-size: 1.8em;
+            padding: 8px 18px;
+            min-width: 130px;
+            border-radius: 8px;
+        }
+        body.wod-mode .btn-control {
+            padding: 8px 14px;
+            font-size: 0.82em;
+            border-radius: 8px;
+        }
+
+        /* Grid compact */
+        body.wod-mode .main-grid {
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        /* Atelier cards compact */
+        body.wod-mode .atelier-card {
+            padding: 8px;
+            border-radius: 8px;
+        }
+        body.wod-mode .atelier-header {
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+        }
+        body.wod-mode .atelier-header h3 { font-size: 1em; margin-bottom: 1px; }
+        body.wod-mode .atelier-duration { font-size: 0.75em; }
+
+        /* Exercises compact */
+        body.wod-mode .exercises {
+            gap: 5px;
+            padding: 6px;
+            min-height: 50px;
+            margin-bottom: 6px;
+        }
+        body.wod-mode .exercise {
+            padding: 5px 7px;
+            border-radius: 6px;
+        }
+        body.wod-mode .exercise-reps { font-size: 1.1em; margin-bottom: 1px; }
+        body.wod-mode .exercise-name { font-size: 0.65em; }
+        body.wod-mode .plus-sign { font-size: 1.3em; }
+
+        /* Records section compact */
+        body.wod-mode .records-section {
+            padding-top: 6px;
+        }
+        body.wod-mode .records-title {
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+        body.wod-mode .record-input-form {
+            padding: 6px;
+            margin-bottom: 5px;
+        }
+        body.wod-mode .category-selector { gap: 4px; margin-bottom: 5px; }
+        body.wod-mode .category-btn { padding: 4px; font-size: 0.72em; }
+        body.wod-mode .record-input { gap: 4px; margin-bottom: 5px; }
+        body.wod-mode .record-input input { padding: 5px; font-size: 0.78em; }
+        body.wod-mode .btn-add { padding: 5px 10px; font-size: 0.8em; }
+        body.wod-mode .time-hint { font-size: 0.65em; }
+
+        /* Records list compact */
+        body.wod-mode .records-list { max-height: 100px; }
+        body.wod-mode .record-item { padding: 5px 6px; margin-bottom: 3px; border-radius: 4px; }
+        body.wod-mode .record-name { font-size: 0.78em; }
+        body.wod-mode .record-category { font-size: 0.62em; }
+        body.wod-mode .record-score { font-size: 0.9em; }
+        body.wod-mode .btn-edit-record, body.wod-mode .btn-delete-record { padding: 2px 5px; font-size: 0.65em; }
+
+        /* Rankings compact */
+        /* Rankings : hidden by default in wod-mode, toggle with button */
+        body.wod-mode .rankings-section { display: none !important; }
+        body.wod-mode .rankings-toggle-btn {
+            display: flex !important;
+        }
+        .rankings-toggle-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #2d3748;
+            border: 1px solid #4299e1;
+            color: #4299e1;
+            border-radius: 8px;
+            padding: 6px 16px;
+            font-size: 0.82em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 6px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .rankings-toggle-btn:hover { background: #3a4a5e; }
+        body.wod-mode .rankings-section.rankings-open {
+            display: block !important;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+        }
+        body.wod-mode .rankings-section.rankings-open .rankings-title { font-size: 1em; margin-bottom: 8px; }
+        body.wod-mode .rankings-section.rankings-open .ranking-card { padding: 8px; }
+        body.wod-mode .rankings-section.rankings-open .ranking-item { padding: 5px 6px; margin-bottom: 4px; }
+
+        /* Hide footer */
+        body.wod-mode .copyright { display: none; }
     </style>
 </head>
 <body>
@@ -1661,6 +1798,9 @@
             <h2>🎉 WOD terminé !</h2>
             <p id="emomFinishedMsg"></p>
         </div>
+
+        <!-- Global Rankings toggle -->
+        <button class="rankings-toggle-btn" id="rankingsToggleBtn" onclick="toggleRankings()">🏆 Afficher le classement général</button>
 
         <!-- Global Rankings -->
         <div class="rankings-section" id="globalRankings" style="display: none;">
@@ -2174,10 +2314,12 @@
         // Hide the generic timer bar for EMOM (it has its own countdown)
         document.querySelector('.controls').style.display = wodConfig.mode === 'emom' ? 'none' : 'flex';
 
-        // EMOM fullscreen compact mode
+        // Fullscreen compact mode
         if (wodConfig.mode === 'emom') {
             document.body.classList.add('emom-mode');
+            document.body.classList.remove('wod-mode');
         } else {
+            document.body.classList.add('wod-mode');
             document.body.classList.remove('emom-mode');
         }
 
@@ -2192,6 +2334,7 @@
         if (confirm('Quitter le WOD ?\n\nLes records resteront sauvegardés pour cette séance.')) {
             pauseEmom();
             document.body.classList.remove('emom-mode');
+            document.body.classList.remove('wod-mode');
             location.reload();
         }
     }
@@ -3196,6 +3339,19 @@
     // ═══════════════════════════════════════════════════════
     //  INIT
     // ═══════════════════════════════════════════════════════
+    function toggleRankings() {
+        const section = document.getElementById('globalRankings');
+        const btn = document.getElementById('rankingsToggleBtn');
+        section.classList.toggle('rankings-open');
+        if (section.classList.contains('rankings-open')) {
+            section.style.display = 'block';
+            btn.textContent = '🏆 Masquer le classement général';
+        } else {
+            section.style.display = 'none';
+            btn.textContent = '🏆 Afficher le classement général';
+        }
+    }
+
     window.onload = function() {
         // Hide welcome screen until auth check completes
         document.getElementById('welcomeScreen').style.display = 'none';
