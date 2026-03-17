@@ -2457,6 +2457,7 @@
 
         // AMRAP / ForTime ateliers
         wodConfig.ateliers.forEach((atelier, index) => {
+            if (!atelier.records) atelier.records = [];
             selectedCategories[index] = 'mixed';
             const card = document.createElement('div');
             card.className = 'atelier-card';
@@ -2621,6 +2622,8 @@
     // ═══════════════════════════════════════════════════════
     function updateRecordsList(atelierIndex) {
         const list = document.getElementById(`records_${atelierIndex}`);
+        if (!list) return;
+        if (!wodConfig.ateliers[atelierIndex].records) wodConfig.ateliers[atelierIndex].records = [];
         const records = wodConfig.ateliers[atelierIndex].records.slice(0, 3);
         const isForTime = wodConfig.mode === 'fortime';
 
@@ -2709,6 +2712,7 @@
         const allGroups = {};
 
         wodConfig.ateliers.forEach(atelier => {
+            if (!atelier.records) atelier.records = [];
             atelier.records.forEach(record => {
                 if (!allGroups[record.name]) {
                     allGroups[record.name] = {
