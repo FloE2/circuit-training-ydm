@@ -1920,8 +1920,7 @@
     let selectedCategories = {};
     let audioContext = null;
 
-    const SESSION_KEY = 'wod_session_data';
-    const SESSION_TIMESTAMP_KEY = 'wod_session_timestamp';
+    // Records stored on Firebase (sessions node)
 
     // ═══════════════════════════════════════════════════════
     //  MODE SELECTION (setup form)
@@ -1991,31 +1990,36 @@
     // ═══════════════════════════════════════════════════════
     //  LOCAL STORAGE
     // ═══════════════════════════════════════════════════════
-    function saveSessionData() {
+    function getSessionRef() {
+        // Use WOD id if saved, otherwise use sanitised name
+        const key = (currentWODId || wodConfig.name.replace(/[^a-zA-Z0-9_-]/g, '_')).slice(0, 100);
+        return database.ref('sessions/' + key);
+    }
+
+    async function saveSessionData() {
         try {
             const sessionData = {
                 wodName: wodConfig.name,
+                savedAt: Date.now(),
                 records: wodConfig.ateliers.map(a => a.records || [])
             };
-            localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
-            localStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
-        } catch(e) { console.error('localStorage save error:', e); }
+            await getSessionRef().set(sessionData);
+        } catch(e) { console.error('Firebase session save error:', e); }
     }
 
-    function loadSessionData() {
+    async function loadSessionData() {
         try {
-            const saved = localStorage.getItem(SESSION_KEY);
-            if (!saved) return null;
-            const data = JSON.parse(saved);
+            const snapshot = await getSessionRef().once('value');
+            if (!snapshot.exists()) return null;
+            const data = snapshot.val();
             if (data.wodName === wodConfig.name) return data.records;
             return null;
-        } catch(e) { return null; }
+        } catch(e) { console.error('Firebase session load error:', e); return null; }
     }
 
-    function clearAllRecords() {
+    async function clearAllRecords() {
         if (!confirm('Effacer tous les records de la séance en cours ?\n\nCette action est irréversible.')) return;
-        localStorage.removeItem(SESSION_KEY);
-        localStorage.removeItem(SESSION_TIMESTAMP_KEY);
+        try { await getSessionRef().remove(); } catch(e) {}
         wodConfig.ateliers.forEach(a => { a.records = []; });
         for (let i = 0; i < wodConfig.numAteliers; i++) updateRecordsList(i);
         updateGlobalRankings();
@@ -2152,11 +2156,11 @@
     // ═══════════════════════════════════════════════════════
     //  MAIN CONTAINER
     // ═══════════════════════════════════════════════════════
-    function showMainContainer() {
+    async function showMainContainer() {
         if (!wodConfig.ateliers || wodConfig.ateliers.length === 0) {
             alert('Erreur : WOD invalide.'); location.reload(); return;
         }
-        const saved = loadSessionData();
+        const saved = await loadSessionData();
         if (saved && saved.length === wodConfig.ateliers.length) {
             wodConfig.ateliers.forEach((a, i) => { a.records = saved[i] || []; });
         }
@@ -2356,7 +2360,7 @@
         return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
-    function addRecord(atelierIndex) {
+    async function addRecord(atelierIndex) {
         const name = document.getElementById(`name_${atelierIndex}`).value.trim();
         const category = selectedCategories[atelierIndex] || 'mixed';
         const isForTime = wodConfig.mode === 'fortime';
@@ -2385,7 +2389,7 @@
 
         // Sort: AMRAP = desc (more = better), For Time = asc (less = better), DNF at end
         sortRecords(atelierIndex);
-        saveSessionData();
+        await saveSessionData();
 
         document.getElementById(`name_${atelierIndex}`).value = '';
         document.getElementById(`score_${atelierIndex}`).value = '';
@@ -2455,7 +2459,7 @@
         }).join('');
     }
 
-    function editRecord(atelierIndex, recordIndex) {
+    async function editRecord(atelierIndex, recordIndex) {
         const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
         const isForTime = wodConfig.mode === 'fortime';
 
@@ -2470,7 +2474,7 @@
 
         selectCategory(atelierIndex, record.category);
         wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
-        saveSessionData();
+        await saveSessionData();
         updateRecordsList(atelierIndex);
         updateGlobalRankings();
 
@@ -2478,7 +2482,7 @@
         card.querySelector('.record-input-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    function deleteRecord(atelierIndex, recordIndex) {
+    async function deleteRecord(atelierIndex, recordIndex) {
         const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
         const label = record.isDNF
             ? `${record.name} (DNF)`
@@ -2488,7 +2492,7 @@
 
         if (confirm(`Supprimer le résultat de "${label}" ?`)) {
             wodConfig.ateliers[atelierIndex].records.splice(recordIndex, 1);
-            saveSessionData();
+            await saveSessionData();
             updateRecordsList(atelierIndex);
             updateGlobalRankings();
         }
