@@ -1046,127 +1046,120 @@
         .emom-progress-bar { height: 100%; background: linear-gradient(90deg,#ed8936,#fbd38d); border-radius:8px; transition: width 1s linear; }
 
         /* ── Big exercise cards grid ── */
+        /* ── 5 exercise cards — always all visible side by side ── */
         .emom-ex-grid {
-            display: grid;
+            display: flex;
+            flex-direction: row;
             gap: 10px;
             margin-bottom: 16px;
-        }
-
-        /* default: up to 5 columns */
-        .emom-ex-grid.ex-count-1 { grid-template-columns: 1fr; }
-        .emom-ex-grid.ex-count-2 { grid-template-columns: repeat(2,1fr); }
-        .emom-ex-grid.ex-count-3 { grid-template-columns: repeat(3,1fr); }
-        .emom-ex-grid.ex-count-4 { grid-template-columns: repeat(4,1fr); }
-        .emom-ex-grid.ex-count-5 { grid-template-columns: repeat(5,1fr); }
-
-        @media (max-width: 900px) {
-            .emom-ex-grid.ex-count-4,
-            .emom-ex-grid.ex-count-5 { grid-template-columns: repeat(3,1fr); }
-        }
-        @media (max-width: 600px) {
-            .emom-ex-grid { grid-template-columns: repeat(2,1fr) !important; }
+            align-items: stretch;
         }
 
         .emom-ex-card {
+            flex: 1;
+            min-width: 0;          /* allow shrink */
             background: #2d3748;
             border: 3px solid #4a5568;
             border-radius: 14px;
-            padding: 18px 12px;
+            padding: 16px 8px;
             text-align: center;
-            transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* Done in a previous minute this tour */
+        /* Done */
         .emom-ex-card.ex-done {
             background: rgba(72,187,120,0.1);
             border-color: #48bb78;
-            opacity: 0.75;
         }
 
         .emom-ex-card.ex-done::after {
             content: '✓';
             position: absolute;
-            top: 6px; right: 10px;
-            font-size: 1.1em;
+            top: 6px; right: 8px;
+            font-size: 1em;
             color: #48bb78;
             font-weight: bold;
         }
 
-        /* ACTIVE — current exercise */
+        /* ACTIVE — orange, no transform (keeps layout stable) */
         .emom-ex-card.ex-active {
-            background: linear-gradient(135deg,#c05621 0%,#9c4221 100%);
+            background: linear-gradient(160deg, #c05621 0%, #9c4221 100%);
             border-color: #ed8936;
-            transform: scale(1.06) translateY(-4px);
-            box-shadow: 0 12px 35px rgba(237,137,54,0.55);
+            box-shadow: 0 6px 28px rgba(237,137,54,0.6), inset 0 0 0 2px rgba(255,255,255,0.08);
         }
 
-        /* Next exercise */
+        /* Next */
         .emom-ex-card.ex-next {
-            background: rgba(237,137,54,0.08);
-            border-color: rgba(237,137,54,0.4);
+            background: rgba(237,137,54,0.07);
+            border-color: rgba(237,137,54,0.45);
             border-style: dashed;
         }
 
+        /* ── Texts inside cards ── */
         .emom-ex-num {
-            font-size: 0.72em;
+            font-size: 0.65em;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: #718096;
-            margin-bottom: 8px;
         }
 
-        .emom-ex-card.ex-active .emom-ex-num { color: rgba(255,255,255,0.6); }
-        .emom-ex-card.ex-next  .emom-ex-num { color: #ed8936; }
-        .emom-ex-card.ex-done  .emom-ex-num { color: #48bb78; }
+        .emom-ex-card.ex-active .emom-ex-num  { color: rgba(255,255,255,0.55); }
+        .emom-ex-card.ex-next   .emom-ex-num  { color: #ed8936; }
+        .emom-ex-card.ex-done   .emom-ex-num  { color: #48bb78; }
 
         .emom-ex-name {
-            font-size: 1.15em;
+            font-size: clamp(0.8em, 1.4vw, 1.3em);
             font-weight: bold;
             color: #e0e0e0;
             line-height: 1.2;
-            margin-bottom: 10px;
-            min-height: 2.5em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            word-break: break-word;
         }
 
-        .emom-ex-card.ex-active .emom-ex-name { font-size: 1.45em; color: #fff; }
+        .emom-ex-card.ex-active .emom-ex-name { color: #fff; font-size: clamp(1em, 1.8vw, 1.6em); }
+        .emom-ex-card.ex-done   .emom-ex-name { color: #68d391; }
 
         .emom-ex-reps {
-            font-size: 2.6em;
+            font-size: clamp(1.6em, 3.5vw, 2.8em);
             font-weight: bold;
             font-family: 'Courier New', monospace;
             color: #4299e1;
             line-height: 1;
         }
 
-        .emom-ex-card.ex-active .emom-ex-reps { font-size: 3.4em; color: #fef08a; }
-        .emom-ex-card.ex-next  .emom-ex-reps { color: #ed8936; }
-        .emom-ex-card.ex-done  .emom-ex-reps { color: #48bb78; }
+        .emom-ex-card.ex-active .emom-ex-reps { color: #fef08a; font-size: clamp(2em, 4.5vw, 3.8em); }
+        .emom-ex-card.ex-next   .emom-ex-reps { color: #ed8936; }
+        .emom-ex-card.ex-done   .emom-ex-reps { color: #48bb78; }
 
         .emom-ex-reps-label {
-            font-size: 0.72em;
+            font-size: 0.7em;
             color: #718096;
-            margin-top: 4px;
         }
 
-        .emom-ex-card.ex-active .emom-ex-reps-label { color: rgba(255,255,255,0.6); }
+        .emom-ex-card.ex-active .emom-ex-reps-label { color: rgba(255,255,255,0.55); }
 
-        /* next arrow badge */
+        /* Suivant badge */
         .emom-next-badge {
             position: absolute;
-            top: 6px; left: 8px;
+            top: 5px; left: 6px;
             background: #ed8936;
             color: white;
-            font-size: 0.62em;
+            font-size: 0.58em;
             font-weight: bold;
-            padding: 2px 7px;
+            padding: 2px 6px;
             border-radius: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 700px) {
+            .emom-ex-grid { flex-wrap: wrap; }
+            .emom-ex-card  { flex: 1 1 calc(50% - 10px); }
         }
 
         /* ── Timeline (15 bubbles) ── */
