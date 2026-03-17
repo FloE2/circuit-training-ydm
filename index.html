@@ -1607,11 +1607,15 @@
 
             <!-- TOP BAR : Minute · Countdown · Tour -->
             <div class="emom-topbar">
+
+                <!-- Left : Minute -->
                 <div class="emom-stat">
                     <div class="emom-stat-value" id="emomMinuteNum">1</div>
                     <div class="emom-stat-label">Minute</div>
                 </div>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+
+                <!-- Center : Countdown + buttons -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;">
                     <div class="emom-countdown-big" id="emomCountdown">60</div>
                     <div class="emom-controls">
                         <button class="btn-control btn-start" onclick="startEmom()" style="padding:8px 20px;">▶ Démarrer</button>
@@ -1619,14 +1623,19 @@
                         <button class="btn-control btn-reset" onclick="resetEmom()" style="padding:8px 20px;">🔄 Reset</button>
                     </div>
                 </div>
-                <div class="emom-stat">
-                    <div class="emom-stat-value" id="emomTourNum">1</div>
-                    <div class="emom-stat-label">Tour</div>
+
+                <!-- Right : Tour + Position groupés -->
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
+                    <div class="emom-stat">
+                        <div class="emom-stat-value" id="emomTourNum">1</div>
+                        <div class="emom-stat-label">Tour</div>
+                    </div>
+                    <div class="emom-stat">
+                        <div class="emom-stat-value" style="font-size:1.1em;line-height:1.2;" id="emomPositionLabel">T1 / Ex.1</div>
+                        <div class="emom-stat-label">Position</div>
+                    </div>
                 </div>
-                <div class="emom-stat">
-                    <div class="emom-stat-value" style="font-size:1.1em; line-height:1.2;" id="emomPositionLabel">T1 / Ex.1</div>
-                    <div class="emom-stat-label">Position</div>
-                </div>
+
             </div>
 
             <!-- Progress bar -->
