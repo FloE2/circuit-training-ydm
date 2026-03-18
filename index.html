@@ -2842,6 +2842,8 @@
             updateGlobalRankings();
         }
     }
+
+    async function editRecord(atelierIndex, recordIndex) {
         const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
         const isForTime = wodConfig.mode === 'fortime';
 
