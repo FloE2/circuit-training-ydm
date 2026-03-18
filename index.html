@@ -1600,6 +1600,11 @@
         body.wod-mode .btn-delete-record { padding: 2px 4px; font-size: 0.6em; }
         body.wod-mode .no-records { padding: 6px; font-size: 0.75em; }
 
+        /* Global For Time panel in wod-mode */
+        body.wod-mode #forTimeGlobalPanel { padding: 10px; margin-bottom: 8px; }
+        body.wod-mode #forTimeGlobalPanel > div:first-child { font-size: 0.9em; margin-bottom: 8px; }
+        body.wod-mode #globalRecordsList { max-height: 180px; }
+
         /* Second records-title (Top 3 label) — not clickable */
         body.wod-mode .records-title + .records-title { cursor: default; background: none; }
         body.wod-mode .records-title + .records-title::after { content: ''; }
@@ -2105,7 +2110,8 @@
         numAteliers: 3,
         duration: 5,     // AMRAP: countdown minutes | ForTime: time cap minutes
         numTours: 3,     // EMOM: number of rounds
-        ateliers: []
+        ateliers: [],
+        globalRecords: [] // For Time: résultats globaux (temps total sur l'ensemble des ateliers)
     };
 
     let selectedWodMode = 'amrap'; // local UI state for setup form
@@ -2201,7 +2207,8 @@
             const sessionData = {
                 wodName: wodConfig.name,
                 savedAt: Date.now(),
-                records: wodConfig.ateliers.map(a => a.records || [])
+                records: wodConfig.ateliers.map(a => a.records || []),
+                globalRecords: wodConfig.globalRecords || []
             };
             await getSessionRef().set(sessionData);
         } catch(e) { console.error('Firebase session save error:', e); }
@@ -2212,7 +2219,7 @@
             const snapshot = await getSessionRef().once('value');
             if (!snapshot.exists()) return null;
             const data = snapshot.val();
-            if (data.wodName === wodConfig.name) return data.records;
+            if (data.wodName === wodConfig.name) return data;
             return null;
         } catch(e) { console.error('Firebase session load error:', e); return null; }
     }
@@ -2221,7 +2228,9 @@
         if (!confirm('Effacer tous les records de la séance en cours ?\n\nCette action est irréversible.')) return;
         try { await getSessionRef().remove(); } catch(e) {}
         wodConfig.ateliers.forEach(a => { a.records = []; });
+        wodConfig.globalRecords = [];
         for (let i = 0; i < wodConfig.numAteliers; i++) updateRecordsList(i);
+        if (wodConfig.mode === 'fortime') updateGlobalRecordsList();
         updateGlobalRankings();
         alert('Tous les records ont été effacés');
     }
@@ -2361,8 +2370,11 @@
             alert('Erreur : WOD invalide.'); location.reload(); return;
         }
         const saved = await loadSessionData();
-        if (saved && saved.length === wodConfig.ateliers.length) {
-            wodConfig.ateliers.forEach((a, i) => { a.records = saved[i] || []; });
+        if (saved && saved.records && saved.records.length === wodConfig.ateliers.length) {
+            wodConfig.ateliers.forEach((a, i) => { a.records = saved.records[i] || []; });
+        }
+        if (saved && saved.globalRecords) {
+            wodConfig.globalRecords = saved.globalRecords;
         }
 
         document.getElementById('mainContainer').classList.add('visible');
@@ -2493,12 +2505,8 @@
                 ? `${atelier.exercises.reduce((s, e) => s + e.reps, 0)} reps au total — For Time`
                 : `${wodConfig.duration}' — AMRAP`;
 
-            card.innerHTML = `
-                <div class="${headerClass}">
-                    <h3>Atelier ${index + 1}</h3>
-                    <div class="atelier-duration">${headerSub}</div>
-                </div>
-                <div class="exercises">${exercisesHTML}</div>
+            // En mode For Time : pas de section résultats par atelier
+            const recordsSectionHTML = isForTime ? '' : `
                 <div class="records-section">
                     <div class="records-title ${titleColor}" onclick="toggleRecordForm(this)">Ajouter un résultat</div>
                     <div class="record-input-form">
@@ -2512,12 +2520,6 @@
                             <input type="${scoreInputType}" ${scoreInputClass} placeholder="${scorePlaceholder}" id="score_${index}" ${scoreInputType === 'number' ? 'min="0"' : ''}>
                         </div>
                         ${timeHint}
-                        ${isForTime ? `
-                        <div style="margin-bottom:8px;">
-                            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.85em;color:#a0aec0;">
-                                <input type="checkbox" id="dnf_${index}"> DNF (Did Not Finish)
-                            </label>
-                        </div>` : ''}
                         <button class="btn-add" onclick="addRecord(${index})">Ajouter le résultat</button>
                     </div>
                     <div class="records-title ${titleColor}" style="margin-top:15px;">Top 3</div>
@@ -2526,9 +2528,23 @@
                     </div>
                 </div>
             `;
+
+            card.innerHTML = `
+                <div class="${headerClass}">
+                    <h3>Atelier ${index + 1}</h3>
+                    <div class="atelier-duration">${headerSub}</div>
+                </div>
+                <div class="exercises">${exercisesHTML}</div>
+                ${recordsSectionHTML}
+            `;
             grid.appendChild(card);
-            updateRecordsList(index);
+            if (!isForTime) updateRecordsList(index);
         });
+
+        // En mode For Time : panneau unique de saisie des temps totaux
+        if (isForTime) {
+            renderForTimeGlobalPanel();
+        }
     }
 
 
@@ -2665,7 +2681,167 @@
         }).join('');
     }
 
-    async function editRecord(atelierIndex, recordIndex) {
+    // ═══════════════════════════════════════════════════════
+    //  FOR TIME — PANNEAU GLOBAL DE RÉSULTATS
+    // ═══════════════════════════════════════════════════════
+    let selectedGlobalCategory = 'mixed';
+
+    function renderForTimeGlobalPanel() {
+        // Supprime un éventuel panneau existant
+        const existing = document.getElementById('forTimeGlobalPanel');
+        if (existing) existing.remove();
+
+        const panel = document.createElement('div');
+        panel.id = 'forTimeGlobalPanel';
+        panel.style.cssText = 'background:#2d3748;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 5px 20px rgba(0,0,0,0.3);';
+
+        panel.innerHTML = `
+            <div style="color:#48bb78;font-size:1.15em;font-weight:bold;margin-bottom:12px;text-align:center;">
+                ⏱️ Résultats — Temps total (tous les ateliers)
+            </div>
+            <div class="records-section" style="background:#1a202c;border-radius:8px;padding:12px;">
+                <div class="records-title fortime-title" onclick="toggleRecordForm(this)" style="cursor:pointer;">Ajouter un résultat</div>
+                <div class="record-input-form">
+                    <div class="category-selector">
+                        <button class="category-btn active" id="globalCatBtn_mixed" onclick="selectGlobalCategory('mixed')">Mixte</button>
+                        <button class="category-btn" id="globalCatBtn_boys" onclick="selectGlobalCategory('boys')">Garçons</button>
+                        <button class="category-btn" id="globalCatBtn_girls" onclick="selectGlobalCategory('girls')">Filles</button>
+                    </div>
+                    <div class="record-input">
+                        <input type="text" placeholder="Prénom(s) - ex: Tom & Léa" id="globalRecordName">
+                        <input type="text" class="time-input" placeholder="MM:SS" id="globalRecordTime">
+                    </div>
+                    <div class="time-hint">Format MM:SS (ex: 3:42) — laisser vide si DNF</div>
+                    <div style="margin-bottom:8px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.85em;color:#a0aec0;">
+                            <input type="checkbox" id="globalDnf"> DNF (Did Not Finish)
+                        </label>
+                    </div>
+                    <button class="btn-add" onclick="addGlobalRecord()">Ajouter le résultat</button>
+                </div>
+                <div class="records-title fortime-title" style="margin-top:15px;">Classement</div>
+                <div class="records-list" id="globalRecordsList">
+                    <div class="no-records">Aucun résultat pour le moment</div>
+                </div>
+            </div>
+        `;
+
+        // Insérer après le rankingsToggleBtn
+        const toggleBtn = document.getElementById('rankingsToggleBtn');
+        toggleBtn.parentNode.insertBefore(panel, toggleBtn.nextSibling);
+
+        selectedGlobalCategory = 'mixed';
+        updateGlobalRecordsList();
+    }
+
+    function selectGlobalCategory(category) {
+        selectedGlobalCategory = category;
+        ['mixed','boys','girls'].forEach(c => {
+            const btn = document.getElementById(`globalCatBtn_${c}`);
+            if (btn) btn.classList.toggle('active', c === category);
+        });
+    }
+
+    async function addGlobalRecord() {
+        const name = document.getElementById('globalRecordName').value.trim();
+        if (!name) { alert('Entrez un nom'); return; }
+
+        const isDNF = document.getElementById('globalDnf').checked;
+        let score;
+
+        if (isDNF) {
+            score = Infinity;
+        } else {
+            const raw = document.getElementById('globalRecordTime').value;
+            score = parseTimeInput(raw);
+            if (score === null) { alert('Entrez un temps valide au format MM:SS (ex: 3:42)'); return; }
+        }
+
+        if (!wodConfig.globalRecords) wodConfig.globalRecords = [];
+        wodConfig.globalRecords.push({ name, score, category: selectedGlobalCategory, isDNF: isDNF || false });
+
+        // Tri : temps le plus bas = meilleur, DNF à la fin
+        wodConfig.globalRecords.sort((a, b) => {
+            if (a.isDNF && !b.isDNF) return 1;
+            if (!a.isDNF && b.isDNF) return -1;
+            if (a.isDNF && b.isDNF) return 0;
+            return a.score - b.score;
+        });
+
+        await saveSessionData();
+
+        document.getElementById('globalRecordName').value = '';
+        document.getElementById('globalRecordTime').value = '';
+        document.getElementById('globalDnf').checked = false;
+
+        updateGlobalRecordsList();
+        updateGlobalRankings();
+    }
+
+    function updateGlobalRecordsList() {
+        const list = document.getElementById('globalRecordsList');
+        if (!list) return;
+        if (!wodConfig.globalRecords) wodConfig.globalRecords = [];
+        const records = wodConfig.globalRecords;
+
+        if (records.length === 0) {
+            list.innerHTML = '<div class="no-records">Aucun résultat pour le moment</div>';
+            return;
+        }
+
+        const rankClass = ['first', 'second', 'third'];
+        const catLabels = { boys: 'Garçons', girls: 'Filles', mixed: 'Mixte' };
+
+        list.innerHTML = records.map((r, i) => {
+            const rankLabel = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+            const scoreText = r.isDNF
+                ? '<span class="dnf-badge">DNF</span>'
+                : `<span class="record-score fortime-score">${formatTime(r.score)}</span>`;
+
+            return `
+                <div class="record-item ${rankClass[i] || ''}">
+                    <div class="record-info">
+                        <span style="font-size:1.1em;font-weight:bold;min-width:28px;">${rankLabel}</span>
+                        <div>
+                            <div class="record-name">${r.name}</div>
+                            <span class="record-category category-${r.category}">${catLabels[r.category]}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        ${scoreText}
+                        <div class="record-actions">
+                            <button class="btn-edit-record" onclick="editGlobalRecord(${i})" title="Modifier">✏️</button>
+                            <button class="btn-delete-record" onclick="deleteGlobalRecord(${i})" title="Supprimer">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function editGlobalRecord(index) {
+        const record = wodConfig.globalRecords[index];
+        document.getElementById('globalRecordName').value = record.name;
+        if (!record.isDNF) document.getElementById('globalRecordTime').value = formatTime(record.score);
+        document.getElementById('globalDnf').checked = !!record.isDNF;
+        selectGlobalCategory(record.category);
+        wodConfig.globalRecords.splice(index, 1);
+        await saveSessionData();
+        updateGlobalRecordsList();
+        updateGlobalRankings();
+        document.getElementById('globalRecordName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    async function deleteGlobalRecord(index) {
+        const record = wodConfig.globalRecords[index];
+        const label = record.isDNF ? `${record.name} (DNF)` : `${record.name} (${formatTime(record.score)})`;
+        if (confirm(`Supprimer le résultat de "${label}" ?`)) {
+            wodConfig.globalRecords.splice(index, 1);
+            await saveSessionData();
+            updateGlobalRecordsList();
+            updateGlobalRankings();
+        }
+    }
         const record = wodConfig.ateliers[atelierIndex].records[recordIndex];
         const isForTime = wodConfig.mode === 'fortime';
 
@@ -2709,6 +2885,31 @@
     // ═══════════════════════════════════════════════════════
     function updateGlobalRankings() {
         const isForTime = wodConfig.mode === 'fortime';
+
+        if (isForTime) {
+            // For Time : utilise directement les globalRecords (temps total)
+            if (!wodConfig.globalRecords) wodConfig.globalRecords = [];
+            const records = wodConfig.globalRecords;
+
+            if (records.length === 0) {
+                document.getElementById('globalRankings').style.display = 'none';
+                return;
+            }
+
+            let rankings = [...records].sort((a, b) => {
+                if (a.isDNF && !b.isDNF) return 1;
+                if (!a.isDNF && b.isDNF) return -1;
+                if (a.isDNF && b.isDNF) return 0;
+                return a.score - b.score;
+            }).slice(0, 3);
+
+            document.getElementById('globalRankings').style.display = 'block';
+            document.getElementById('globalRankTitle').textContent = 'Top 3 — Meilleurs temps totaux';
+            displayGlobalTop3(rankings);
+            return;
+        }
+
+        // AMRAP : agrège les scores par atelier
         const allGroups = {};
 
         wodConfig.ateliers.forEach(atelier => {
